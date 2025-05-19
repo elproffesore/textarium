@@ -1,454 +1,541 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MereoGrapher</title>
     <style>
-      @font-face {
-        font-family: "Atkinson";
-        src: url("include/fonts/Atkinson-Hyperlegible-Regular-102a.woff2")
-          format("woff2-variations");
-        font-style: normal;
-        font-weight: normal;
-      }
+        @font-face {
+            font-family: "Atkinson";
+            src: url("include/fonts/Atkinson-Hyperlegible-Regular-102a.woff2") format("woff2-variations");
+            font-style: normal;
+            font-weight: normal;
+        }
 
-      @font-face {
-        font-family: "Atkinson";
-        src: url("include/fonts/Atkinson-Hyperlegible-Italic-102a.woff2")
-          format("woff2-variations");
-        font-style: italic;
-        font-weight: normal;
-      }
+        @font-face {
+            font-family: "Atkinson";
+            src: url("include/fonts/Atkinson-Hyperlegible-Italic-102a.woff2") format("woff2-variations");
+            font-style: italic;
+            font-weight: normal;
+        }
 
-      @font-face {
-        font-family: "Atkinson";
-        src: url("include/fonts/Atkinson-Hyperlegible-Bold-102a.woff2")
-          format("woff2-variations");
-        font-style: normal;
-        font-weight: bold;
-      }
+        @font-face {
+            font-family: "Atkinson";
+            src: url("include/fonts/Atkinson-Hyperlegible-Bold-102a.woff2") format("woff2-variations");
+            font-style: normal;
+            font-weight: bold;
+        }
 
-      @font-face {
-        font-family: "Atkinson";
-        src: url("include/fonts/Atkinson-Hyperlegible-BoldItalic-102a.woff2")
-          format("woff2-variations");
-        font-style: italic;
-        font-weight: bold;
-      }
-      html{
-        overscroll-behavior: none;
-      }
-      body {
-        font-family: Atkinson, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-        font-size: 14pt;
-        line-height: 1.3;
-        color: #333;
-    }
+        @font-face {
+            font-family: "Atkinson";
+            src: url("include/fonts/Atkinson-Hyperlegible-BoldItalic-102a.woff2") format("woff2-variations");
+            font-style: italic;
+            font-weight: bold;
+        }
 
-      .extracted {
-        background-color: #b2ff2d;
-        cursor: pointer;
-      }
+        html {
+            overscroll-behavior: none;
+        }
 
-      #app {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        margin: 16px;
-      }
+        body {
+            font-family: Atkinson, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-size: 14pt;
+            line-height: 1.3;
+            color: #333;
+        }
 
-      #text-container {
-        width: 500px;
-        z-index: 20;
-      }
+        .extracted {
+            background-color: #b2ff2d;
+            cursor: pointer;
+        }
 
-      #annotation-wrapper {
-        position: relative;
-        z-index: 10;
-      }
+        #app {
+            display: grid;
+            grid-template-columns: 40% 35% 25%;
+        }
 
-      .annotation {
-        position: absolute;
-        max-width: 300px;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        cursor: grab;
-      }
-      #annotation-wrapper {
-        position: relative;
-        z-index: 10;
-      }
-      #annotation-container {
-        height: 100vh;
-        width: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-      }
+        #text-container {
+            width: 500px;
+            z-index: 20;
+            padding: 16px;
+            overflow-y: scroll;
+            height: 100vh;
+            scrollbar-width: none;
+        }
 
-      #comment-container {
-        z-index: 30;
-      }
-      #connections-canvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-      }
+        #annotations-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        .annotation {
+            position: absolute;
+            max-width: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: grab;
+        }
+
+        #annotations-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        #annotations-container {
+            height: 100vh;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        #comments-container {
+            padding: 16px;
+            z-index: 30;
+            border-left: 1px solid #222;
+            overflow-y: scroll;
+            height: 100vh;
+            
+        }
+
+        #comments-container>div {
+            height: 100vh;
+            
+        }
+
+        #connections-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
     </style>
-  </head>
+</head>
 
-  <body>
+<body>
     <script src="include/libs/marked.min.js"></script>
     <script src="include/libs/rangy.min.js"></script>
     <script src="include/libs/d3.min.js"></script>
     <div id="app">
-      <canvas id="connections-canvas"></canvas>
-      <div id="text-container"></div>
-      <div id="annotation-wrapper"> 
-              <div id="annotation-container"></div>
-
-      </div>
-      <div id="comment-container"></div>
+        <canvas id="connections-canvas"></canvas>
+            <div id="text-container"></div>
+            <div id="annotations-wrapper">
+                <div id="annotations-container"></div>
+            </div>
+        <div id="comments-container"> </div>
     </div>
     <script>
-      //
-      // GLOBAL VARIABLES
-      //
-      let canvas = null;
-      let ctx = null;
-      let annotations = [];
-      let drawings = [];
-      let annotationsMovement = false;
-      //
-      // HELPER FUNCTIONS
-      //
-      // Recursive function to get the parent element with a hashed ID
-      function getParentWithLongId(node) {
-        if (!node || !node.parentElement) return null;
-        if (node.parentElement.id && node.parentElement.id.length == 12) {
-          return node.parentElement;
-        }
-        return getParentWithLongId(node.parentElement);
-      }
-      // Function to hash text using SHA-1 and crop it to generate a unique content dependent ID
-      async function hashText(text) {
-        const hashBuffer = await self.crypto.subtle.digest(
-          "SHA-1",
-          new TextEncoder().encode(text)
-        );
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("")
-          .slice(0, 10);
-        return hashHex;
-      }
-        function resetPage(){
-        // Remove all annotations
-        annotations = [];
-        document.querySelectorAll(".annotation").forEach((el) => {
-          el.remove();
-        });
-        document.querySelectorAll(".extracted").forEach((el) => {
-          el.outerHTML = el.textContent;
-        });
-      }
-      //
-      // LOADING TEXT
-      //
-      (async function () {
-        // Get text from server and parse it via marked.js
-        const response = await fetch(
-          `${location.pathname}media/texts/latour-a-cautious-promotheus.md`
-        );
-        const text = await response.text();
-        const textContainer = document.getElementById("text-container");
-        textContainer.innerHTML = marked.parse(text);
-
-        // Give each section a unique ID that is based on its hashed contents
-        let promises = Array.from(
-          document.querySelector("#text-container").childNodes
-        ).map(async (child) => {
-          child.id = "id" + (await hashText(child.textContent));
-        });
-        // Wait for all promises to resolve before loading URL encoded annotations
-        Promise.all(promises).then(() => {
-          getHashedAnnotations();
-            setupCanvas();
-            updateCanvas();
-        });
-      })();
-      //
-      // HANDLING HASHED URL
-      //
-
-      window.addEventListener("hashchange", (e) => {
-        // Check if the hash has changed and if we are not in edit mode
-        getHashedAnnotations();
-      });
-      function setHashedAnnotations() {
-        // Update the URL hash with the new annotation
-        let hash = annotations
-          .map((a) => {
-            return `[${a.mode}][${a.id}][${a.absoluteStartOffset}-${a.absoluteEndOffset}][${a.annotationX}-${a.annotationY}]`;
-          })
-          .join(",");
-
-        history.pushState(
-          null,
-          null,
-          location.pathname + location.search + "#" + hash
-        );
-      }
-      // Handle URL encoded annotations
-      function getHashedAnnotations() {
-        resetPage();
-        // Get the hash from the URL and split it into an array
-        let instructions = location.hash
-          .split(",")
-          .filter((action) => action.length > 0);
-        if (instructions.length == 0) return;
-        // Iterate over the instructions and decode them
-        let ranges = instructions
-          .map((action) => action.replace("#", "").replaceAll("%20", " "))
-          .map((action) => {
-            // [H][id][startOffset-endOffset][annotationX-annotationY]
-            let matches = [...action.matchAll(/\[(.*?)\]/g)];
-            if (matches.length != 4) return null;
-            let [mode, parentContainerID, textRange, annotationPosition] =
-              matches.map((match) => match[1]);
-            // Create start and end offsets and nthChild
-            let [absoluteStartOffset, absoluteEndOffset] = textRange.split("-");
-            let [annotationX, annotationY] = annotationPosition.split("-");
-            let element = document.querySelector("#" + parentContainerID);
-            if (element) {
-              // Create a range and set the start and end points
-              let rangeElement = document.createRange();
-              let nthChildStart = 0;
-              let paddingStart = 0;
-              let nthChildEnd = 0;
-              let paddingEnd = 0;
-              element.childNodes = Array.from(element.childNodes).filter(childNode => childNode.textContent.length > 0);
-                // Find the nth child for the start and end offsets
-                if(element.childNodes.length > 1) {      
-                    while (
-                        nthChildStart < element.childNodes.length &&
-                        paddingStart + element.childNodes[nthChildStart].textContent.length < absoluteStartOffset 
-                        ) {
-                        paddingStart += element.childNodes[nthChildStart].textContent
-                            .length;
-                        nthChildStart++;
-                        }
-                    while (
-                        nthChildEnd < element.childNodes.length &&
-                        paddingEnd + element.childNodes[nthChildEnd].textContent.length < absoluteEndOffset
-                        ) {
-                        paddingEnd += element.childNodes[nthChildEnd].textContent
-                            .length;
-                        nthChildEnd++;
-                        }
-                }
-                // Set the start and end points of the range
-                let startOffset =  absoluteStartOffset - paddingStart ;
-                let endOffset = absoluteEndOffset - paddingEnd;
-              // Set the start and end points of the range  
-                rangeElement.setStart(
-                    element.childNodes[nthChildStart],
-                    startOffset
-                );
-                rangeElement.setEnd(
-                    element.childNodes[nthChildEnd],
-                    endOffset
-                );
-              // Create a new annotation object
-              createAnnotation(
-                mode,
-                parentContainerID,
-                absoluteStartOffset,
-                absoluteEndOffset,
-                rangeElement,
-                annotationX,
-                annotationY
-              );
+        //
+        // GLOBAL VARIABLES
+        //
+        let canvas = null;
+        let ctx = null;
+        let annotations = [];
+        let drawings = [];
+        let annotationsMovement = false;
+        let annotationsMovementID = null;
+        let annotationsMovementOffsetX = 0;
+        let annotationsMovementOffsetY = 0;
+        //
+        // HELPER FUNCTIONS
+        //
+        // Recursive function to get the parent element with a hashed ID
+        function getParentWithLongId(node) {
+            if (!node || !node.parentElement) return null;
+            if (node.parentElement.id && node.parentElement.id.length == 12) {
+                return node.parentElement;
             }
-          });
-      }
-      //
-      // HANDLING ANNOTATIONS
-      //
-      function createAnnotation(
-        mode,
-        id,
-        absoluteStartOffset,
-        absoluteEndOffset,
-        range,
-        annotationX = null,
-        annotationY = null
-      ) {
-        // Create a span element and wrap the selected text with it
-        let spanWrapper = document.createElement("span");
-        spanWrapper.id = "id"+self.crypto.randomUUID();
-        spanWrapper.classList.add("extracted");
-        range.surroundContents(spanWrapper);
-        // Clone the span element and append it to the annotation container
-        let clone = spanWrapper.cloneNode(true);
-        clone.id = spanWrapper.id + "-annotation";
-        clone.classList.add("annotation");
-        clone.classList.remove("extracted"); 
-        document.querySelector("#annotation-container").appendChild(clone);
-        // Set the position of the annotation
-        let boundingClient = clone.getBoundingClientRect();
-        clone.style.left = annotationX ? annotationX + "px" : boundingClient.left + "px";  
-        clone.style.top = annotationY ? annotationY + "px" : boundingClient.top + "px";
-        clone.addEventListener("mousedown",(e) => {
-            e.preventDefault();
-            annotationsMovement = true;
-            annotationsMovementID = clone.id
-        })
-
-        // Create a new annotation object
-        let annotation = {
-          mode,
-          id,
-          absoluteStartOffset,
-          absoluteEndOffset,
-          text: range.toString(),
-          spanID: spanWrapper.id,
-          annotationID: clone.id,
-          annotationX: annotationX ? annotationX : boundingClient.left,
-          annotationY: annotationY ? annotationY : boundingClient.top
-        };
-        annotations.push(annotation);
-        setHashedAnnotations();
-      }
-      function deleteAnnotation() {}
-      function editAnnotation() {}
-      window.addEventListener("mousemove", (e) => {
-        if (annotationsMovement) {
-          let annotation = document.querySelector("#" + annotationsMovementID);
-          annotation.style.left = e.clientX + "px";
-          annotation.style.top = e.clientY + "px";
-          annotations.forEach((a) => {
-            if (a.annotationID == annotationsMovementID) {
-              a.annotationX = e.clientX;
-              a.annotationY = e.clientY;
-              //setHashedAnnotations(); -> to computation intensive
-            }
-          });
+            return getParentWithLongId(node.parentElement);
         }
-      });
-      window.addEventListener("mouseup", (e) => {
-        if (annotationsMovement) {
-          annotationsMovement = false;
-          annotationsMovementID = null;
-          setHashedAnnotations();
+        // Function to hash text using SHA-1 and crop it to generate a unique content dependent ID
+        async function hashText(text) {
+            const hashBuffer = await self.crypto.subtle.digest(
+                "SHA-1",
+                new TextEncoder().encode(text)
+            );
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray
+                .map((b) => b.toString(16).padStart(2, "0"))
+                .join("")
+                .slice(0, 10);
+            return hashHex;
         }
-      });
-      function moveAnnotation() {
+        function resetPage() {
+            // Remove all annotations
+            annotations = [];
+            drawings = [];
+            annotationsMovement = false;
+            annotationsMovementID = null;
+            annotationsMovementOffsetX = 0;
+            annotationsMovementOffsetY = 0;
+            // Remove all annotations from the annotation container
+            document.querySelectorAll(".annotation").forEach((el) => {
+                el.remove();
+            });
+            document.querySelectorAll(".extracted").forEach((el) => {
+                el.outerHTML = el.textContent;
+            });
+        }
+        //
+        // Loading Comments
+        //
+        (async function () {
+            // Get text from server and parse it via marked.js
+            const response = await fetch(
+                `${location.pathname}media/comments/test-comments.md`
+            );
+            const text = await response.text();
+            text.split("---").map((section) => {
+                let sectionContainer = document.createElement("div");
+                sectionContainer.classList.add("section");
+                sectionContainer.innerHTML = marked.parse(section);
+                document
+                    .getElementById("comments-container")
+                    .appendChild(sectionContainer);
+            });
+        })();
+        //
+        // LOADING TEXT
+        //
+        (async function () {
+            // Get text from server and parse it via marked.js
+            const response = await fetch(
+                `${location.pathname}media/texts/latour-a-cautious-promotheus.md`
+            );
+            const text = await response.text();
+            const textContainer = document.getElementById("text-container");
+            textContainer.innerHTML = marked.parse(text);
 
-      }
-      //Handle highlighting and creation of extracted elements
-      window.addEventListener("mouseup", (e) => {
-        e.preventDefault();
-        try {
-          let selection = window.getSelection();
-          let range = selection.getRangeAt(0);
-          // Check if the selection is empty or if the selected text is too short
-          if (
-            range == undefined ||
-            range.collapsed ||
-            range.toString().length < 2 ||
-            range.toString().length > 200
-          ) {
-            return;
-          }
-          // We need to encode where the selection has started and where it ended
-          let nthChildStart = 0;
-          let paddingStart = 0;
-          let parent = selection.anchorNode.parentElement;
-          while (parent.childNodes[nthChildStart] != selection.anchorNode) {
-            paddingStart += parent.childNodes[nthChildStart].textContent.length;
-            nthChildStart++;
-          }
+            // Give each section a unique ID that is based on its hashed contents
+            let promises = Array.from(
+                document.querySelector("#text-container").childNodes
+            ).map(async (child) => {
+                child.id = "id" + (await hashText(child.textContent));
+            });
+            // Wait for all promises to resolve before loading URL encoded annotations
+            Promise.all(promises).then(() => {
+                getHashedAnnotations();
+                setupCanvas();
+                updateCanvas();
+                initializeObservers();
+            });
+        })();
+        //
+        // HANDLING HASHED URL
+        //
+        window.addEventListener("hashchange", (e) => {
+            // Check if the hash has changed and if we are not in edit mode
+            getHashedAnnotations();
+        });
+        function setHashedAnnotations() {
+            // Update the URL hash with the new annotation
+            let hash = `[${document.getElementById('text-container').scrollTop}],`;
+            hash += annotations
+                .map((a) => {
+                    return `[${a.mode}][${a.id}][${a.absoluteStartOffset}-${a.absoluteEndOffset}][${a.annotationX}-${a.annotationY}]`;
+                })
+                .join(",");
 
-          let nthChildEnd = nthChildStart;
-          let paddingEnd = paddingStart;
-          while (parent.childNodes[nthChildEnd] != selection.focusNode) {
-            paddingEnd += parent.childNodes[nthChildEnd].textContent.length;
-            nthChildEnd++;
-          }
-
-          // Get the parent element with a long ID
-          let parentID = getParentWithLongId(selection.anchorNode).id;
-          let startOffset = selection.anchorOffset;
-          let endOffset = selection.focusOffset;
-          let absoluteStartOffset = startOffset + paddingStart;
-          let absoluteEndOffset = endOffset + paddingEnd;
-
-          // Create a new annotation object
-          createAnnotation(
-            "H",
-            parentID,
+            history.pushState(
+                null,
+                null,
+                location.pathname + location.search + "#" + hash
+            );
+        }
+        // Handle URL encoded annotations
+        async function getHashedAnnotations() {
+            resetPage();
+            // Get the hash from the URL and split it into an array
+            let instructions = location.hash
+                .slice(1)
+                .replaceAll("%20", " ")
+                .replaceAll("%5B", "[")
+                .replaceAll("%5D", "]")
+                .split(",")
+                .filter((action) => action.length > 0);
+            if (instructions.length == 0) return;
+            let scrollPosition = instructions.shift().replaceAll(/[\[\]]/g, "");
+            console.log(scrollPosition);
+            // Scroll to the position
+            document.getElementById('text-container').scrollTo({
+                top: parseInt(scrollPosition),
+                left: 0,
+                behavior: "smooth",
+            });
+            // Wait for the scroll to finish
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 600);
+            });
+            // Iterate over the instructions and decode them
+            let ranges = instructions
+                .map((action) => action.replaceAll("%20", " "))
+                .map((action) => {
+                    // [H][id][startOffset-endOffset][annotationX-annotationY]
+                    let matches = [...action.matchAll(/\[(.*?)\]/g)];
+                    if (matches.length != 4) return null;
+                    let [mode, parentContainerID, textRange, annotationPosition] =
+                        matches.map((match) => match[1]);
+                    // Create start and end offsets and nthChild
+                    let [absoluteStartOffset, absoluteEndOffset] = textRange.split("-");
+                    let [annotationX, annotationY] = annotationPosition.split("-");
+                    let element = document.querySelector("#" + parentContainerID);
+                    if (element) {
+                        // Create a range and set the start and end points
+                        let rangeElement = document.createRange();
+                        let nthChildStart = 0;
+                        let paddingStart = 0;
+                        let nthChildEnd = 0;
+                        let paddingEnd = 0;
+                        element.childNodes = Array.from(element.childNodes).filter(
+                            (childNode) => childNode.textContent.length > 0
+                        );
+                        // Find the nth child for the start and end offsets
+                        if (element.childNodes.length > 1) {
+                            while (
+                                nthChildStart < element.childNodes.length &&
+                                paddingStart +
+                                element.childNodes[nthChildStart].textContent.length <
+                                absoluteStartOffset
+                            ) {
+                                paddingStart +=
+                                    element.childNodes[nthChildStart].textContent.length;
+                                nthChildStart++;
+                            }
+                            while (
+                                nthChildEnd < element.childNodes.length &&
+                                paddingEnd +
+                                element.childNodes[nthChildEnd].textContent.length <
+                                absoluteEndOffset
+                            ) {
+                                paddingEnd +=
+                                    element.childNodes[nthChildEnd].textContent.length;
+                                nthChildEnd++;
+                            }
+                        }
+                        // Set the start and end points of the range
+                        let startOffset = absoluteStartOffset - paddingStart;
+                        let endOffset = absoluteEndOffset - paddingEnd;
+                        // Set the start and end points of the range
+                        rangeElement.setStart(
+                            element.childNodes[nthChildStart],
+                            startOffset
+                        );
+                        rangeElement.setEnd(element.childNodes[nthChildEnd], endOffset);
+                        // Create a new annotation object
+                        createAnnotation(
+                            mode,
+                            parentContainerID,
+                            absoluteStartOffset,
+                            absoluteEndOffset,
+                            rangeElement,
+                            annotationX,
+                            annotationY
+                        );
+                    }
+                });
+        }
+        //
+        // HANDLING ANNOTATIONS
+        //
+        function createAnnotation(
+            mode,
+            id,
             absoluteStartOffset,
             absoluteEndOffset,
-            range
-          );
-          // Remove all ranges from the selection
-          selection.removeAllRanges();
-        } catch (e) {
-          console.log(e);
+            range,
+            annotationX = null,
+            annotationY = null
+        ) {
+            // Create a span element and wrap the selected text with it
+            let spanWrapper = document.createElement("span");
+            spanWrapper.id = "id" + self.crypto.randomUUID();
+            spanWrapper.classList.add("extracted");
+            range.surroundContents(spanWrapper);
+            // Clone the span element and append it to the annotation container
+            let clone = spanWrapper.cloneNode(true);
+            clone.id = spanWrapper.id + "-annotation";
+            clone.classList.add("annotation");
+            clone.classList.remove("extracted");
+            document.querySelector("#annotations-container").appendChild(clone);
+            // Set the position of the annotation
+            let boundingClient = clone.getBoundingClientRect();
+            clone.style.left = annotationX
+                ? annotationX + "px"
+                : boundingClient.left + "px";
+            clone.style.top = annotationY
+                ? annotationY + "px"
+                : boundingClient.top + "px";
+            clone.addEventListener("mousedown", (e) => {
+                e.preventDefault();
+                boundingClient = clone.getBoundingClientRect();
+                annotationsMovement = true;
+                annotationsMovementID = clone.id;
+                annotationsMovementOffsetX =
+                    e.clientX - (boundingClient.left + boundingClient.width / 2);
+                annotationsMovementOffsetY =
+                    e.clientY - (boundingClient.top + boundingClient.height / 2);
+            });
+
+            // Create a new annotation object
+            let annotation = {
+                mode,
+                id,
+                absoluteStartOffset,
+                absoluteEndOffset,
+                text: range.toString(),
+                spanID: spanWrapper.id,
+                annotationID: clone.id,
+                annotationX: annotationX ? annotationX : boundingClient.left,
+                annotationY: annotationY ? annotationY : boundingClient.top,
+            };
+            annotations.push(annotation);
+            setHashedAnnotations();
         }
-      });
-      //
-      // Handling Connections between Annotations
-      //
-      function setupCanvas(){
+        function deleteAnnotation() { }
+        function editAnnotation() { }
+        window.addEventListener("mousemove", (e) => {
+            if (annotationsMovement) {
+                let annotation = document.querySelector("#" + annotationsMovementID);
+                let boundingClient = annotation.getBoundingClientRect();
+                let newLeft = e.clientX - annotationsMovementOffsetX;
+                let newTop = e.clientY - annotationsMovementOffsetY;
+                annotation.style.left = newLeft + "px";
+                annotation.style.top = newTop + "px";
+                annotations.forEach((a) => {
+                    if (a.annotationID == annotationsMovementID) {
+                        a.annotationX = newLeft;
+                        a.annotationY = newTop;
+                    }
+                });
+            }
+        });
+        window.addEventListener("mouseup", (e) => {
+            if (annotationsMovement) {
+                annotationsMovement = false;
+                annotationsMovementID = null;
+                setHashedAnnotations();
+            }
+        });
+        function moveAnnotation() { }
+        //Handle highlighting and creation of extracted elements
+        window.addEventListener("mouseup", (e) => {
+            e.preventDefault();
+            try {
+                let selection = window.getSelection();
+                if (selection.rangeCount == 0) return;
+                let range = selection.getRangeAt(0);
+                // Check if the selection is empty or if the selected text is too short
+                if (
+                    range == undefined ||
+                    range.collapsed ||
+                    range.toString().length < 2 ||
+                    range.toString().length > 1000
+                ) {
+                    return;
+                }
+                // We need to encode where the selection has started and where it ended
+                let nthChildStart = 0;
+                let paddingStart = 0;
+                let parent = selection.anchorNode.parentElement;
+                while (parent.childNodes[nthChildStart] != selection.anchorNode) {
+                    paddingStart += parent.childNodes[nthChildStart].textContent.length;
+                    nthChildStart++;
+                }
+
+                let nthChildEnd = nthChildStart;
+                let paddingEnd = paddingStart;
+                while (parent.childNodes[nthChildEnd] != selection.focusNode) {
+                    paddingEnd += parent.childNodes[nthChildEnd].textContent.length;
+                    nthChildEnd++;
+                }
+
+                // Get the parent element with a long ID
+                let parentID = getParentWithLongId(selection.anchorNode).id;
+                let startOffset = selection.anchorOffset;
+                let endOffset = selection.focusOffset;
+                let absoluteStartOffset = startOffset + paddingStart;
+                let absoluteEndOffset = endOffset + paddingEnd;
+
+                // Create a new annotation object
+                createAnnotation(
+                    "H",
+                    parentID,
+                    absoluteStartOffset,
+                    absoluteEndOffset,
+                    range
+                );
+                // Remove all ranges from the selection
+                selection.removeAllRanges();
+            } catch (e) {
+                console.log(e);
+            }
+        });
+        //
+        // Handling Connections between Annotations
+        //
+        // Function to setup the canvas and its context
+        function setupCanvas() {
             canvas = document.querySelector("#connections-canvas");
-            canvas.width = window.innerWidth*2; // Adjust for high DPI screens
-            canvas.height = window.innerHeight*2;
+            canvas.width = window.innerWidth * 2; // Adjust for high DPI screens
+            canvas.height = window.innerHeight * 2;
             canvas.style.width = `${window.innerWidth}px`;
             canvas.style.height = `${window.innerHeight}px`;
             ctx = canvas.getContext("2d");
             ctx.scale(2, 2); // Adjust for high DPI screens
-            ctx.lineWidth =  1;
+            ctx.lineWidth = 1;
             ctx.setLineDash([5, 5]);
-            ctx.strokeStyle = '#11111155';
-      }
+            ctx.strokeStyle = "#11111155";
+        }
         function updateCanvas() {
-            if (window.scrollY < 0) return 
+            if (window.scrollY < 0) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             // Set the canvas size to match the window size
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             // Draw connections between annotations
-            annotations.map(annotation => {
+            annotations.map((annotation) => {
                 if (annotation.mode != "H") return;
-                let annotationElement = document.querySelector("#" + annotation.annotationID);
-                let annotationBoundingClient = annotationElement.getBoundingClientRect();
+                let annotationElement = document.querySelector(
+                    "#" + annotation.annotationID
+                );
+                let annotationBoundingClient =
+                    annotationElement.getBoundingClientRect();
                 let spanElement = document.querySelector("#" + annotation.spanID);
                 let spanBoundingClient = spanElement.getBoundingClientRect();
+
+                let distance = Math.abs(
+                    annotationBoundingClient.left -
+                    (spanBoundingClient.left + spanBoundingClient.width)
+                );
                 let controlPoint1 = {
-                    x: annotationBoundingClient.left,
-                    y: annotationBoundingClient.top + annotationBoundingClient.height / 2
+                    x: annotationBoundingClient.left - 20,
+                    y:
+                        annotationBoundingClient.top +
+                        annotationBoundingClient.height / 2,
                 };
                 let controlPoint2 = {
-                    x: annotationBoundingClient.left -150,
-                    y: annotationBoundingClient.top + annotationBoundingClient.height / 2
+                    x: annotationBoundingClient.left - distance / 2,
+                    y:
+                        annotationBoundingClient.top +
+                        annotationBoundingClient.height / 2,
                 };
                 let controlPoint3 = {
-                    x: spanBoundingClient.left + spanBoundingClient.width + 150,
-                    y: spanBoundingClient.top + spanBoundingClient.height / 2
+                    x:
+                        spanBoundingClient.left + spanBoundingClient.width + distance / 2,
+                    y: spanBoundingClient.top + spanBoundingClient.height / 2,
                 };
                 let controlPoint4 = {
-                    x: spanBoundingClient.left + spanBoundingClient.width,
-                    y: spanBoundingClient.top + spanBoundingClient.height / 2
+                    x: spanBoundingClient.left + spanBoundingClient.width + 20,
+                    y: spanBoundingClient.top + spanBoundingClient.height / 2,
                 };
                 ctx.beginPath();
                 ctx.moveTo(controlPoint1.x, controlPoint1.y);
@@ -461,11 +548,44 @@
                     controlPoint4.y
                 );
                 ctx.stroke();
+            });
+            requestAnimationFrame(updateCanvas);
+        }
+        // with IntersectionObserver we can check what is visible
+        function initializeObservers() {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            // Add active class only to the visible link
+                            const visibleLink = entry.target;
+                            if (
+                                !visibleLink.classList.contains("dontinflect") &&
+                                visibleLink.getAttribute("href") != ""
+                            ) {
+                                visibleLink.classList.add("active");
+                                visibleLink.click();
+                            }
+                        } else entry.target.classList.remove("active");
+                    });
+                },
+                {
+                    threshold: 0.5,
+                }
+            );
 
-            })
-        requestAnimationFrame(updateCanvas);
-    }
+            // Add observer to all inflect links
+            const inflectLinks = document.querySelectorAll("a");
+            inflectLinks.forEach((link) => {
+                observer.observe(link);
+            });
 
+            const firstLink = document.querySelector("#app a:not(.dontinflect)");
+            if (firstLink) {
+                firstLink.click();
+            }
+        }
     </script>
-  </body>
+</body>
+
 </html>
