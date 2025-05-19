@@ -47,10 +47,7 @@
       }
 
       .extracted {
-        background-color: #ffeb3b;
-        border: 1px solid black;
-        padding: 2px 4px;
-        border-radius: 5px;
+        background-color: #b2ff2d;
         cursor: pointer;
       }
 
@@ -72,6 +69,7 @@
 
       .annotation {
         position: absolute;
+        max-width: 300px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -92,6 +90,14 @@
       #comment-container {
         z-index: 30;
       }
+      #connections-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
     </style>
   </head>
 
@@ -100,6 +106,7 @@
     <script src="include/libs/rangy.min.js"></script>
     <script src="include/libs/d3.min.js"></script>
     <div id="app">
+      <canvas id="connections-canvas"></canvas>
       <div id="text-container"></div>
       <div id="annotation-wrapper"> 
               <div id="annotation-container"></div>
@@ -111,6 +118,8 @@
       //
       // GLOBAL VARIABLES
       //
+      let canvas = null;
+      let ctx = null;
       let annotations = [];
       let drawings = [];
       let annotationsMovement = false;
@@ -169,6 +178,8 @@
         // Wait for all promises to resolve before loading URL encoded annotations
         Promise.all(promises).then(() => {
           getHashedAnnotations();
+            setupCanvas();
+            updateCanvas();
         });
       })();
       //
@@ -325,7 +336,7 @@
             if (a.annotationID == annotationsMovementID) {
               a.annotationX = e.clientX;
               a.annotationY = e.clientY;
-              setHashedAnnotations();
+              //setHashedAnnotations(); -> to computation intensive
             }
           });
         }
@@ -334,6 +345,7 @@
         if (annotationsMovement) {
           annotationsMovement = false;
           annotationsMovementID = null;
+          setHashedAnnotations();
         }
       });
       function moveAnnotation() {
@@ -391,6 +403,65 @@
           console.log(e);
         }
       });
+      //
+      // Handling Connections between Annotations
+      //
+      function setupCanvas(){
+            canvas = document.querySelector("#connections-canvas");
+            canvas.width = window.innerWidth*2; // Adjust for high DPI screens
+            canvas.height = window.innerHeight*2;
+            canvas.style.width = `${window.innerWidth}px`;
+            canvas.style.height = `${window.innerHeight}px`;
+            ctx = canvas.getContext("2d");
+            ctx.scale(2, 2); // Adjust for high DPI screens
+            ctx.lineWidth =  1;
+            ctx.setLineDash([5, 5]);
+            ctx.strokeStyle = '#11111155';
+      }
+        function updateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Set the canvas size to match the window size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Draw connections between annotations
+            annotations.map(annotation => {
+                if (annotation.mode != "H") return;
+                let annotationElement = document.querySelector("#" + annotation.annotationID);
+                let annotationBoundingClient = annotationElement.getBoundingClientRect();
+                let spanElement = document.querySelector("#" + annotation.spanID);
+                let spanBoundingClient = spanElement.getBoundingClientRect();
+                let controlPoint1 = {
+                    x: annotationBoundingClient.left,
+                    y: annotationBoundingClient.top + annotationBoundingClient.height / 2
+                };
+                let controlPoint2 = {
+                    x: annotationBoundingClient.left -150,
+                    y: annotationBoundingClient.top + annotationBoundingClient.height / 2
+                };
+                let controlPoint3 = {
+                    x: spanBoundingClient.left + spanBoundingClient.width + 150,
+                    y: spanBoundingClient.top + spanBoundingClient.height / 2
+                };
+                let controlPoint4 = {
+                    x: spanBoundingClient.left + spanBoundingClient.width,
+                    y: spanBoundingClient.top + spanBoundingClient.height / 2
+                };
+                ctx.beginPath();
+                ctx.moveTo(controlPoint1.x, controlPoint1.y);
+                ctx.bezierCurveTo(
+                    controlPoint2.x,
+                    controlPoint2.y,
+                    controlPoint3.x,
+                    controlPoint3.y,
+                    controlPoint4.x,
+                    controlPoint4.y
+                );
+                ctx.stroke();
+
+            })
+        requestAnimationFrame(updateCanvas);
+    }
+
     </script>
   </body>
 </html>
