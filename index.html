@@ -75,11 +75,15 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        cursor: grab;
       }
-
+      #annotation-wrapper {
+        position: relative;
+        z-index: 10;
+      }
       #annotation-container {
         height: 100vh;
-        width: 100vw;
+        width: 100%;
         position: fixed;
         top: 0;
         left: 0;
@@ -97,7 +101,10 @@
     <script src="include/libs/d3.min.js"></script>
     <div id="app">
       <div id="text-container"></div>
-      <div id="annotation-container"></div>
+      <div id="annotation-wrapper"> 
+              <div id="annotation-container"></div>
+
+      </div>
       <div id="comment-container"></div>
     </div>
     <script>
@@ -106,7 +113,7 @@
       //
       let annotations = [];
       let drawings = [];
-      let editMode = false;
+      let annotationsMovement = false;
       //
       // HELPER FUNCTIONS
       //
@@ -130,6 +137,16 @@
           .join("")
           .slice(0, 10);
         return hashHex;
+      }
+        function resetPage(){
+        // Remove all annotations
+        annotations = [];
+        document.querySelectorAll(".annotation").forEach((el) => {
+          el.remove();
+        });
+        document.querySelectorAll(".extracted").forEach((el) => {
+          el.outerHTML = el.textContent;
+        });
       }
       //
       // LOADING TEXT
@@ -157,20 +174,16 @@
       //
       // HANDLING HASHED URL
       //
+
       window.addEventListener("hashchange", (e) => {
         // Check if the hash has changed and if we are not in edit mode
-          // Remove all annotations
-          document.querySelectorAll(".annotation").forEach((el) => {
-            el.remove();
-          });
-          // Load the annotations from the URL hash
-          getHashedAnnotations();
-    })
+        getHashedAnnotations();
+      });
       function setHashedAnnotations() {
         // Update the URL hash with the new annotation
         let hash = annotations
           .map((a) => {
-            return `[${a.mode}][${a.id}][${a.nthChildStart}-${a.nthChildEnd}][${a.startOffset}-${a.endOffset}][${a.annotationX}-${a.annotationY}]`;
+            return `[${a.mode}][${a.id}][${a.absoluteStartOffset}-${a.absoluteEndOffset}][${a.annotationX}-${a.annotationY}]`;
           })
           .join(",");
 
@@ -182,7 +195,7 @@
       }
       // Handle URL encoded annotations
       function getHashedAnnotations() {
-        if (editMode) return;
+        resetPage();
         // Get the hash from the URL and split it into an array
         let instructions = location.hash
           .split(",")
@@ -192,35 +205,63 @@
         let ranges = instructions
           .map((action) => action.replace("#", "").replaceAll("%20", " "))
           .map((action) => {
-            // [H][id][nthChildStart-nthChildEnd][startOffset-endOffset][annotationX-annotationY]
+            // [H][id][startOffset-endOffset][annotationX-annotationY]
             let matches = [...action.matchAll(/\[(.*?)\]/g)];
-            if (matches.length != 5) return null;
-            let [mode, id, nthChild, range, annotationPosition] = matches.map(
-              (match) => match[1]
-            );
+            if (matches.length != 4) return null;
+            let [mode, parentContainerID, textRange, annotationPosition] =
+              matches.map((match) => match[1]);
             // Create start and end offsets and nthChild
-            let [startOffset, endOffset] = range.split("-");
-            let [nthChildStart, nthChildEnd] = nthChild.split("-");
+            let [absoluteStartOffset, absoluteEndOffset] = textRange.split("-");
             let [annotationX, annotationY] = annotationPosition.split("-");
-            let element = document.querySelector("#" + id);
+            let element = document.querySelector("#" + parentContainerID);
             if (element) {
               // Create a range and set the start and end points
               let rangeElement = document.createRange();
-              rangeElement.setStart(
-                element.childNodes[nthChildStart],
-                startOffset
-              );
-              console.log(element.childNodes.length)
-              rangeElement.setEnd(element.childNodes[nthChildEnd], endOffset);
+              let nthChildStart = 0;
+              let paddingStart = 0;
+              let nthChildEnd = 0;
+              let paddingEnd = 0;
+              element.childNodes = Array.from(element.childNodes).filter(childNode => childNode.textContent.length > 0);
+                // Find the nth child for the start and end offsets
+                if(element.childNodes.length > 1) {      
+                    while (
+                        nthChildStart < element.childNodes.length &&
+                        paddingStart + element.childNodes[nthChildStart].textContent.length < absoluteStartOffset 
+                        ) {
+                        paddingStart += element.childNodes[nthChildStart].textContent
+                            .length;
+                        nthChildStart++;
+                        }
+                    while (
+                        nthChildEnd < element.childNodes.length &&
+                        paddingEnd + element.childNodes[nthChildEnd].textContent.length < absoluteEndOffset
+                        ) {
+                        paddingEnd += element.childNodes[nthChildEnd].textContent
+                            .length;
+                        nthChildEnd++;
+                        }
+                }
+                // Set the start and end points of the range
+                let startOffset =  absoluteStartOffset - paddingStart ;
+                let endOffset = absoluteEndOffset - paddingEnd;
+              // Set the start and end points of the range  
+                rangeElement.setStart(
+                    element.childNodes[nthChildStart],
+                    startOffset
+                );
+                rangeElement.setEnd(
+                    element.childNodes[nthChildEnd],
+                    endOffset
+                );
               // Create a new annotation object
               createAnnotation(
                 mode,
-                id,
-                nthChildStart,
-                nthChildEnd,
-                startOffset,
-                endOffset,
-                rangeElement
+                parentContainerID,
+                absoluteStartOffset,
+                absoluteEndOffset,
+                rangeElement,
+                annotationX,
+                annotationY
               );
             }
           });
@@ -231,45 +272,73 @@
       function createAnnotation(
         mode,
         id,
-        nthChildStart,
-        nthChildEnd,
-        startOffset,
-        endOffset,
-        range
+        absoluteStartOffset,
+        absoluteEndOffset,
+        range,
+        annotationX = null,
+        annotationY = null
       ) {
         // Create a span element and wrap the selected text with it
         let spanWrapper = document.createElement("span");
-        spanWrapper.id = self.crypto.randomUUID();
+        spanWrapper.id = "id"+self.crypto.randomUUID();
         spanWrapper.classList.add("extracted");
         range.surroundContents(spanWrapper);
         // Clone the span element and append it to the annotation container
         let clone = spanWrapper.cloneNode(true);
         clone.id = spanWrapper.id + "-annotation";
         clone.classList.add("annotation");
-        clone.classList.remove("extracted");
+        clone.classList.remove("extracted"); 
         document.querySelector("#annotation-container").appendChild(clone);
+        // Set the position of the annotation
+        let boundingClient = clone.getBoundingClientRect();
+        clone.style.left = annotationX ? annotationX + "px" : boundingClient.left + "px";  
+        clone.style.top = annotationY ? annotationY + "px" : boundingClient.top + "px";
+        clone.addEventListener("mousedown",(e) => {
+            e.preventDefault();
+            annotationsMovement = true;
+            annotationsMovementID = clone.id
+        })
 
         // Create a new annotation object
         let annotation = {
           mode,
           id,
-          nthChildStart,
-          nthChildEnd,
-          startOffset,
-          endOffset,
+          absoluteStartOffset,
+          absoluteEndOffset,
           text: range.toString(),
           spanID: spanWrapper.id,
           annotationID: clone.id,
-          annotationX: clone.getBoundingClientRect().left,
-          annotationY: clone.getBoundingClientRect().top,
+          annotationX: annotationX ? annotationX : boundingClient.left,
+          annotationY: annotationY ? annotationY : boundingClient.top
         };
         annotations.push(annotation);
         setHashedAnnotations();
       }
       function deleteAnnotation() {}
       function editAnnotation() {}
-      function moveAnnotation() {}
+      window.addEventListener("mousemove", (e) => {
+        if (annotationsMovement) {
+          let annotation = document.querySelector("#" + annotationsMovementID);
+          annotation.style.left = e.clientX + "px";
+          annotation.style.top = e.clientY + "px";
+          annotations.forEach((a) => {
+            if (a.annotationID == annotationsMovementID) {
+              a.annotationX = e.clientX;
+              a.annotationY = e.clientY;
+              setHashedAnnotations();
+            }
+          });
+        }
+      });
+      window.addEventListener("mouseup", (e) => {
+        if (annotationsMovement) {
+          annotationsMovement = false;
+          annotationsMovementID = null;
+        }
+      });
+      function moveAnnotation() {
 
+      }
       //Handle highlighting and creation of extracted elements
       window.addEventListener("mouseup", (e) => {
         e.preventDefault();
@@ -300,21 +369,20 @@
             paddingEnd += parent.childNodes[nthChildEnd].textContent.length;
             nthChildEnd++;
           }
-          
+
           // Get the parent element with a long ID
           let parentID = getParentWithLongId(selection.anchorNode).id;
           let startOffset = selection.anchorOffset;
           let endOffset = selection.focusOffset;
-          console.log(startOffset,endOffset,paddingStart, paddingEnd, startOffset+paddingStart, endOffset+paddingEnd);
+          let absoluteStartOffset = startOffset + paddingStart;
+          let absoluteEndOffset = endOffset + paddingEnd;
 
           // Create a new annotation object
           createAnnotation(
             "H",
             parentID,
-            nthChildStart,
-            nthChildEnd,
-            startOffset,
-            endOffset,
+            absoluteStartOffset,
+            absoluteEndOffset,
             range
           );
           // Remove all ranges from the selection
