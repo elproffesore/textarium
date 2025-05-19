@@ -154,7 +154,7 @@
       (async function () {
         // Get text from server and parse it via marked.js
         const response = await fetch(
-          `/media/texts/latour-a-cautious-promotheus.md`
+          `${location.pathname}media/texts/latour-a-cautious-promotheus.md`
         );
         const text = await response.text();
         const textContainer = document.getElementById("text-container");
