@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MereoGrapher</title>
+    <title>MeroGraph</title>
     <style>
-        @font-face {
+                @font-face {
             font-family: "Atkinson";
             src: url("include/fonts/Atkinson-Hyperlegible-Regular-102a.woff2") format("woff2-variations");
             font-style: normal;
@@ -46,22 +46,26 @@
             font-size: 14pt;
             line-height: 1.3;
             color: #333;
+            overflow: hidden;
         }
 
         .extracted {
-            background-color: #b2ff2d;
+            background: linear-gradient(to right, #b2ff2d 50%, #ffffff00 50%);
+            background-size: 200% 200%;
+            background-position: right bottom;
             cursor: pointer;
+            transition: all 1s;
         }
 
         #app {
             display: grid;
-            grid-template-columns: 40% 35% 25%;
+            grid-template-columns: 35% 35% 30%;
         }
 
         #text-container {
             width: 500px;
             z-index: 20;
-            padding: 16px;
+            padding: 16px 48px;
             overflow-y: scroll;
             height: 100vh;
             scrollbar-width: none;
@@ -95,17 +99,15 @@
         }
 
         #comments-container {
-            padding: 16px;
+            padding: 16px 48px;
             z-index: 30;
             border-left: 1px solid #222;
             overflow-y: scroll;
             height: 100vh;
-            
         }
 
         #comments-container>div {
             height: 100vh;
-            
         }
 
         #connections-canvas {
@@ -125,16 +127,14 @@
     <script src="include/libs/d3.min.js"></script>
     <div id="app">
         <canvas id="connections-canvas"></canvas>
-            <div id="text-container"></div>
-            <div id="annotations-wrapper">
-                <div id="annotations-container"></div>
-            </div>
+        <div id="text-container"></div>
+        <div id="annotations-wrapper">
+            <div id="annotations-container"></div>
+        </div>
         <div id="comments-container"> </div>
     </div>
     <script>
-        //
         // GLOBAL VARIABLES
-        //
         let canvas = null;
         let ctx = null;
         let annotations = [];
@@ -143,9 +143,8 @@
         let annotationsMovementID = null;
         let annotationsMovementOffsetX = 0;
         let annotationsMovementOffsetY = 0;
-        //
+
         // HELPER FUNCTIONS
-        //
         // Recursive function to get the parent element with a hashed ID
         function getParentWithLongId(node) {
             if (!node || !node.parentElement) return null;
@@ -167,15 +166,14 @@
                 .slice(0, 10);
             return hashHex;
         }
+        // Function to reset the page
         function resetPage() {
-            // Remove all annotations
             annotations = [];
             drawings = [];
             annotationsMovement = false;
             annotationsMovementID = null;
             annotationsMovementOffsetX = 0;
             annotationsMovementOffsetY = 0;
-            // Remove all annotations from the annotation container
             document.querySelectorAll(".annotation").forEach((el) => {
                 el.remove();
             });
@@ -183,15 +181,15 @@
                 el.outerHTML = el.textContent;
             });
         }
-        //
-        // Loading Comments
-        //
-        (async function () {
-            // Get text from server and parse it via marked.js
-            const response = await fetch(
+
+        // LOAD AND PARSE TEXT AND COMMENT FILES
+        // Function to load text and comments from the server
+        async function loadTextAndComments() {
+            // Get comments from server and parse it via marked.js
+            let response = await fetch(
                 `${location.pathname}media/comments/test-comments.md`
             );
-            const text = await response.text();
+            let text = await response.text();
             text.split("---").map((section) => {
                 let sectionContainer = document.createElement("div");
                 sectionContainer.classList.add("section");
@@ -200,17 +198,12 @@
                     .getElementById("comments-container")
                     .appendChild(sectionContainer);
             });
-        })();
-        //
-        // LOADING TEXT
-        //
-        (async function () {
             // Get text from server and parse it via marked.js
-            const response = await fetch(
+            response = await fetch(
                 `${location.pathname}media/texts/latour-a-cautious-promotheus.md`
             );
-            const text = await response.text();
-            const textContainer = document.getElementById("text-container");
+            text = await response.text();
+            let textContainer = document.getElementById("text-container");
             textContainer.innerHTML = marked.parse(text);
 
             // Give each section a unique ID that is based on its hashed contents
@@ -219,50 +212,12 @@
             ).map(async (child) => {
                 child.id = "id" + (await hashText(child.textContent));
             });
-            // Wait for all promises to resolve before loading URL encoded annotations
-            Promise.all(promises).then(() => {
-                getHashedAnnotations();
-                setupCanvas();
-                updateCanvas();
-                initializeObservers();
-            });
-        })();
-        //
-        // HANDLING HASHED URL
-        //
-        window.addEventListener("hashchange", (e) => {
-            // Check if the hash has changed and if we are not in edit mode
-            getHashedAnnotations();
-        });
-        function setHashedAnnotations() {
-            // Update the URL hash with the new annotation
-            let hash = `[${document.getElementById('text-container').scrollTop}],`;
-            hash += annotations
-                .map((a) => {
-                    return `[${a.mode}][${a.id}][${a.absoluteStartOffset}-${a.absoluteEndOffset}][${a.annotationX}-${a.annotationY}]`;
-                })
-                .join(",");
-
-            history.pushState(
-                null,
-                null,
-                location.pathname + location.search + "#" + hash
-            );
+            return Promise.all(promises)
         }
-        // Handle URL encoded annotations
-        async function getHashedAnnotations() {
+        async function initializePage(){
             resetPage();
-            // Get the hash from the URL and split it into an array
-            let instructions = location.hash
-                .slice(1)
-                .replaceAll("%20", " ")
-                .replaceAll("%5B", "[")
-                .replaceAll("%5D", "]")
-                .split(",")
-                .filter((action) => action.length > 0);
-            if (instructions.length == 0) return;
+            let instructions = hashToState();
             let scrollPosition = instructions.shift().replaceAll(/[\[\]]/g, "");
-            console.log(scrollPosition);
             // Scroll to the position
             document.getElementById('text-container').scrollTo({
                 top: parseInt(scrollPosition),
@@ -276,8 +231,47 @@
                 }, 600);
             });
             // Iterate over the instructions and decode them
+            getHashedAnnotations(instructions);
+            //getDrawingsFromHash(instructions);
+        }
+        // HANDLING HASHED URL
+        // Function to set the URL hash with the current state of the app
+        function stateToHash() {
+            let hash = `[${document.getElementById('text-container').scrollTop}],`;
+            hash += annotations
+                .map((a) => {
+                    return `[${a.mode}][${a.id}][${a.absoluteStartOffset}-${a.absoluteEndOffset}][${a.annotationX}-${a.annotationY}]`;
+                })
+                .join(",");
+
+            // hash += drawings
+            //     .map((d) => {
+            //         return `[${d.mode}][${d.id}][${d.absoluteStartOffset}-${d.absoluteEndOffset}][${d.annotationX}-${d.annotationY}]`;
+            //     })
+            //     .join(",");
+            // Encode the hash
+            history.pushState(
+                null,
+                null,
+                location.pathname + location.search + "#" + hash
+            );
+        }
+        function hashToState() {
+            return location.hash.slice(1) // remove the #
+                .replaceAll("%20", " ")
+                .replaceAll("%5B", "[")
+                .replaceAll("%5D", "]")
+                .split(",")
+                .filter((action) => action.length > 0);
+        }
+        window.addEventListener("hashchange", (e) => {
+            initializePage();
+        });
+        // Handle URL encoded annotations
+        function getHashedAnnotations(instructions) {
+            // Iterate over the instructions and decode them
+            console.log("instructions", instructions);
             let ranges = instructions
-                .map((action) => action.replaceAll("%20", " "))
                 .map((action) => {
                     // [H][id][startOffset-endOffset][annotationX-annotationY]
                     let matches = [...action.matchAll(/\[(.*?)\]/g)];
@@ -346,6 +340,35 @@
         //
         // HANDLING ANNOTATIONS
         //
+        function renderAnnotations() {
+            // Render the annotations on the page
+            let annotationsContainer = d3.select('#annotations-container');
+            let update = annotationsContainer.selectAll('.annotation').data(annotations)
+
+            update.exit().remove()
+
+            let enter = update.enter()
+                .append('span')
+                .attr('class', 'annotation')
+                .attr('draggable', true)
+                .attr('contenteditable', false)
+                .attr('id', d => d.annotationID)
+
+
+            enter.merge(update)
+                .attr('style', d => `left: ${d.annotationX}px; top: ${d.annotationY}px;`)
+                .text(d => d.text)
+                // Add event listeners for mouse events
+                .on('mousedown', function (e, d) {
+                    e.preventDefault();
+                    let boundingClient = d3.select('#' + d.annotationID).node().getBoundingClientRect();
+                    annotationsMovement = true;
+                    annotationsMovementID = d.annotationID;
+                    annotationsMovementOffsetX = e.clientX - (boundingClient.left + boundingClient.width / 2);
+                    annotationsMovementOffsetY = e.clientY - (boundingClient.top + boundingClient.height / 2);
+                })
+
+        }
         function createAnnotation(
             mode,
             id,
@@ -360,30 +383,9 @@
             spanWrapper.id = "id" + self.crypto.randomUUID();
             spanWrapper.classList.add("extracted");
             range.surroundContents(spanWrapper);
-            // Clone the span element and append it to the annotation container
-            let clone = spanWrapper.cloneNode(true);
-            clone.id = spanWrapper.id + "-annotation";
-            clone.classList.add("annotation");
-            clone.classList.remove("extracted");
-            document.querySelector("#annotations-container").appendChild(clone);
-            // Set the position of the annotation
-            let boundingClient = clone.getBoundingClientRect();
-            clone.style.left = annotationX
-                ? annotationX + "px"
-                : boundingClient.left + "px";
-            clone.style.top = annotationY
-                ? annotationY + "px"
-                : boundingClient.top + "px";
-            clone.addEventListener("mousedown", (e) => {
-                e.preventDefault();
-                boundingClient = clone.getBoundingClientRect();
-                annotationsMovement = true;
-                annotationsMovementID = clone.id;
-                annotationsMovementOffsetX =
-                    e.clientX - (boundingClient.left + boundingClient.width / 2);
-                annotationsMovementOffsetY =
-                    e.clientY - (boundingClient.top + boundingClient.height / 2);
-            });
+            setTimeout(() => {
+                spanWrapper.style.backgroundPosition = 'left bottom';
+            }, 100);
 
             // Create a new annotation object
             let annotation = {
@@ -393,39 +395,31 @@
                 absoluteEndOffset,
                 text: range.toString(),
                 spanID: spanWrapper.id,
-                annotationID: clone.id,
-                annotationX: annotationX ? annotationX : boundingClient.left,
-                annotationY: annotationY ? annotationY : boundingClient.top,
+                annotationID: spanWrapper.id + "-annotation",
+                annotationX: annotationX ? annotationX : window.innerWidth / 1.5,
+                annotationY: annotationY ? annotationY : window.innerHeight / 2,
             };
             annotations.push(annotation);
-            setHashedAnnotations();
+            // Render the annotations
+            renderAnnotations();
         }
-        function deleteAnnotation() { }
-        function editAnnotation() { }
         window.addEventListener("mousemove", (e) => {
             if (annotationsMovement) {
-                let annotation = document.querySelector("#" + annotationsMovementID);
-                let boundingClient = annotation.getBoundingClientRect();
+                let annotation = annotations.filter(annotation => annotation.annotationID == annotationsMovementID)[0]
                 let newLeft = e.clientX - annotationsMovementOffsetX;
                 let newTop = e.clientY - annotationsMovementOffsetY;
-                annotation.style.left = newLeft + "px";
-                annotation.style.top = newTop + "px";
-                annotations.forEach((a) => {
-                    if (a.annotationID == annotationsMovementID) {
-                        a.annotationX = newLeft;
-                        a.annotationY = newTop;
-                    }
-                });
+                annotation.annotationX = newLeft;
+                annotation.annotationY = newTop;
+                renderAnnotations();
             }
         });
         window.addEventListener("mouseup", (e) => {
             if (annotationsMovement) {
                 annotationsMovement = false;
                 annotationsMovementID = null;
-                setHashedAnnotations();
+                stateToHash();
             }
         });
-        function moveAnnotation() { }
         //Handle highlighting and creation of extracted elements
         window.addEventListener("mouseup", (e) => {
             e.preventDefault();
@@ -480,77 +474,82 @@
             }
         });
         //
-        // Handling Connections between Annotations
+        // CONNECTIONS
         //
-        // Function to setup the canvas and its context
-        function setupCanvas() {
-            canvas = document.querySelector("#connections-canvas");
-            canvas.width = window.innerWidth * 2; // Adjust for high DPI screens
-            canvas.height = window.innerHeight * 2;
-            canvas.style.width = `${window.innerWidth}px`;
-            canvas.style.height = `${window.innerHeight}px`;
-            ctx = canvas.getContext("2d");
-            ctx.scale(2, 2); // Adjust for high DPI screens
-            ctx.lineWidth = 1;
-            ctx.setLineDash([5, 5]);
-            ctx.strokeStyle = "#11111155";
+        function initializeAnnotationLines() {
+            // Create a canvas element for drawing the lines
+            let svg = setupAnnotationLinesSVG();
+            updateAnnotationLines(svg);
         }
-        function updateCanvas() {
-            if (window.scrollY < 0) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Set the canvas size to match the window size
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            // Draw connections between annotations
-            annotations.map((annotation) => {
-                if (annotation.mode != "H") return;
-                let annotationElement = document.querySelector(
-                    "#" + annotation.annotationID
-                );
-                let annotationBoundingClient =
-                    annotationElement.getBoundingClientRect();
-                let spanElement = document.querySelector("#" + annotation.spanID);
-                let spanBoundingClient = spanElement.getBoundingClientRect();
+        // Setup SVG using D3.js
+        function setupAnnotationLinesSVG() {
+            // Create an SVG element
+            const svg = d3.select("body").append("svg")
+                .attr("width", window.innerWidth)
+                .attr("height", window.innerHeight)
+                .style("position", "fixed")
+                .style("top", 0)
+                .style("left", 0)
+                .style("pointer-events", "none")
+                .style("z-index", 1000);
 
-                let distance = Math.abs(
-                    annotationBoundingClient.left -
-                    (spanBoundingClient.left + spanBoundingClient.width)
-                );
-                let controlPoint1 = {
-                    x: annotationBoundingClient.left - 20,
-                    y:
-                        annotationBoundingClient.top +
-                        annotationBoundingClient.height / 2,
-                };
-                let controlPoint2 = {
-                    x: annotationBoundingClient.left - distance / 2,
-                    y:
-                        annotationBoundingClient.top +
-                        annotationBoundingClient.height / 2,
-                };
-                let controlPoint3 = {
-                    x:
-                        spanBoundingClient.left + spanBoundingClient.width + distance / 2,
-                    y: spanBoundingClient.top + spanBoundingClient.height / 2,
-                };
-                let controlPoint4 = {
-                    x: spanBoundingClient.left + spanBoundingClient.width + 20,
-                    y: spanBoundingClient.top + spanBoundingClient.height / 2,
-                };
-                ctx.beginPath();
-                ctx.moveTo(controlPoint1.x, controlPoint1.y);
-                ctx.bezierCurveTo(
-                    controlPoint2.x,
-                    controlPoint2.y,
-                    controlPoint3.x,
-                    controlPoint3.y,
-                    controlPoint4.x,
-                    controlPoint4.y
-                );
-                ctx.stroke();
-            });
-            requestAnimationFrame(updateCanvas);
+            return svg;
         }
+
+        // Update SVG paths
+        function updateAnnotationLines(svg) {
+            // Clear previous paths
+            let update = svg.selectAll("path").data(annotations);
+            update.exit().remove();
+            let enter = update.enter()
+                .append("path")
+                .attr("fill", "none")
+                .attr("stroke", "#11111155")
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray", "1000")
+                .attr("stroke-dashoffset", 1000)
+                .transition()
+                .duration(1000)
+                .ease(d3.easeLinear)
+                .attr("stroke-dashoffset", 0);
+
+
+            update.merge(enter)
+                .attr("d", (d) => {
+                    console.log("update");
+                    if (d.mode != "H") return "";
+                    let annotationElement = document.querySelector("#" + d.annotationID);
+                    let annotationBoundingClient = annotationElement.getBoundingClientRect();
+                    let spanElement = document.querySelector("#" + d.spanID);
+                    let spanBoundingClient = spanElement.getBoundingClientRect();
+
+                    let distance = Math.abs(
+                        annotationBoundingClient.left - (spanBoundingClient.left + spanBoundingClient.width)
+                    );
+
+                    let controlPoint1 = {
+                        x: annotationBoundingClient.left - 20,
+                        y: annotationBoundingClient.top + annotationBoundingClient.height / 2,
+                    };
+                    let controlPoint2 = {
+                        x: annotationBoundingClient.left - distance / 2,
+                        y: annotationBoundingClient.top + annotationBoundingClient.height / 2,
+                    };
+                    let controlPoint3 = {
+                        x: spanBoundingClient.left + spanBoundingClient.width + distance / 2,
+                        y: spanBoundingClient.top + spanBoundingClient.height / 2,
+                    };
+                    let controlPoint4 = {
+                        x: spanBoundingClient.left + spanBoundingClient.width + 20,
+                        y: spanBoundingClient.top + spanBoundingClient.height / 2,
+                    };
+
+                    return `M${controlPoint1.x},${controlPoint1.y} C${controlPoint2.x},${controlPoint2.y} ${controlPoint3.x},${controlPoint3.y} ${controlPoint4.x},${controlPoint4.y}`;
+                })
+
+            requestAnimationFrame(() => updateAnnotationLines(svg));
+        }
+
         // with IntersectionObserver we can check what is visible
         function initializeObservers() {
             const observer = new IntersectionObserver(
@@ -559,14 +558,11 @@
                         if (entry.isIntersecting) {
                             // Add active class only to the visible link
                             const visibleLink = entry.target;
-                            if (
-                                !visibleLink.classList.contains("dontinflect") &&
-                                visibleLink.getAttribute("href") != ""
+                            if (visibleLink.getAttribute("href") != "" && !visibleLink.classList.contains("noninteractive")
                             ) {
-                                visibleLink.classList.add("active");
                                 visibleLink.click();
                             }
-                        } else entry.target.classList.remove("active");
+                        }
                     });
                 },
                 {
@@ -575,16 +571,19 @@
             );
 
             // Add observer to all inflect links
-            const inflectLinks = document.querySelectorAll("a");
-            inflectLinks.forEach((link) => {
+            document.querySelectorAll("a").forEach((link) => {
+                if(link.classList.contains("noninteractive")){
+                    link.target = "_blank";
+                }
                 observer.observe(link);
             });
-
-            const firstLink = document.querySelector("#app a:not(.dontinflect)");
-            if (firstLink) {
-                firstLink.click();
-            }
         }
+        loadTextAndComments()
+            .then(() => {
+                initializePage();
+                initializeAnnotationLines();
+                initializeObservers();
+            })
     </script>
 </body>
 
