@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MeroGraph</title>
     <style>
-                @font-face {
+        @font-face {
             font-family: "Atkinson";
             src: url("include/fonts/Atkinson-Hyperlegible-Regular-102a.woff2") format("woff2-variations");
             font-style: normal;
@@ -57,6 +57,10 @@
             transition: all 1s;
         }
 
+        .related {
+            text-decoration: underline dotted;
+        }
+
         #app {
             display: grid;
             grid-template-columns: 35% 35% 30%;
@@ -69,6 +73,7 @@
             overflow-y: scroll;
             height: 100vh;
             scrollbar-width: none;
+            overscroll-behavior: none;
         }
 
         #annotations-wrapper {
@@ -139,6 +144,8 @@
         let ctx = null;
         let annotations = [];
         let drawings = [];
+        let annotationPathPairArray = [];
+        let relationPathPairArray = [];
         let annotationsMovement = false;
         let annotationsMovementID = null;
         let annotationsMovementOffsetX = 0;
@@ -214,9 +221,10 @@
             });
             return Promise.all(promises)
         }
-        async function initializePage(){
+        async function initializePage() {
             resetPage();
             let instructions = hashToState();
+            if (instructions.length == 0) return;
             let scrollPosition = instructions.shift().replaceAll(/[\[\]]/g, "");
             // Scroll to the position
             document.getElementById('text-container').scrollTo({
@@ -402,6 +410,12 @@
             annotations.push(annotation);
             // Render the annotations
             renderAnnotations();
+            // Find all similar texts in the source text
+            retrieveSameWordsInText("#text-container", annotation.text, annotation);
+            // Rerender annotation Lines
+            updateAnnotationPathPairs();
+            // Rerender reference Lines
+            updateRelationPathPairs();
         }
         window.addEventListener("mousemove", (e) => {
             if (annotationsMovement) {
@@ -473,18 +487,70 @@
                 console.log(e);
             }
         });
+        function retrieveSameWordsInText(selector, text, annotationObject = null) {
+            // Find similar texts in source text
+            let rootElement = document.querySelector(selector);
+            let textNodes = document.createTreeWalker(rootElement, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+            let ranges = [];
+            while ((node = textNodes.nextNode())) {
+                if (node.parentElement.classList.contains('extracted')) {
+                    continue;
+                }
+                let nodeValue = node.nodeValue.toLocaleLowerCase();
+                let searchText = text.trim().toLocaleLowerCase();
+                let startIndex = 0;
+                while ((startIndex = nodeValue.indexOf(searchText, startIndex)) !== -1) {
+                    let endIndex = startIndex + searchText.length;
+                    let range = rangy.createRange();
+                    range.setStart(node, startIndex);
+                    range.setEnd(node, endIndex);
+                    ranges.push(range);
+                    startIndex = endIndex; // Move to the end of the current match
+                }
+            }
+            let related = [];
+            ranges.forEach((range) => {
+                let span = document.createElement('span');
+                span.classList.add('related');
+                span.classList.add('ref-' + annotationObject.annotationID);
+                // span.addEventListener('click', () => {
+                //     if (textModel.mode != 'fixed') {
+                //         window.scrollTo({ top: textModel.position[textModel.mode].y - window.innerHeight / 4, behavior: 'smooth' });
+                //     }
+                // });
+                range.surroundContents(span);
+                related.push(span);
+            });
+        }
         //
         // CONNECTIONS
         //
-        function initializeAnnotationLines() {
-            // Create a canvas element for drawing the lines
-            let svg = setupAnnotationLinesSVG();
-            updateAnnotationLines(svg);
+        function updateAnnotationPathPairs() {
+            d3.selectAll('path').remove() // for making the tracing animation happen
+            annotationPathPairArray = annotations.map((annotation) => {
+                let annotationElement = document.querySelector('#' + annotation.annotationID)
+                let spanElement = document.querySelector('#' + annotation.spanID)
+                return [annotationElement, spanElement, 2]
+            })
         }
-        // Setup SVG using D3.js
-        function setupAnnotationLinesSVG() {
+        function updateRelationPathPairs() {
+            d3.selectAll('path').remove() // for making the tracing animation happen
+            relationPathPairArray = annotations.map((annotation) => {
+                let annotationElement = document.querySelector('#'+annotation.annotationID)
+                let pairs = []
+                document.querySelectorAll('.ref-'+annotation.annotationID).forEach(refernceElement => {
+                    pairs.push([annotationElement,refernceElement,0.3])
+                })
+                return pairs
+            }).flat();
+            console.log(relationPathPairArray)
+            // updatePathSVG(svg,pathPairArray)
+        }
+        function setupPathSVG(id) {
             // Create an SVG element
-            const svg = d3.select("body").append("svg")
+            d3.select("body").append("svg")
+                .attr("id", id)
                 .attr("width", window.innerWidth)
                 .attr("height", window.innerHeight)
                 .style("position", "fixed")
@@ -492,62 +558,53 @@
                 .style("left", 0)
                 .style("pointer-events", "none")
                 .style("z-index", 1000);
-
-            return svg;
         }
-
-        // Update SVG paths
-        function updateAnnotationLines(svg) {
-            // Clear previous paths
-            let update = svg.selectAll("path").data(annotations);
+        function updatePathSVG(svg) {
+            let array = svg == 'annotationLines'? annotationPathPairArray:relationPathPairArray
+            let update = d3.select('#'+svg).selectAll("path").data(array);
             update.exit().remove();
             let enter = update.enter()
                 .append("path")
                 .attr("fill", "none")
                 .attr("stroke", "#11111155")
-                .attr("stroke-width", 1)
                 .attr("stroke-dasharray", "1000")
                 .attr("stroke-dashoffset", 1000)
                 .transition()
-                .duration(1000)
+                .duration(500)
                 .ease(d3.easeLinear)
                 .attr("stroke-dashoffset", 0);
 
-
             update.merge(enter)
-                .attr("d", (d) => {
-                    console.log("update");
-                    if (d.mode != "H") return "";
-                    let annotationElement = document.querySelector("#" + d.annotationID);
-                    let annotationBoundingClient = annotationElement.getBoundingClientRect();
-                    let spanElement = document.querySelector("#" + d.spanID);
-                    let spanBoundingClient = spanElement.getBoundingClientRect();
+                .attr("stroke-width", (pathPair) => pathPair[2])
+                .attr("d", (pathPair) => {
+                    let annotationElementBoundingBox = pathPair[0].getBoundingClientRect();
+                    let referenceElementBoundingBox = pathPair[1].getBoundingClientRect();
 
                     let distance = Math.abs(
-                        annotationBoundingClient.left - (spanBoundingClient.left + spanBoundingClient.width)
+                        annotationElementBoundingBox.left - (referenceElementBoundingBox.left + referenceElementBoundingBox.width)
                     );
 
                     let controlPoint1 = {
-                        x: annotationBoundingClient.left - 20,
-                        y: annotationBoundingClient.top + annotationBoundingClient.height / 2,
+                        x: annotationElementBoundingBox.left - 20,
+                        y: annotationElementBoundingBox.top + annotationElementBoundingBox.height / 2,
                     };
                     let controlPoint2 = {
-                        x: annotationBoundingClient.left - distance / 2,
-                        y: annotationBoundingClient.top + annotationBoundingClient.height / 2,
+                        x: annotationElementBoundingBox.left - distance / 2,
+                        y: annotationElementBoundingBox.top + annotationElementBoundingBox.height / 2,
                     };
                     let controlPoint3 = {
-                        x: spanBoundingClient.left + spanBoundingClient.width + distance / 2,
-                        y: spanBoundingClient.top + spanBoundingClient.height / 2,
+                        x: referenceElementBoundingBox.left + referenceElementBoundingBox.width + distance / 2,
+                        y: referenceElementBoundingBox.top + referenceElementBoundingBox.height / 2,
                     };
                     let controlPoint4 = {
-                        x: spanBoundingClient.left + spanBoundingClient.width + 20,
-                        y: spanBoundingClient.top + spanBoundingClient.height / 2,
+                        x: referenceElementBoundingBox.left + referenceElementBoundingBox.width + 20,
+                        y: referenceElementBoundingBox.top + referenceElementBoundingBox.height / 2,
                     };
 
                     return `M${controlPoint1.x},${controlPoint1.y} C${controlPoint2.x},${controlPoint2.y} ${controlPoint3.x},${controlPoint3.y} ${controlPoint4.x},${controlPoint4.y}`;
                 })
 
-            requestAnimationFrame(() => updateAnnotationLines(svg));
+            requestAnimationFrame(() => updatePathSVG(svg));
         }
 
         // with IntersectionObserver we can check what is visible
@@ -572,7 +629,7 @@
 
             // Add observer to all inflect links
             document.querySelectorAll("a").forEach((link) => {
-                if(link.classList.contains("noninteractive")){
+                if (link.classList.contains("noninteractive")) {
                     link.target = "_blank";
                 }
                 observer.observe(link);
@@ -581,8 +638,16 @@
         loadTextAndComments()
             .then(() => {
                 initializePage();
-                initializeAnnotationLines();
                 initializeObservers();
+
+                setupPathSVG('annotationLines');
+                updateAnnotationPathPairs();
+                updatePathSVG('annotationLines')
+
+                setupPathSVG('relationLines');
+                updateRelationPathPairs();
+                updatePathSVG('relationLines')
+                //updatePathSVG('relationLines')
             })
     </script>
 </body>
