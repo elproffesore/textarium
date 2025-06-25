@@ -1,655 +1,351 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MeroGraph</title>
+<html>
+<head>    
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" sizes="any" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%221em%22%20font-size%3D%2290%22%3E%F0%9F%93%84%3C%2Ftext%3E%3C%2Fsvg%3E">
+    <title>Textarium: Bridging Annotation, Abstraction and Argumentation</title>
+    <script src="src/marked.min.js"></script>
+    
     <style>
+
         @font-face {
             font-family: "Atkinson";
-            src: url("include/fonts/Atkinson-Hyperlegible-Regular-102a.woff2") format("woff2-variations");
+            src: url("src/fonts/AtkinsonHyperlegibleNextVF-Variable.woff2") format("woff2-variations");
             font-style: normal;
-            font-weight: normal;
         }
 
         @font-face {
-            font-family: "Atkinson";
-            src: url("include/fonts/Atkinson-Hyperlegible-Italic-102a.woff2") format("woff2-variations");
-            font-style: italic;
-            font-weight: normal;
+            font-family: "AtkinsonMono";
+            src: url("src/fonts/AtkinsonHyperlegibleMono-Medium.woff2") format("woff2-variations");
+            font-style: normal;
         }
 
         @font-face {
-            font-family: "Atkinson";
-            src: url("include/fonts/Atkinson-Hyperlegible-Bold-102a.woff2") format("woff2-variations");
+            font-family: "AtkinsonMono";
+            src: url("src/fonts/AtkinsonHyperlegibleMono-Bold.woff2") format("woff2-variations");
             font-style: normal;
             font-weight: bold;
-        }
-
-        @font-face {
-            font-family: "Atkinson";
-            src: url("include/fonts/Atkinson-Hyperlegible-BoldItalic-102a.woff2") format("woff2-variations");
-            font-style: italic;
-            font-weight: bold;
-        }
-
-        html {
-            overscroll-behavior: none;
         }
 
         body {
-            font-family: Atkinson, sans-serif;
+            font-family: "Atkinson", sans-serif;
+            font-weight: 250;
+            font-size: calc(1vw + 1vh);
+            background-color: rgb(242, 242, 242);
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            font-size: 14pt;
-            line-height: 1.3;
-            color: #333;
-            overflow: hidden;
         }
 
-        .extracted {
-            background: linear-gradient(to right, #b2ff2d 50%, #ffffff00 50%);
-            background-size: 200% 200%;
-            background-position: right bottom;
-            cursor: pointer;
-            transition: all 1s;
+        code, pre, kbd, samp, tt, textarea {
+            font-family: "AtkinsonMono", monospace;
+        } 
+
+        a.img {
+            float: left; width: 0; height: 0;            
         }
 
-        .related {
-            text-decoration: underline dotted;
+        section img {
+            max-width: 100%;
         }
 
-        #app {
-            display: grid;
-            grid-template-columns: 35% 35% 30%;
-        }
+        strong { font-weight: 500; }
 
-        #text-container {
-            width: 500px;
-            z-index: 20;
-            padding: 16px 48px;
-            overflow-y: scroll;
+        iframe {
+            top: 0;
+            left: 0;
             height: 100vh;
-            scrollbar-width: none;
-            overscroll-behavior: none;
+            width: 70vw;
+            position: fixed;
+            background-color: #fff;
+            border: 0;
+            margin: 0;
+            padding: 0;            
         }
 
-        #annotations-wrapper {
-            position: relative;
-            z-index: 10;
+        iframe {
+            transition: opacity 0.1s ease-in;
         }
 
-        .annotation {
+        h1 { font-size: 2.4em; font-weight: 200; margin-bottom: 0;}
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.4em; }
+        h4 { font-size: 1.2em; }
+        h2, h3, h4 { font-weight: 500; }
+
+        main {
+            box-sizing: border-box;
             position: absolute;
-            max-width: 300px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            cursor: grab;
+            right: 0;
+            width: 30vw;
+            padding: 0 5vh;
+            margin: 0;
         }
 
-        #annotations-wrapper {
-            position: relative;
-            z-index: 10;
+        section {
+            margin-top: 100vh;
+            margin-bottom: 100vh;
         }
 
-        #annotations-container {
-            height: 100vh;
+        section:first-of-type, section:last-of-type {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;           
+        }
+
+        section:first-of-type { 
+            min-height: 100vh;
+            margin-top: 0;
+        }
+
+        section:last-of-type {
+            min-height: 93vh;
+            margin-bottom: 0;        
+        }
+        
+        p {
+            font-size: 1em;
+            line-height: 1.5em;
+        }
+
+        a {
+            color: #000;
+        }
+
+        ul, ol {
+            padding-left: 1em;
+        }
+
+        li {
+            padding-bottom: 0.5em;
+        }
+
+        li li {
+            padding-bottom: 0;         
+        }
+
+        a.dontinflect { color: #555;}
+        a.dontinflect:hover { color: #000;}
+
+        a.active {
+            cursor: default;
+            text-decoration: none;
+        }
+
+        footer {
+            bottom: 0;
+            display: block;
             width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
+            text-align: right;
+            margin: 0;
+            padding: 0;
+            opacity: 0.33;
+            height: 7vh;
+            font-size: .85em;
         }
 
-        #comments-container {
-            padding: 16px 48px;
-            z-index: 30;
-            border-left: 1px solid #222;
-            overflow-y: scroll;
-            height: 100vh;
+        footer a.dontinflect { color: #333;}
+
+        @media (max-width: 1000px) and (orientation: portrait) {
+
+            body {
+                font-size: calc(1.5vw + 1.5vh);
+            }
+
+            iframe {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 50vh;
+                z-index: 100;
+            }
+
+            main {
+                position: relative; 
+                width: 100vw;
+                right: auto;        
+                padding: 0 5vw;     
+                margin-top: 50vh;   
+                z-index: 1;
+            }
+
+            section {
+                margin: 50vh 0;                
+            }
+
+            section:first-of-type {
+                margin: 0;
+                justify-content: start;
+                min-height: 50vh;
+            }
         }
 
-        #comments-container>div {
-            height: 100vh;
-        }
-
-        #connections-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
     </style>
 </head>
 
 <body>
-    <script src="include/libs/marked.min.js"></script>
-    <script src="include/libs/rangy.min.js"></script>
-    <script src="include/libs/d3.min.js"></script>
-    <div id="app">
-        <canvas id="connections-canvas"></canvas>
-        <div id="text-container"></div>
-        <div id="annotations-wrapper">
-            <div id="annotations-container"></div>
-        </div>
-        <div id="comments-container"> </div>
-    </div>
-    <script>
-        // GLOBAL VARIABLES
-        let canvas = null;
-        let ctx = null;
-        let annotations = [];
-        let drawings = [];
-        let annotationPathPairArray = [];
-        let relationPathPairArray = [];
-        let annotationsMovement = false;
-        let annotationsMovementID = null;
-        let annotationsMovementOffsetX = 0;
-        let annotationsMovementOffsetY = 0;
 
-        // HELPER FUNCTIONS
-        // Recursive function to get the parent element with a hashed ID
-        function getParentWithLongId(node) {
-            if (!node || !node.parentElement) return null;
-            if (node.parentElement.id && node.parentElement.id.length == 12) {
-                return node.parentElement;
-            }
-            return getParentWithLongId(node.parentElement);
-        }
-        // Function to hash text using SHA-1 and crop it to generate a unique content dependent ID
-        async function hashText(text) {
-            const hashBuffer = await self.crypto.subtle.digest(
-                "SHA-1",
-                new TextEncoder().encode(text)
-            );
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray
-                .map((b) => b.toString(16).padStart(2, "0"))
-                .join("")
-                .slice(0, 10);
-            return hashHex;
-        }
-        // Function to reset the page
-        function resetPage() {
-            annotations = [];
-            drawings = [];
-            annotationsMovement = false;
-            annotationsMovementID = null;
-            annotationsMovementOffsetX = 0;
-            annotationsMovementOffsetY = 0;
-            document.querySelectorAll(".annotation").forEach((el) => {
-                el.remove();
-            });
-            document.querySelectorAll(".extracted").forEach((el) => {
-                el.outerHTML = el.textContent;
-            });
-        }
+<div><iframe id="if"></iframe></div>
 
-        // LOAD AND PARSE TEXT AND COMMENT FILES
-        // Function to load text and comments from the server
-        async function loadTextAndComments() {
-            // Get comments from server and parse it via marked.js
-            let response = await fetch(
-                `${location.pathname}media/comments/test-comments.md`
-            );
+<main></main>
+
+<script>
+    // Track last path (excluding hash)
+    let lastIframePath = null;
+    let firstFrame = true;
+    const iframe = document.getElementById('if');
+
+    // Fade in new content 
+    function setIframeIfPathChanged(newHref) {
+      const newURL = new URL(newHref, window.location.origin);
+      newURL.hash = ''; // remove hash for path comparison
+      const newPath = newURL.href;
+
+      // If path changes, set iframe to 0 opacity
+      if (newPath !== lastIframePath) {
+        if (firstFrame) firstFrame = false;
+        else iframe.style.opacity = '0';
+        iframe.src = newHref;
+        lastIframePath = newPath;
+      } 
+      else {
+        // Otherwise just update src as needed (rare case)
+        iframe.src = newHref;
+      }
+    }
+
+    // Fade in once the iframe finishes loading
+    iframe.addEventListener('load', () => {
+      iframe.style.opacity = '1';
+    });
+
+    // Function to fetch and render the markdown
+    async function renderMarkdown() {
+        try {
+            const hash = window.location.hash.substring(1); // Remove '#' from hash
+            const file = hash ? hash : 'README';
+
+            var title = document.title.split(" · ")[0];
+            document.title = (file === "README") 
+                             ? title
+                             : `${title} · ${file}`;
+
+            const response = await fetch(file + ".md"); 
             let text = await response.text();
-            text.split("---").map((section) => {
-                let sectionContainer = document.createElement("div");
-                sectionContainer.classList.add("section");
-                sectionContainer.innerHTML = marked.parse(section);
-                document
-                    .getElementById("comments-container")
-                    .appendChild(sectionContainer);
-            });
-            // Get text from server and parse it via marked.js
-            response = await fetch(
-                `${location.pathname}media/texts/latour-a-cautious-promotheus.md`
-            );
-            text = await response.text();
-            let textContainer = document.getElementById("text-container");
-            textContainer.innerHTML = marked.parse(text);
 
-            // Give each section a unique ID that is based on its hashed contents
-            let promises = Array.from(
-                document.querySelector("#text-container").childNodes
-            ).map(async (child) => {
-                child.id = "id" + (await hashText(child.textContent));
-            });
-            return Promise.all(promises)
-        }
-        async function initializePage() {
-            resetPage();
-            let instructions = hashToState();
-            if (instructions.length == 0) return;
-            let scrollPosition = instructions.shift().replaceAll(/[\[\]]/g, "");
-            // Scroll to the position
-            document.getElementById('text-container').scrollTo({
-                top: parseInt(scrollPosition),
-                left: 0,
-                behavior: "smooth",
-            });
-            // Wait for the scroll to finish
-            await new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve();
-                }, 600);
-            });
-            // Iterate over the instructions and decode them
-            getHashedAnnotations(instructions);
-            //getDrawingsFromHash(instructions);
-        }
-        // HANDLING HASHED URL
-        // Function to set the URL hash with the current state of the app
-        function stateToHash() {
-            let hash = `[${document.getElementById('text-container').scrollTop}],`;
-            hash += annotations
-                .map((a) => {
-                    return `[${a.mode}][${a.id}][${a.absoluteStartOffset}-${a.absoluteEndOffset}][${a.annotationX}-${a.annotationY}]`;
-                })
-                .join(",");
-
-            // hash += drawings
-            //     .map((d) => {
-            //         return `[${d.mode}][${d.id}][${d.absoluteStartOffset}-${d.absoluteEndOffset}][${d.annotationX}-${d.annotationY}]`;
-            //     })
-            //     .join(",");
-            // Encode the hash
-            history.pushState(
-                null,
-                null,
-                location.pathname + location.search + "#" + hash
+            // split sections by two empty lines
+            text = text.replace(/\s*\n\s*\n\s*\n\s*/g, '\n\n</section>\n\n<section>\n\n');
+            text = "<section>\n\n" + text + "\n\n</section>";
+            
+            // add class dontinflect to regular html links
+            text = text.replace(/<a\b([^>]*)>/gi, (m, attrs) => 
+              `<a${/class\s*=\s*["']([^"']*)["']/i.test(attrs) 
+                  ? attrs.replace(/class\s*=\s*["']([^"']*)["']/i, 
+                                  (m, c) => `class="${c} dontinflect"`) 
+                  : ` class="dontinflect"${attrs}`}>`
             );
+
+            // render markdown into HTML           
+            let html = marked.parse(text);
+
+            // skip footer when on inflect page
+            if (document.URL!="https://uclab.fh-potsdam.de/inflect/") html = html + "\n<footer>a story made with <strong><a class='dontinflect' href='https://uclab.fh-potsdam.de/inflect/'>!nflect</a></strong></footer>";
+
+            document.querySelector('main').innerHTML = html;
+
+            transformInflectionImages();
+
+            initializeObservers();
+
+            // return to old position
+            if (location.hostname=="localhost") window.scrollTo(0, sessionStorage.getItem("scrollPosition") || 0);
+        } catch (error) {
+            console.error('Error fetching or rendering the markdown file:', error);
         }
-        function hashToState() {
-            return location.hash.slice(1) // remove the #
-                .replaceAll("%20", " ")
-                .replaceAll("%5B", "[")
-                .replaceAll("%5D", "]")
-                .split(",")
-                .filter((action) => action.length > 0);
-        }
-        window.addEventListener("hashchange", (e) => {
-            initializePage();
+    }
+
+    // Update markdown when hash changes
+    window.addEventListener('hashchange', function() {
+        event.preventDefault();
+        window.scrollTo(0, 0);
+        if (location.hostname=="localhost") sessionStorage.setItem("scrollPosition", 0);
+        renderMarkdown();        
+    });
+
+    document.addEventListener("scroll", (event) => {
+        if (location.hostname=="localhost") sessionStorage.setItem("scrollPosition", window.scrollY);
+    });
+
+    window.addEventListener("beforeunload", function () {
+        if (location.hostname=="localhost") sessionStorage.setItem("scrollPosition", window.scrollY);
+    });
+
+    // turn images with alt-tag img to inflection links
+    function transformInflectionImages() {
+        const images = document.querySelectorAll('img[alt="img"]');
+        images.forEach(img => {
+            const link = document.createElement('a');
+
+            link.href = img.getAttribute('src');
+            link.classList.add("img");
+
+            const p = img.closest('p');
+
+            p.replaceWith(link);
         });
-        // Handle URL encoded annotations
-        function getHashedAnnotations(instructions) {
-            // Iterate over the instructions and decode them
-            console.log("instructions", instructions);
-            let ranges = instructions
-                .map((action) => {
-                    // [H][id][startOffset-endOffset][annotationX-annotationY]
-                    let matches = [...action.matchAll(/\[(.*?)\]/g)];
-                    if (matches.length != 4) return null;
-                    let [mode, parentContainerID, textRange, annotationPosition] =
-                        matches.map((match) => match[1]);
-                    // Create start and end offsets and nthChild
-                    let [absoluteStartOffset, absoluteEndOffset] = textRange.split("-");
-                    let [annotationX, annotationY] = annotationPosition.split("-");
-                    let element = document.querySelector("#" + parentContainerID);
-                    if (element) {
-                        // Create a range and set the start and end points
-                        let rangeElement = document.createRange();
-                        let nthChildStart = 0;
-                        let paddingStart = 0;
-                        let nthChildEnd = 0;
-                        let paddingEnd = 0;
-                        element.childNodes = Array.from(element.childNodes).filter(
-                            (childNode) => childNode.textContent.length > 0
-                        );
-                        // Find the nth child for the start and end offsets
-                        if (element.childNodes.length > 1) {
-                            while (
-                                nthChildStart < element.childNodes.length &&
-                                paddingStart +
-                                element.childNodes[nthChildStart].textContent.length <
-                                absoluteStartOffset
-                            ) {
-                                paddingStart +=
-                                    element.childNodes[nthChildStart].textContent.length;
-                                nthChildStart++;
-                            }
-                            while (
-                                nthChildEnd < element.childNodes.length &&
-                                paddingEnd +
-                                element.childNodes[nthChildEnd].textContent.length <
-                                absoluteEndOffset
-                            ) {
-                                paddingEnd +=
-                                    element.childNodes[nthChildEnd].textContent.length;
-                                nthChildEnd++;
-                            }
-                        }
-                        // Set the start and end points of the range
-                        let startOffset = absoluteStartOffset - paddingStart;
-                        let endOffset = absoluteEndOffset - paddingEnd;
-                        // Set the start and end points of the range
-                        rangeElement.setStart(
-                            element.childNodes[nthChildStart],
-                            startOffset
-                        );
-                        rangeElement.setEnd(element.childNodes[nthChildEnd], endOffset);
-                        // Create a new annotation object
-                        createAnnotation(
-                            mode,
-                            parentContainerID,
-                            absoluteStartOffset,
-                            absoluteEndOffset,
-                            rangeElement,
-                            annotationX,
-                            annotationY
-                        );
+    }
+
+    // with IntersectionObserver we can check what is visible    
+    function initializeObservers() {
+        const observer = new IntersectionObserver((entries) => {
+
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {                    
+                    // Add active class only to the visible link
+                    const visibleLink = entry.target;
+                    if (!visibleLink.classList.contains("dontinflect") && visibleLink.getAttribute("href") != "") {
+                        visibleLink.classList.add('active');
+                        // Update iframe, ignoring just changes
+                        setIframeIfPathChanged(visibleLink.href);
                     }
+                }
+                else entry.target.classList.remove("active")
+            });
+        });
+
+        // Add observer to all inflect links
+        const inflectLinks = document.querySelectorAll('a');
+        inflectLinks.forEach(link => {
+            observer.observe(link);
+
+            // ignore local links to markdown files
+            if (!link.classList.contains("dontinflect")) {
+                // Add event listener to manually handle click
+                link.addEventListener('click', function(event) {                    
+                    document.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+                    link.classList.add('active');
+                    setIframeIfPathChanged(link.href);
                 });
-        }
-        //
-        // HANDLING ANNOTATIONS
-        //
-        function renderAnnotations() {
-            // Render the annotations on the page
-            let annotationsContainer = d3.select('#annotations-container');
-            let update = annotationsContainer.selectAll('.annotation').data(annotations)
-
-            update.exit().remove()
-
-            let enter = update.enter()
-                .append('span')
-                .attr('class', 'annotation')
-                .attr('draggable', true)
-                .attr('contenteditable', false)
-                .attr('id', d => d.annotationID)
-
-
-            enter.merge(update)
-                .attr('style', d => `left: ${d.annotationX}px; top: ${d.annotationY}px;`)
-                .text(d => d.text)
-                // Add event listeners for mouse events
-                .on('mousedown', function (e, d) {
-                    e.preventDefault();
-                    let boundingClient = d3.select('#' + d.annotationID).node().getBoundingClientRect();
-                    annotationsMovement = true;
-                    annotationsMovementID = d.annotationID;
-                    annotationsMovementOffsetX = e.clientX - (boundingClient.left + boundingClient.width / 2);
-                    annotationsMovementOffsetY = e.clientY - (boundingClient.top + boundingClient.height / 2);
-                })
-
-        }
-        function createAnnotation(
-            mode,
-            id,
-            absoluteStartOffset,
-            absoluteEndOffset,
-            range,
-            annotationX = null,
-            annotationY = null
-        ) {
-            // Create a span element and wrap the selected text with it
-            let spanWrapper = document.createElement("span");
-            spanWrapper.id = "id" + self.crypto.randomUUID();
-            spanWrapper.classList.add("extracted");
-            range.surroundContents(spanWrapper);
-            setTimeout(() => {
-                spanWrapper.style.backgroundPosition = 'left bottom';
-            }, 100);
-
-            // Create a new annotation object
-            let annotation = {
-                mode,
-                id,
-                absoluteStartOffset,
-                absoluteEndOffset,
-                text: range.toString(),
-                spanID: spanWrapper.id,
-                annotationID: spanWrapper.id + "-annotation",
-                annotationX: annotationX ? annotationX : window.innerWidth / 2,
-                annotationY: annotationY ? annotationY : window.innerHeight / 2,
-            };
-            annotations.push(annotation);
-            // Render the annotations
-            renderAnnotations();
-            // Find all similar texts in the source text
-            retrieveSameWordsInText("#text-container", annotation.text, annotation);
-            // Rerender annotation Lines
-            updateAnnotationPathPairs();
-            // Rerender reference Lines
-            updateRelationPathPairs();
-        }
-        window.addEventListener("mousemove", (e) => {
-            if (annotationsMovement) {
-                let annotation = annotations.filter(annotation => annotation.annotationID == annotationsMovementID)[0]
-                let newLeft = e.clientX - annotationsMovementOffsetX;
-                let newTop = e.clientY - annotationsMovementOffsetY;
-                annotation.annotationX = newLeft;
-                annotation.annotationY = newTop;
-                renderAnnotations();
             }
         });
-        window.addEventListener("mouseup", (e) => {
-            if (annotationsMovement) {
-                annotationsMovement = false;
-                annotationsMovementID = null;
-                stateToHash();
-            }
-        });
-        //Handle highlighting and creation of extracted elements
-        window.addEventListener("mouseup", (e) => {
-            e.preventDefault();
-            try {
-                let selection = window.getSelection();
-                if (selection.rangeCount == 0) return;
-                let range = selection.getRangeAt(0);
-                // Check if the selection is empty or if the selected text is too short
-                if (
-                    range == undefined ||
-                    range.collapsed ||
-                    range.toString().length < 2 ||
-                    range.toString().length > 1000
-                ) {
-                    return;
-                }
-                // We need to encode where the selection has started and where it ended
-                let nthChildStart = 0;
-                let paddingStart = 0;
-                let parent = selection.anchorNode.parentElement;
-                while (parent.childNodes[nthChildStart] != selection.anchorNode) {
-                    paddingStart += parent.childNodes[nthChildStart].textContent.length;
-                    nthChildStart++;
-                }
 
-                let nthChildEnd = nthChildStart;
-                let paddingEnd = paddingStart;
-                while (parent.childNodes[nthChildEnd] != selection.focusNode) {
-                    paddingEnd += parent.childNodes[nthChildEnd].textContent.length;
-                    nthChildEnd++;
-                }
-
-                // Get the parent element with a long ID
-                let parentID = getParentWithLongId(selection.anchorNode).id;
-                let startOffset = selection.anchorOffset;
-                let endOffset = selection.focusOffset;
-                let absoluteStartOffset = startOffset + paddingStart;
-                let absoluteEndOffset = endOffset + paddingEnd;
-
-                // Create a new annotation object
-                createAnnotation(
-                    "H",
-                    parentID,
-                    absoluteStartOffset,
-                    absoluteEndOffset,
-                    range
-                );
-                // Remove all ranges from the selection
-                selection.removeAllRanges();
-            } catch (e) {
-                console.log(e);
-            }
-        });
-        function retrieveSameWordsInText(selector, text, annotationObject = null) {
-            // Find similar texts in source text
-            let rootElement = document.querySelector(selector);
-            let textNodes = document.createTreeWalker(rootElement, NodeFilter.SHOW_TEXT, null, false);
-            let node;
-            let ranges = [];
-            while ((node = textNodes.nextNode())) {
-                if (node.parentElement.classList.contains('extracted')) {
-                    continue;
-                }
-                let nodeValue = node.nodeValue.toLocaleLowerCase();
-                let searchText = text.trim().toLocaleLowerCase();
-                let startIndex = 0;
-                while ((startIndex = nodeValue.indexOf(searchText, startIndex)) !== -1) {
-                    let endIndex = startIndex + searchText.length;
-                    let range = rangy.createRange();
-                    range.setStart(node, startIndex);
-                    range.setEnd(node, endIndex);
-                    ranges.push(range);
-                    startIndex = endIndex; // Move to the end of the current match
-                }
-            }
-            let related = [];
-            ranges.forEach((range) => {
-                let span = document.createElement('span');
-                span.classList.add('related');
-                span.classList.add('ref-' + annotationObject.annotationID);
-                // span.addEventListener('click', () => {
-                //     if (textModel.mode != 'fixed') {
-                //         window.scrollTo({ top: textModel.position[textModel.mode].y - window.innerHeight / 4, behavior: 'smooth' });
-                //     }
-                // });
-                range.surroundContents(span);
-                related.push(span);
-            });
-        }
-        //
-        // CONNECTIONS
-        //
-        function updateAnnotationPathPairs() {
-            d3.selectAll('path').remove() // for making the tracing animation happen
-            annotationPathPairArray = annotations.map((annotation) => {
-                let annotationElement = document.querySelector('#' + annotation.annotationID)
-                let spanElement = document.querySelector('#' + annotation.spanID)
-                return [annotationElement, spanElement, 2]
-            })
-        }
-        function updateRelationPathPairs() {
-            d3.selectAll('path').remove() // for making the tracing animation happen
-            relationPathPairArray = annotations.map((annotation) => {
-                let annotationElement = document.querySelector('#'+annotation.annotationID)
-                let pairs = []
-                document.querySelectorAll('.ref-'+annotation.annotationID).forEach(refernceElement => {
-                    pairs.push([annotationElement,refernceElement,0.3])
-                })
-                return pairs
-            }).flat();
-            console.log(relationPathPairArray)
-            // updatePathSVG(svg,pathPairArray)
-        }
-        function setupPathSVG(id) {
-            // Create an SVG element
-            d3.select("body").append("svg")
-                .attr("id", id)
-                .attr("width", window.innerWidth)
-                .attr("height", window.innerHeight)
-                .style("position", "fixed")
-                .style("top", 0)
-                .style("left", 0)
-                .style("pointer-events", "none")
-                .style("z-index", 1000);
-        }
-        function updatePathSVG(svg) {
-            let array = svg == 'annotationLines'? annotationPathPairArray:relationPathPairArray
-            let update = d3.select('#'+svg).selectAll("path").data(array);
-            update.exit().remove();
-            let enter = update.enter()
-                .append("path")
-                .attr("fill", "none")
-                .attr("stroke", "#11111155")
-                .attr("stroke-dasharray", "1000")
-                .attr("stroke-dashoffset", 1000)
-                .transition()
-                .duration(500)
-                .ease(d3.easeLinear)
-                .attr("stroke-dashoffset", 0);
-
-            update.merge(enter)
-                .attr("stroke-width", (pathPair) => pathPair[2])
-                .attr("d", (pathPair) => {
-                    let annotationElementBoundingBox = pathPair[0].getBoundingClientRect();
-                    let referenceElementBoundingBox = pathPair[1].getBoundingClientRect();
-
-                    let distance = Math.abs(
-                        annotationElementBoundingBox.left - (referenceElementBoundingBox.left + referenceElementBoundingBox.width)
-                    );
-
-                    let controlPoint1 = {
-                        x: annotationElementBoundingBox.left - 20,
-                        y: annotationElementBoundingBox.top + annotationElementBoundingBox.height / 2,
-                    };
-                    let controlPoint2 = {
-                        x: annotationElementBoundingBox.left - distance / 2,
-                        y: annotationElementBoundingBox.top + annotationElementBoundingBox.height / 2,
-                    };
-                    let controlPoint3 = {
-                        x: referenceElementBoundingBox.left + referenceElementBoundingBox.width + distance / 2,
-                        y: referenceElementBoundingBox.top + referenceElementBoundingBox.height / 2,
-                    };
-                    let controlPoint4 = {
-                        x: referenceElementBoundingBox.left + referenceElementBoundingBox.width + 20,
-                        y: referenceElementBoundingBox.top + referenceElementBoundingBox.height / 2,
-                    };
-
-                    return `M${controlPoint1.x},${controlPoint1.y} C${controlPoint2.x},${controlPoint2.y} ${controlPoint3.x},${controlPoint3.y} ${controlPoint4.x},${controlPoint4.y}`;
-                })
-
-            requestAnimationFrame(() => updatePathSVG(svg));
+        const firstLink = document.querySelector('main a:not(.dontinflect)');
+        if (firstLink) {
+            firstLink.classList.add('active');
+            setIframeIfPathChanged(firstLink.href);
         }
 
-        // with IntersectionObserver we can check what is visible
-        function initializeObservers() {
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            // Add active class only to the visible link
-                            const visibleLink = entry.target;
-                            if (visibleLink.getAttribute("href") != "" && !visibleLink.classList.contains("noninteractive")
-                            ) {
-                                visibleLink.click();
-                            }
-                        }
-                    });
-                },
-                {
-                    threshold: 0.5,
-                }
-            );
+    }
 
-            // Add observer to all inflect links
-            document.querySelectorAll("a").forEach((link) => {
-                if (link.classList.contains("noninteractive")) {
-                    link.target = "_blank";
-                }
-                observer.observe(link);
-            });
+    // scroll up when pressing Escape
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        loadTextAndComments()
-            .then(() => {
-                initializePage();
-                initializeObservers();
+    });
 
-                setupPathSVG('annotationLines');
-                updateAnnotationPathPairs();
-                updatePathSVG('annotationLines')
-
-                setupPathSVG('relationLines');
-                updateRelationPathPairs();
-                updatePathSVG('relationLines')
-                //updatePathSVG('relationLines')
-            })
-    </script>
+    // Load, parse, and display markdown on page load
+    renderMarkdown();
+</script>
 </body>
-
 </html>
