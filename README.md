@@ -1,17 +1,15 @@
-# Welcome 
-## The Textarium Environment
+# A Cautious Prometheus? 
+## How the word "Design" is defined in English and French
 
-[](txt#[136],[H][idcbeec52871][719-725][736.3333693000133-468.99701068514946],[H][idcbeec52871][731-738][738.3408625320425-507.9970412027276])
+[](/txt/#latour&annotations=Concept(Design27,Philosophy9))
 
-This tool was built by <a class="noninteractive" href="https://philippproff.eu">Philipp Proff</a> and  <a class="noninteractive" href="https://mariandoerk.de">Marian Dörk</a> augments the process of text interpretation by adding an interactive visual layer for exploring cross-textual relations. The idea is to create a tool that allows to explore and present findings to peers in a step-by-step manner to enhance comprehension and discussion.
+In this section, Latour discusses the different meanings of the word "design" in English and French. He highlights how the term is used in various contexts and how its meaning can change based on the language and cultural background.
 
-
-### Description of Language
-
-[](txt#[136],[H][idcbeec52871][719-725][736.3333693000133-468.99701068514946],[H][idcbeec52871][731-738][738.3408625320425-507.9970412027276])
 
 In this section Latour introduces the different meanings of the design term in the different languages. 
 
 
+### What are Hypernyms?
 
+Hypernyms are words that have a broader meaning than a given word. For example, "vehicle" is a hypernym of "car" because it encompasses all types of vehicles, including cars, trucks, and motorcycles. In contrast, "car" is a hyponym of "vehicle" because it is a specific type of vehicle. Hypernyms help to categorize and organize language by grouping words with similar meanings under a more general term.
 
