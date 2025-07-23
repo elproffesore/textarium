@@ -124,11 +124,14 @@
 </head>
 
 <body>
-    <script src="/src/marked.min.js"></script>
-    <script src="/src/porter-stemmer.js"></script>
-    <script src="/src/convex-hull.js"></script>
-    <script src="/src/rangy.min.js"></script>
-    <script src="/src/d3.min.js"></script>
+    <script>
+        let local = window.location.href.includes('localhost')
+    </script>
+    <script src="../src/marked.min.js"></script>
+    <script src="../src/porter-stemmer.js"></script>
+    <script src="../src/convex-hull.js"></script>
+    <script src="../src/rangy.min.js"></script>
+    <script src="../src/d3.min.js"></script>
     <div id="app">
         <div id="text-wrapper"></div>
         <div id="annotations-wrapper"></div>
@@ -517,7 +520,7 @@
         async function init() {
             // Get request text from server and parse it via marked.js
             textHash = window.location.hash.slice(1).split('&')[0];
-            let response = await fetch(`/${textHash}.md`);
+            let response = await fetch(`/${local ? '' : 'textarium/'}${textHash}.md`);
             let text = await response.text();
             text = text
                 .replaceAll('\n', ' \n ')
