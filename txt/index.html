@@ -468,7 +468,7 @@
             }).filter((item) => item !== null)
 
             let abstractionHash = ABSTRACTIONS.map((abstraction) => {
-                return `${abstraction.textElement.innerText}(${abstraction.annotations.map((annotation) => annotation.reference).join(',')})`;
+                return `${abstraction.textElement.innerText.replaceAll(' ','_')}(${abstraction.annotations.map((annotation) => annotation.reference).join(',')})`;
             })
 
             let joinedHash = [...abstractionHash, ...annotationHash].join(';');
@@ -490,7 +490,7 @@
                     annotationsAndAbstractions.map((annotationOrAbstraction) => {
                         if (RegExp(/\(/g).test(annotationOrAbstraction)) {
                             let abstraction = annotationOrAbstraction.match(/(\w+)/g)
-                            let abstractionName = abstraction[0];
+                            let abstractionName = abstraction[0].replaceAll('_',' ');
                             let annotations = abstraction.slice(1)
                             let newAbstraction = new Abstraction(abstractionName);
                             annotations.forEach((annotation) => {
