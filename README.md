@@ -1,7 +1,7 @@
 # A Cautious Prometheus? 
 ## How the word "Design" is defined in English and French
 
-[](/txt/#latour&annotations=Concept(Design27,Philosophy9))
+[](/textarium/txt/#latour&annotations=Concept(Design27,Philosophy9))
 
 In this section, Latour discusses the different meanings of the word "design" in English and French. He highlights how the term is used in various contexts and how its meaning can change based on the language and cultural background.
 
