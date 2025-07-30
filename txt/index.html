@@ -246,6 +246,7 @@
                 if (this.abstraction) {
                     this.abstraction.updateTextElementPosition();
                 }
+                this.checkAbstractions();
             }
             checkAbstractions() {
                 // Check distance to all other annotations 
@@ -355,6 +356,7 @@
             updateTextElementPosition() {
                 if (!this.element) return;
                 // Position the text element at the center of all annotations
+                this.text = this.element.innerText;
                 let boundingBox = this.annotations.reduce((acc, annotation) => {
                     let element = annotation.element.getBoundingClientRect();
                     acc.left = Math.min(acc.left, element.left);
@@ -593,7 +595,6 @@
             // Clear the canvas and redraw all connections and hull
             CTX.clearRect(0, 0, CONNECTIONSWRAPPER.width, CONNECTIONSWRAPPER.height);
             ANNOTATIONS.forEach((annotation) => {
-                annotation.checkAbstractions();
                 annotation.renderConnections();
             });
             ABSTRACTIONS.forEach((abstraction) => {
