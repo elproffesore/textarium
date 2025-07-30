@@ -109,6 +109,7 @@
         .hovered:not(.extracted) {
             border-radius: 3px;
             padding: 2px 4px;
+            margin: -2px -4px
         }
 
         .abstraction-texts {
@@ -159,11 +160,11 @@
         ];
         // Application related variables
         let textHash = '';
-        let resetPage = false;
+        let blockHashChangeEvent = false;
         let stopLoop = false;
         const iFRAME = window.self !== window.top;
         //Animation related variables
-        let annotationLineOpacity = 1;
+        let annotationLineOpacity = 0.3;
         const ANNOTATIONLINEWIDTH = 5;
         const STEMINSTANCELINEWIDTH = 0.8;
         const ABSTRACTIONSMINIMUMDISTANCE = 50;
@@ -179,19 +180,22 @@
         let annotationsMovementOffsetY = 0;
 
         class Annotation {
-            constructor(type, word, reference = null) {
-                this.type = type; // 0=Annotation or 1=Stem Instance
-                this.word = word; // The word or text content of the annotation
-                this.stem = stemmer(word).toLocaleLowerCase(); // The stemmed version of the word
+            constructor(text, reference = null, positionX = window.innerWidth / 1.5, positionY = null) {
+                this.text = text; // The word or text content of the annotation
+                this.stem = stemmer(text).toLocaleLowerCase(); // The stemmed version of the word
                 this.element = null;
                 this.reference = reference; // ID for the extraction element
-                this.annotationX = window.innerWidth / 1.5; // X position of the extraction
-                this.annotationY = document.querySelector('#' + this.reference).getBoundingClientRect().top + TEXTWRAPPER.scrollTop; // Y position of the extraction
-                this.color = COLORS[colorCounter++]; // Color based on the text content
+                this.positionX = positionX; // X position of the extraction
+                let referenceElement = TEXTWRAPPER.querySelector('#' + reference);
+                this.positionY = positionY ? positionY : referenceElement.getBoundingClientRect().top; // Y position of the extraction
+                this.color = COLORS[(colorCounter++ % COLORS.length)]; // Color based on the text content
                 this.textColor = this.getColor(this.color); // Default text color
-                this.stems = document.querySelectorAll(`.${this.stem}:not(#${this.reference})`);
+                this.stems = TEXTWRAPPER.querySelectorAll(`.${this.stem}:not(#${this.reference})`); // All stems of the word in the text
                 this.abstraction = null;
                 this.firstPaint();
+            }
+            static createAnnotation(word, reference) {
+                return new Annotation(word, reference);
             }
             getColor(color) {
                 // Function to determine the text color based on the background color based on brightness -> https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
@@ -207,7 +211,7 @@
                 annotationElement.className = 'annotation';
                 annotationElement.style.backgroundColor = this.color;
                 annotationElement.style.color = this.textColor;
-                annotationElement.innerText = this.word;
+                annotationElement.innerText = this.text;
                 ANNOTATIONSWRAPPER.appendChild(annotationElement);
                 this.element = annotationElement;
                 annotationElement.addEventListener('mousedown', (e) => {
@@ -219,20 +223,22 @@
                     annotationsMovementOffsetX = e.clientX - (boundingClient.left + boundingClient.width / 2);
                     annotationsMovementOffsetY = e.clientY - (boundingClient.top + boundingClient.height / 2);
                 });
-                this.updatePosition(this.annotationX, this.annotationY);
+                this.updatePosition(this.positionX, this.positionY);
                 this.stems.forEach((stemInstance) => {
                     stemInstance.classList.add('extracted');
                     stemInstance.style.backgroundColor = this.color;
                     stemInstance.style.color = this.textColor;
                 });
-                let referenceElement = document.querySelector('#' + this.reference);
+                let referenceElement = TEXTWRAPPER.querySelector('#' + this.reference);
                 referenceElement.classList.add('extracted');
                 referenceElement.style.backgroundColor = this.color;
                 referenceElement.style.color = this.textColor;
+                ANNOTATIONS.push(this);
+                encodeStateAsURLHash();
             }
             updatePosition(x, y) {
-                this.annotationX = x;
-                this.annotationY = y;
+                this.positionX = x;
+                this.positionY = y;
                 if (this.element) {
                     this.element.style.left = `${x}px`;
                     this.element.style.top = `${y}px`;
@@ -244,10 +250,10 @@
             checkAbstractions() {
                 // Check distance to all other annotations 
                 ANNOTATIONS.forEach((annotation) => {
-                    if (annotation !== this && annotation.type == 0) {
+                    if (annotation !== this) {
                         let distance = Math.sqrt(
-                            Math.pow(this.annotationX - annotation.annotationX, 2) +
-                            Math.pow(this.annotationY - annotation.annotationY, 2)
+                            Math.pow(this.positionX - annotation.positionX, 2) +
+                            Math.pow(this.positionY - annotation.positionY, 2)
                         );
                         if (distance < ABSTRACTIONSMINIMUMDISTANCE) {
                             // Check if there is already an abstraction with this annotation
@@ -267,23 +273,22 @@
                                 newAbstraction.addElement(annotation);
                                 ABSTRACTIONS.push(newAbstraction);
                             }
-                            setURLHash();
+                            encodeStateAsURLHash();
                         }
                     }
                 });
             }
             renderConnections() {
-                if (this.type == 1) return;
                 // Render the connections to the stems
-                let referenceElement = document.querySelector('#' + this.reference);
+                let referenceElement = TEXTWRAPPER.querySelector('#' + this.reference);
                 if (!referenceElement) return;
                 let referenceBoundingBox = referenceElement.getBoundingClientRect();
                 let referenceX = referenceBoundingBox.left + referenceBoundingBox.width / 2;
                 let referenceY = referenceBoundingBox.top + referenceBoundingBox.height / 2;
-                let annotationX = this.annotationX;
-                let annotationY = this.annotationY;
+                let positionX = this.positionX;
+                let positionY = this.positionY;
                 CTX.beginPath();
-                CTX.moveTo(annotationX, annotationY);
+                CTX.moveTo(positionX, positionY);
                 CTX.lineTo(referenceX, referenceY);
                 CTX.globalAlpha = annotationLineOpacity;
                 CTX.lineWidth = ANNOTATIONLINEWIDTH;
@@ -297,29 +302,33 @@
                     let stemInstanceX = stemInstanceBoundingBox.left + stemInstanceBoundingBox.width / 2;
                     let stemInstanceY = stemInstanceBoundingBox.top + stemInstanceBoundingBox.height / 2;
                     CTX.beginPath();
-                    CTX.moveTo(annotationX, annotationY);
+                    CTX.moveTo(positionX, positionY);
                     CTX.lineTo(stemInstanceX, stemInstanceY);
                     CTX.lineWidth = STEMINSTANCELINEWIDTH;
                     CTX.strokeStyle = this.color;
-                    let verticalDistance = Math.abs(annotationY - stemInstanceY);
+                    let verticalDistance = Math.abs(positionY - stemInstanceY);
                     let opacity = Math.max(0.4, 1 - verticalDistance / window.innerHeight / 2);
                     CTX.globalAlpha = Math.min(opacity, annotationLineOpacity);
                     CTX.stroke();
                     CTX.closePath();
                 });
             }
+            encodeAsURLHash() {
+                // Encode the annotation as a string for the URL hash
+                return `${this.reference}(${Math.round(this.positionX)},${Math.round(this.positionY)})`;
+            }
         }
         class Abstraction {
             constructor(text = "Abstraction") {
                 this.annotations = [];
                 this.id = self.crypto.randomUUID();
-                this.textElement = null
+                this.element = null
                 this.text = text; // The text content of the abstraction
                 this.firstPaint();
             }
             firstPaint() {
                 let abstractionTextElement = document.createElement("span");
-                abstractionTextElement.contentEditable = true;
+                abstractionTextElement.contentEditable = iFRAME? false: true;
                 abstractionTextElement.type = "text";
                 abstractionTextElement.classList.add("abstraction-texts");
                 abstractionTextElement.innerText = this.text;
@@ -330,11 +339,11 @@
                 abstractionTextElement.addEventListener("blur", (e) => {
                     console.log("blur")
                     this.updateTextElementPosition();
-                    setURLHash();
+                    encodeStateAsURLHash();
                     stopLoop = false;
-                    appLoop();
+                    loop();
                 });
-                this.textElement = abstractionTextElement;
+                this.element = abstractionTextElement;
                 document.body.appendChild(abstractionTextElement);
             }
             addElement(annotation) {
@@ -344,7 +353,7 @@
                 this.annotations = this.annotations.filter((el) => el !== annotation);
             }
             updateTextElementPosition() {
-                if (!this.textElement) return;
+                if (!this.element) return;
                 // Position the text element at the center of all annotations
                 let boundingBox = this.annotations.reduce((acc, annotation) => {
                     let element = annotation.element.getBoundingClientRect();
@@ -356,8 +365,8 @@
                 }, { left: Infinity, top: Infinity, right: -Infinity, bottom: -Infinity })
                 let centerX = (boundingBox.left + boundingBox.right) / 2;
                 let centerY = (boundingBox.top + boundingBox.bottom) / 2;
-                this.textElement.style.left = `${centerX - this.textElement.offsetWidth / (this.annotations.length > 2 ? 3 : 2)}px`;
-                this.textElement.style.top = `${centerY - this.textElement.offsetHeight / (this.annotations.length > 2 ? 3 : 2)}px`;
+                this.element.style.left = `${centerX - this.element.offsetWidth / (this.annotations.length > 2 ? 3 : 2)}px`;
+                this.element.style.top = `${centerY - this.element.offsetHeight / (this.annotations.length > 2 ? 3 : 2)}px`;
             }
             renderHull() {
                 if (!this.checkAnnotations()) return;
@@ -407,8 +416,8 @@
                         let annotation2 = this.annotations[y];
                         // Check if the distance between the two annotations is below the minimum distance
                         let distance = Math.sqrt(
-                            Math.pow(annotation1.annotationX - annotation2.annotationX, 2) +
-                            Math.pow(annotation1.annotationY - annotation2.annotationY, 2)
+                            Math.pow(annotation1.positionX - annotation2.positionX, 2) +
+                            Math.pow(annotation1.positionY - annotation2.positionY, 2)
                         );
                         if (distance < ABSTRACTIONSMAXIMUMDISTANCE) {
                             oneCloseAnnotation = true;
@@ -420,7 +429,7 @@
                         // Remove the annotation from the abstraction
                         this.removeElement(this.annotations[x]);
                         this.updateTextElementPosition();
-                        setURLHash();
+                        encodeStateAsURLHash();
                     }
                 }
                 if (this.annotations.length < 2) {
@@ -430,55 +439,55 @@
                     });
                     // Remove the abstraction from the global list
                     ABSTRACTIONS.splice(ABSTRACTIONS.indexOf(this), 1);
-                    this.textElement.remove();
-                    this.textElement = null;
-                    setURLHash();
+                    this.element.remove();
+                    this.element = null;
+                    encodeStateAsURLHash();
                     delete this;
                     return false;
                 }
                 return true;
             }
+            encodeAsURLHash() {
+                // Encode the abstraction as a string for the URL hash
+                return `${this.text.replaceAll(' ', '_')}(${this.annotations.map((annotation) => annotation.encodeAsURLHash()).join(',')})`;
+            }
         }
-        function createAnnotation(word, reference) {
-            let annotation = new Annotation(0, word, reference);
-            ANNOTATIONS.push(annotation);
-            setURLHash();
+        function updateConnectionsWrapperSize() {
+            CONNECTIONSWRAPPER.width = window.innerWidth;
+            CONNECTIONSWRAPPER.height = window.innerHeight;
         }
-
         function showRelatedWordStems(word) {
             if (iFRAME) return;
-            document.querySelectorAll('.' + word).forEach((el) => {
+            TEXTWRAPPER.querySelectorAll('.' + word).forEach((el) => {
                 el.classList.add('hovered');
             });
         }
         function hideRelatedWordStems() {
             if (iFRAME) return;
-            document.querySelectorAll('.hovered').forEach((el) => {
+            TEXTWRAPPER.querySelectorAll('.hovered').forEach((el) => {
                 el.classList.remove('hovered');
             });
         }
-
-        function setURLHash() {
+        function encodeStateAsURLHash() {
             if (resetPage) return;
+            blockHashChangeEvent = true;
             console.log('Setting URL hash');
             // Set the URL hash to the current annotations
             let annotationHash = ANNOTATIONS.map((annotation) => {
                 if (annotation.abstraction) return null;
-                return `${annotation.reference}`;
+                return annotation.encodeAsURLHash();
             }).filter((item) => item !== null)
-
             let abstractionHash = ABSTRACTIONS.map((abstraction) => {
-                return `${abstraction.textElement.innerText.replaceAll(' ','_')}(${abstraction.annotations.map((annotation) => annotation.reference).join(',')})`;
+                return abstraction.encodeAsURLHash();
             })
-
             let joinedHash = [...abstractionHash, ...annotationHash].join(';');
-
             window.location.hash = `${textHash}&annotations=${joinedHash}`;
+            window.setTimeout(() => { blockHashChangeEvent = false }, 100);
         }
-        function setStateFromURLHash() {
+        function decodeStateFromURLHash() {
             resetPage = true;
             // Reset the state from the URL hash
-            let hash = window.location.hash.slice(1);
+            let hash = decodeURI(window.location.hash.slice(1));
             if (hash) {
                 let parts = hash.split('&').slice(1);
                 if (parts.length >= 1 && parts[0].startsWith('annotations=')) {
@@ -488,27 +497,51 @@
                         return;
                     }
                     annotationsAndAbstractions.map((annotationOrAbstraction) => {
-                        if (RegExp(/\(/g).test(annotationOrAbstraction)) {
-                            let abstraction = annotationOrAbstraction.match(/(\w+)/g)
-                            let abstractionName = abstraction[0].replaceAll('_',' ');
-                            let annotations = abstraction.slice(1)
+                        if (RegExp(/\([!a-zA-Z]/g).test(annotationOrAbstraction)) {
+                            let abstraction = annotationOrAbstraction.match(/(!?\w+[äöüß]?)/g)
+                            let abstractionName = abstraction[0].replaceAll('_', ' ');
                             let newAbstraction = new Abstraction(abstractionName);
+                            abstraction = abstraction.slice(1)
+                            let annotations = [];
+                            for (let i = 0; i < abstraction.length; i += 3) {
+                                annotations.push([abstraction[i], abstraction[i + 1], abstraction[i + 2]]);
+                            }
                             annotations.forEach((annotation) => {
-                                let referenceElement = document.querySelector('#' + annotation);
-                                if (referenceElement) {
-                                    let annotationInstance = new Annotation(0, referenceElement.innerText, annotation);
+                                if (annotation[0][0] == '!') {
+                                    annotation[0] = annotation[0].slice(1);
+                                    window.setTimeout(() => {
+                                        TEXTWRAPPER.querySelector('#' + annotation[0]).scrollIntoView({
+                                            block: 'center',
+                                            behavior: 'smooth'
+                                        });
+                                    }, 100);
+                                }
+                                let referenceElement = TEXTWRAPPER.querySelector('#' + annotation[0]);
+                                if (referenceElement && ANNOTATIONS.findIndex((el) => el.reference === annotation[0]) === -1) {
+                                    console.log('Creating annotation for abstraction', annotation[0], referenceElement.innerText);
+                                    let annotationInstance = new Annotation(referenceElement.innerText, annotation[0], parseInt(annotation[1]), parseInt(annotation[2]));
                                     annotationInstance.abstraction = newAbstraction;
                                     newAbstraction.addElement(annotationInstance);
-                                    ANNOTATIONS.push(annotationInstance);
                                 }
                             });
                             ABSTRACTIONS.push(newAbstraction);
                             newAbstraction.updateTextElementPosition();
                             //if true => abstraction
                         } else {
-                            let referenceElement = document.querySelector('#' + annotationOrAbstraction);
+                            let annotation = annotationOrAbstraction.match(/(!?\w+[äöüß]?)/g)
+                            console.log('Creating annotation from URL hash', annotation);
+                            if (annotation[0][0] == '!') {
+                                annotation[0] = annotation[0].slice(1);
+                                window.setTimeout(() => {
+                                    TEXTWRAPPER.querySelector('#' + annotation[0]).scrollIntoView({
+                                        block: 'center',
+                                        behavior: 'smooth'
+                                    });
+                                }, 100);
+                            }
+                            let referenceElement = TEXTWRAPPER.querySelector('#' + annotation[0]);
                             if (referenceElement) {
-                                createAnnotation(referenceElement.innerText, annotationOrAbstraction);
+                                new Annotation(referenceElement.innerText, annotation[0], parseInt(annotation[1]), parseInt(annotation[2]));
                             }
                         }
                     })
@@ -517,65 +550,34 @@
             console.log('Annotations and Abstractions loaded from URL hash', ANNOTATIONS, ABSTRACTIONS);
             resetPage = false;
         }
-        async function init() {
-            // Get request text from server and parse it via marked.js
-            textHash = window.location.hash.slice(1).split('&')[0];
-            let response = await fetch(`/${local ? '' : 'textarium/'}${textHash}.md`);
-            let text = await response.text();
-            text = text
-                .replaceAll('\n', ' \n ')
-                .split(' ')
-                .map((word, index) => {
-                    if (word != '#' && !RegExp(/[<>\d|-]/).test(word)) {
-                        let sanitizedWord = word.replace(/[^a-zA-Z]/g, '');
-                        let stemmedWord = stemmer(sanitizedWord).toLocaleLowerCase();
-                        word = word.replace(
-                            /(\w+)/g,
-                            `<span id="${sanitizedWord + index}" onclick="createAnnotation('${sanitizedWord}', '${sanitizedWord + index}')" onmouseleave="hideRelatedWordStems()" onmouseenter="showRelatedWordStems('${stemmedWord}')" class='word ${stemmedWord}'>${sanitizedWord}</span>`
-                        );
-                    }
-                    return word;
-                })
-                .join(' ');
-            TEXTWRAPPER.innerHTML = marked.parse(text);
-            setStateFromURLHash();
-            window.addEventListener('mousemove', (e) => {
-                if (annotationsMovement) {
-                    let newLeft = e.clientX - annotationsMovementOffsetX;
-                    let newTop = e.clientY - annotationsMovementOffsetY;
-                    annotationsMovementObject.updatePosition(newLeft, newTop)
-                }
-            });
-            window.addEventListener('mouseup', (e) => {
-                if (annotationsMovement) {
-                    annotationsMovement = false;
-                    annotationsMovementObject = null;
-                }
-            });
-            window.addEventListener('resize', (e) => {
-                CONNECTIONSWRAPPER.width = window.innerWidth;
-                CONNECTIONSWRAPPER.height = window.innerHeight;
-            });
-            TEXTWRAPPER.addEventListener('scroll', (e) => {
-                // Prevent scrolling of the body
-                annotationLineOpacity = 1;
-                console.log('scrolling');
-                let reduceOpacity = setInterval(() => {
-                    annotationLineOpacity -= 0.0005;
-                    if (annotationLineOpacity <= 0.05) {
-                        annotationLineOpacity = 0.05;
-                        clearInterval(reduceOpacity);
-                    }
-                }, 50);
-            });
-            // Initialize the canvas size
-            CONNECTIONSWRAPPER.width = window.innerWidth;
-            CONNECTIONSWRAPPER.height = window.innerHeight;
-            // Start the application loop
-            appLoop();
-        }
-        function appReset() {
+        function resetState() {
             stopLoop = true;
+            // Remove all annotations and abstractions from the DOM
+            ANNOTATIONS.forEach((annotation) => {
+                if (annotation.element) {
+                    annotation.element.remove();
+                }
+                if (annotation.abstraction && annotation.abstraction.textElement) {
+                    annotation.abstraction.textElement.remove();
+                    annotation.abstraction.textElement = null;
+                }
+                annotation.stems.forEach((stemInstance) => {
+                    stemInstance.classList.remove('extracted');
+                    stemInstance.style.backgroundColor = '';
+                    stemInstance.style.color = '';
+                });
+                let referenceElement = TEXTWRAPPER.querySelector('#' + annotation.reference);
+                if (referenceElement) {
+                    referenceElement.classList.remove('extracted');
+                    referenceElement.style.backgroundColor = '';
+                    referenceElement.style.color = '';
+                }
+            });
+            ABSTRACTIONS.forEach((abstraction) => {
+                if (abstraction.textElement) {
+                    abstraction.textElement.remove();
+                }
+            });
             // Reset all global variables
             ANNOTATIONS = [];
             ABSTRACTIONS = [];
@@ -585,9 +587,8 @@
             annotationsMovementObject = null
             annotationsMovementOffsetX = 0;
             annotationsMovementOffsetY = 0;
-            appLoop();
         }
-        async function appLoop() {
+        async function loop() {
             if (stopLoop) return
             // Clear the canvas and redraw all connections and hull
             CTX.clearRect(0, 0, CONNECTIONSWRAPPER.width, CONNECTIONSWRAPPER.height);
@@ -598,9 +599,78 @@
             ABSTRACTIONS.forEach((abstraction) => {
                 abstraction.renderHull();
             });
-            requestAnimationFrame(appLoop);
+            requestAnimationFrame(loop);
         }
-        init();
+        window.addEventListener('mousemove', (e) => {
+            if (annotationsMovement) {
+                let newLeft = e.clientX - annotationsMovementOffsetX;
+                let newTop = e.clientY - annotationsMovementOffsetY;
+                annotationsMovementObject.updatePosition(newLeft, newTop);
+            }
+        });
+        window.addEventListener('mouseup', (e) => {
+            if (annotationsMovement) {
+                annotationsMovement = false;
+                annotationsMovementObject = null;
+                encodeStateAsURLHash();
+            }
+        });
+        window.addEventListener('resize', (e) => {
+            updateConnectionsWrapperSize();
+        });
+        window.addEventListener('hashchange', (e) => {
+            e.preventDefault();
+            // Reset the application state when the hash changes
+            //if (!iFRAME || resetPage) return;
+            if (blockHashChangeEvent) return;
+            console.log('Hash changed, resetting application state');
+            resetState();
+            decodeStateFromURLHash();
+            updateConnectionsWrapperSize();
+            loop();
+        });
+        TEXTWRAPPER.addEventListener('scroll', (e) => {
+            // Prevent scrolling of the body
+            // annotationLineOpacity = 0.8;
+            // console.log('scrolling');
+            // let reduceOpacity = setInterval(() => {
+            //     annotationLineOpacity -= 0.0005;
+            //     if (annotationLineOpacity <= 0.05) {
+            //         annotationLineOpacity = 0.05;
+            //         clearInterval(reduceOpacity);
+            //     }
+            // }, 50);
+        });
+        // Get request text from server and parse it via marked.js
+        textHash = window.location.hash.slice(1).match(/\w+/)[0];
+        fetch(`/${local ? '' : 'textarium/'}${textHash}.md`)
+        .then(response => response.text())
+        .then(text => {
+            if (!text) {
+                console.error('No text found for the given hash:', textHash);
+                return;
+            }
+            let parsedText = text
+                .replaceAll('\n', ' \n ')
+                .split(' ')
+                .map((word, index) => {
+                if (word != '#' && !RegExp(/[<>\d|-]/).test(word)) {
+                    let sanitizedWord = word.replace(/[^a-zA-Z]/g, '');
+                    let stemmedWord = stemmer(sanitizedWord).toLocaleLowerCase();
+                    word = word.replace(
+                        /(\w+)/g,
+                        `<span id="${sanitizedWord + index}" onclick="Annotation.createAnnotation('${sanitizedWord}', '${sanitizedWord + index}')" onmouseleave="hideRelatedWordStems()" onmouseenter="showRelatedWordStems('${stemmedWord}')" class='word ${stemmedWord}'>${sanitizedWord}</span>`
+                    );
+                }
+                return word;
+            })
+            .join(' ');
+            TEXTWRAPPER.innerHTML = marked.parse(parsedText);
+        }).then(() => {
+            decodeStateFromURLHash();
+            updateConnectionsWrapperSize();
+            loop();
+        })
     </script>
 </body>
 
