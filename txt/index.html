@@ -50,38 +50,29 @@
         }
 
         .hovered:not(.extracted) {
-            background-color: lightslategray;
+            text-decoration: dotted underline;
             cursor: pointer;
-            transition: all 150ms;
+            transition: all 50ms;
         }
 
         .extracted {
             transition: all 150ms;
-            pointer-events: none;
-            cursor: help;
+            cursor: url('data:image/x-icon;base64,AAACAAEAICAAAAAAAACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAYAAAAIAAAACAAAAAgAAAAIAAAACAAAAAgAAAAIAAAABgAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAMAAAAFQAAABwAAAAcAAAAHAAAABwAAAAcAAAAHAAAABwAAAAVAAAADAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAABwAAAAvAAAAOAAAADgAAAA4AAAAOAAAADgAAAA4AAAAOAAAAC8AAAAcAAAACQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAAALAAAAEUAAABMAAAATAAAAEwAAABMAAAATAAAAEwAAABMAAAARQAAACwAAAATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAFMAAABRAAAANQAAABkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/qKio/6ioqP+oqKj/qKio/6ioqP+oqKj/qKio/6ioqP+oqKj/AAAA/wAAAFQAAAA4AAAAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP+oqKj/AAAA/6ioqP8AAAD/qKio/wAAAP+oqKj/AAAA/6ioqP8AAAD/AAAAVQAAADkAAAAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/6ioqP8AAAD/qKio/wAAAP+oqKj/AAAA/6ioqP8AAAD/qKio/wAAAP8AAABVAAAAOQAAABwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/qKio/wAAAP+oqKj/AAAA/6ioqP8AAAD/qKio/wAAAP+oqKj/AAAA/wAAAFUAAAA5AAAAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP+oqKj/AAAA/6ioqP8AAAD/qKio/wAAAP+oqKj/AAAA/6ioqP8AAAD/AAAAVQAAADkAAAAdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/6ioqP8AAAD/qKio/wAAAP+oqKj/AAAA/6ioqP8AAAD/qKio/wAAAP8AAABVAAAAOwAAAB8AAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/qKio/wAAAP+oqKj/AAAA/6ioqP8AAAD/qKio/wAAAP+oqKj/AAAA/wAAAFUAAABCAAAAJQAAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAAAwAAAP+oqKj/qKio/6ioqP+oqKj/qKio/6ioqP+oqKj/qKio/6ioqP8AAAD/AAAAVAAAAEcAAAAsAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkAAAAMAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAABPAAAAQwAAACkAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEgAAAP+oqKj/qKio/6ioqP+oqKj/qKio/6ioqP+oqKj/qKio/6ioqP+oqKj/qKio/wAAAP8AAAAuAAAAHAAAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXAAAA/6ioqP+oqKj/qKio/6ioqP+oqKj/qKio/6ioqP+oqKj/qKio/6ioqP+oqKj/AAAA/wAAABUAAAAMAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/wAAABIAAAAiAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAAYAAAABgAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAAA/wAAABIAAAAZAAAAEAAAAP8AAAAKAAAAEQAAABcAAAAVAAAAFQAAAP8AAAAXAAAAEQAAAAoAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP8AAAD/AAAA/wAAAAgAAAAFAAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAAcAAAAFAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA///////////////////////////////////////////////////////////////////////////////////////////wB///4AP//+AD///gA///4AP//+AD///gA///4AP//+AD///gA///wAH//8AB//9gA///O+///xgP//8='), auto;
+
         }
 
         #app {
             display: grid;
-            grid-template-columns: 35% 35% 30%;
+            grid-template-columns: 50% 50%;
         }
 
         #text-wrapper {
-            width: 500px;
             z-index: 20;
-            padding: 16px 48px;
+            padding: 12px 24px;
             overflow-y: scroll;
             height: 100vh;
             scrollbar-width: none;
             overscroll-behavior: none;
-        }
-
-        #annotations-wrapper {
-            height: 100vh;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
         }
 
         .annotation {
@@ -91,15 +82,19 @@
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: grab;
-            z-index: 10;
+            z-index: 30;
         }
 
-        #connections-wrapper {
+        #connections-wrapper,
+        #annotations-wrapper {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+        }
+
+        #connections-wrapper {
             pointer-events: none;
             z-index: -1;
         }
@@ -108,14 +103,13 @@
         .annotation,
         .hovered:not(.extracted) {
             border-radius: 3px;
-            padding: 2px 4px;
-            margin: -2px -4px
+            padding: 1px 4px;
+            margin: -1px -4px
         }
 
         .abstraction-texts {
             font-size: 1.5em;
             line-height: 1.3;
-            font-family: Atkinson, sans-serif;
             position: absolute;
             background: none;
             border: none;
@@ -144,6 +138,7 @@
         const ANNOTATIONSWRAPPER = document.getElementById('annotations-wrapper');
         const CONNECTIONSWRAPPER = document.getElementById('connections-wrapper');
         const CTX = CONNECTIONSWRAPPER.getContext('2d');
+        CTX.globalAlpha = 1;
         const COLORS = [
             '#a6cee3',
             '#1f78b4',
@@ -165,8 +160,7 @@
         const iFRAME = window.self !== window.top;
         //Animation related variables
         let annotationLineOpacity = 0.3;
-        const ANNOTATIONLINEWIDTH = 5;
-        const STEMINSTANCELINEWIDTH = 0.8;
+        const ANNOTATIONLINEWIDTH = 0.8;
         const ABSTRACTIONSMINIMUMDISTANCE = 50;
         const ABSTRACTIONSMAXIMUMDISTANCE = 350; // Minimum distance between annotations to create an abstraction
 
@@ -190,12 +184,43 @@
                 this.positionY = positionY ? positionY : referenceElement.getBoundingClientRect().top; // Y position of the extraction
                 this.color = COLORS[(colorCounter++ % COLORS.length)]; // Color based on the text content
                 this.textColor = this.getColor(this.color); // Default text color
-                this.stems = TEXTWRAPPER.querySelectorAll(`.${this.stem}:not(#${this.reference})`); // All stems of the word in the text
+                this.stems = TEXTWRAPPER.querySelectorAll(`.${this.stem}`); // All stems of the word in the text
                 this.abstraction = null;
-                this.firstPaint();
+                this.initialize();
             }
             static createAnnotation(word, reference) {
-                return new Annotation(word, reference);
+                // Check if the annotation already exists
+                let annotation = ANNOTATIONS.find((el) => el.text === word)
+                if (annotation) {
+                    annotation.deleteAnnotation();
+                    return;
+                } else {
+                    return new Annotation(word, reference);
+                }
+            }
+            deleteAnnotation() {
+                // Remove the annotation from the DOM and the global list
+                this.element.remove();
+                this.stems.forEach((stemInstance) => {
+                    stemInstance.classList.remove('extracted');
+                    stemInstance.style.backgroundColor = '';
+                    stemInstance.style.color = '';
+                });
+                let referenceElement = TEXTWRAPPER.querySelector('#' + this.reference);
+                if (referenceElement) {
+                    referenceElement.classList.remove('extracted');
+                    referenceElement.style.backgroundColor = '';
+                    referenceElement.style.color = '';
+                }
+                ANNOTATIONS.splice(ANNOTATIONS.indexOf(this), 1);
+                
+                if (this.abstraction) {
+                    // Remove the annotation from the abstraction
+                    this.abstraction.removeElement(this);
+                }
+                encodeStateAsURLHash();
+                console.log("hello")
+                delete this;
             }
             getColor(color) {
                 // Function to determine the text color based on the background color based on brightness -> https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
@@ -206,7 +231,7 @@
                 let brightness = (r * 299 + g * 587 + b * 114) / 1000;
                 return brightness > 128 ? '#000000' : '#ffffff'; // Return black or white based on brightness
             }
-            firstPaint() {
+            initialize() {
                 let annotationElement = document.createElement('div');
                 annotationElement.className = 'annotation';
                 annotationElement.style.backgroundColor = this.color;
@@ -230,9 +255,6 @@
                     stemInstance.style.color = this.textColor;
                 });
                 let referenceElement = TEXTWRAPPER.querySelector('#' + this.reference);
-                referenceElement.classList.add('extracted');
-                referenceElement.style.backgroundColor = this.color;
-                referenceElement.style.color = this.textColor;
                 ANNOTATIONS.push(this);
                 encodeStateAsURLHash();
             }
@@ -280,24 +302,11 @@
                 });
             }
             renderConnections() {
+                let referenceElementBoundingBox = this.element.getBoundingClientRect();
+                if (!referenceElementBoundingBox) return;
+                let positionX = referenceElementBoundingBox.left + referenceElementBoundingBox.width / 2;
+                let positionY = referenceElementBoundingBox.top + referenceElementBoundingBox.height / 2;
                 // Render the connections to the stems
-                let referenceElement = TEXTWRAPPER.querySelector('#' + this.reference);
-                if (!referenceElement) return;
-                let referenceBoundingBox = referenceElement.getBoundingClientRect();
-                let referenceX = referenceBoundingBox.left + referenceBoundingBox.width / 2;
-                let referenceY = referenceBoundingBox.top + referenceBoundingBox.height / 2;
-                let positionX = this.positionX;
-                let positionY = this.positionY;
-                CTX.beginPath();
-                CTX.moveTo(positionX, positionY);
-                CTX.lineTo(referenceX, referenceY);
-                CTX.globalAlpha = annotationLineOpacity;
-                CTX.lineWidth = ANNOTATIONLINEWIDTH;
-                CTX.strokeStyle = this.color;
-                CTX.stroke();
-                CTX.closePath();
-
-                // Render the stem instances
                 this.stems.forEach((stemInstance) => {
                     let stemInstanceBoundingBox = stemInstance.getBoundingClientRect();
                     let stemInstanceX = stemInstanceBoundingBox.left + stemInstanceBoundingBox.width / 2;
@@ -305,18 +314,19 @@
                     CTX.beginPath();
                     CTX.moveTo(positionX, positionY);
                     CTX.lineTo(stemInstanceX, stemInstanceY);
-                    CTX.lineWidth = STEMINSTANCELINEWIDTH;
-                    CTX.strokeStyle = this.color;
-                    let verticalDistance = Math.abs(positionY - stemInstanceY);
-                    let opacity = Math.max(0.4, 1 - verticalDistance / window.innerHeight / 2);
-                    CTX.globalAlpha = Math.min(opacity, annotationLineOpacity);
+                    let verticalDistance = Math.abs(stemInstanceY- positionY);
+                    let opacity = Math.max(0.3,Math.pow((TEXTWRAPPER.scrollHeight - verticalDistance) / TEXTWRAPPER.scrollHeight, 10));
+                    let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
+                    CTX.strokeStyle = `${this.color}${hexOpacity}`;
+                    CTX.lineWidth = ANNOTATIONLINEWIDTH + 3 * opacity;
+                    CTX.globalAlpha = opacity;
                     CTX.stroke();
-                    CTX.closePath();
+
                 });
             }
             encodeAsURLHash() {
                 // Encode the annotation as a string for the URL hash
-                return `${this.reference}(${Math.round(this.positionX)},${Math.round(this.positionY)})`;
+                return `${this.reference}(${(this.positionX / window.innerWidth).toFixed(4)},${(this.positionY / window.innerHeight).toFixed(4)})`;
             }
         }
         class Abstraction {
@@ -325,11 +335,11 @@
                 this.id = self.crypto.randomUUID();
                 this.element = null
                 this.text = text; // The text content of the abstraction
-                this.firstPaint();
+                this.initialize();
             }
-            firstPaint() {
+            initialize() {
                 let abstractionTextElement = document.createElement("span");
-                abstractionTextElement.contentEditable = iFRAME? false: true;
+                abstractionTextElement.contentEditable = iFRAME ? false : true;
                 abstractionTextElement.type = "text";
                 abstractionTextElement.classList.add("abstraction-texts");
                 abstractionTextElement.innerText = this.text;
@@ -500,7 +510,7 @@
                     }
                     annotationsAndAbstractions.map((annotationOrAbstraction) => {
                         if (RegExp(/\([!a-zA-Z]/g).test(annotationOrAbstraction)) {
-                            let abstraction = annotationOrAbstraction.match(/(!?\w+[äöüß]?)/g)
+                            let abstraction = annotationOrAbstraction.match(/(!?\w+[äöüß]?){2,}/g)
                             let abstractionName = abstraction[0].replaceAll('_', ' ');
                             let newAbstraction = new Abstraction(abstractionName);
                             abstraction = abstraction.slice(1)
@@ -521,7 +531,7 @@
                                 let referenceElement = TEXTWRAPPER.querySelector('#' + annotation[0]);
                                 if (referenceElement && ANNOTATIONS.findIndex((el) => el.reference === annotation[0]) === -1) {
                                     console.log('Creating annotation for abstraction', annotation[0], referenceElement.innerText);
-                                    let annotationInstance = new Annotation(referenceElement.innerText, annotation[0], parseInt(annotation[1]), parseInt(annotation[2]));
+                                    let annotationInstance = new Annotation(referenceElement.innerText, annotation[0], parseFloat("0." + annotation[1]) * window.innerWidth, parseFloat("0." + annotation[2]) * window.innerHeight);
                                     annotationInstance.abstraction = newAbstraction;
                                     newAbstraction.addElement(annotationInstance);
                                 }
@@ -530,7 +540,7 @@
                             newAbstraction.updateTextElementPosition();
                             //if true => abstraction
                         } else {
-                            let annotation = annotationOrAbstraction.match(/(!?\w+[äöüß]?)/g)
+                            let annotation = annotationOrAbstraction.match(/(!?\w+[äöüß]?){2,}/g)
                             console.log('Creating annotation from URL hash', annotation);
                             if (annotation[0][0] == '!') {
                                 annotation[0] = annotation[0].slice(1);
@@ -543,7 +553,7 @@
                             }
                             let referenceElement = TEXTWRAPPER.querySelector('#' + annotation[0]);
                             if (referenceElement) {
-                                new Annotation(referenceElement.innerText, annotation[0], parseInt(annotation[1]), parseInt(annotation[2]));
+                                new Annotation(referenceElement.innerText, annotation[0], parseFloat("0." + annotation[1]) * window.innerWidth, parseFloat("0." + annotation[2]) * window.innerHeight);
                             }
                         }
                     })
@@ -603,14 +613,14 @@
             requestAnimationFrame(loop);
         }
         window.addEventListener('mousemove', (e) => {
-            if (annotationsMovement) {
+            if (annotationsMovement && !iFRAME) {
                 let newLeft = e.clientX - annotationsMovementOffsetX;
                 let newTop = e.clientY - annotationsMovementOffsetY;
                 annotationsMovementObject.updatePosition(newLeft, newTop);
             }
         });
         window.addEventListener('mouseup', (e) => {
-            if (annotationsMovement) {
+            if (annotationsMovement && !iFRAME) {
                 annotationsMovement = false;
                 annotationsMovementObject = null;
                 encodeStateAsURLHash();
@@ -623,55 +633,43 @@
             e.preventDefault();
             // Reset the application state when the hash changes
             //if (!iFRAME || resetPage) return;
-            if (blockHashChangeEvent) return;
+            if (!iFRAME) return;
             console.log('Hash changed, resetting application state');
             resetState();
             decodeStateFromURLHash();
             updateConnectionsWrapperSize();
             loop();
         });
-        TEXTWRAPPER.addEventListener('scroll', (e) => {
-            // Prevent scrolling of the body
-            // annotationLineOpacity = 0.8;
-            // console.log('scrolling');
-            // let reduceOpacity = setInterval(() => {
-            //     annotationLineOpacity -= 0.0005;
-            //     if (annotationLineOpacity <= 0.05) {
-            //         annotationLineOpacity = 0.05;
-            //         clearInterval(reduceOpacity);
-            //     }
-            // }, 50);
-        });
         // Get request text from server and parse it via marked.js
         textHash = window.location.hash.slice(1).match(/\w+/)[0];
         fetch(`/${local ? '' : 'textarium/'}${textHash}.md`)
-        .then(response => response.text())
-        .then(text => {
-            if (!text) {
-                console.error('No text found for the given hash:', textHash);
-                return;
-            }
-            let parsedText = text
-                .replaceAll('\n', ' \n ')
-                .split(' ')
-                .map((word, index) => {
-                if (word != '#' && !RegExp(/[<>\d|-]/).test(word)) {
-                    let sanitizedWord = word.replace(/[^a-zA-Z]/g, '');
-                    let stemmedWord = stemmer(sanitizedWord).toLocaleLowerCase();
-                    word = word.replace(
-                        /(\w+)/g,
-                        `<span id="${sanitizedWord + index}" onclick="Annotation.createAnnotation('${sanitizedWord}', '${sanitizedWord + index}')" onmouseleave="hideRelatedWordStems()" onmouseenter="showRelatedWordStems('${stemmedWord}')" class='word ${stemmedWord}'>${sanitizedWord}</span>`
-                    );
+            .then(response => response.text())
+            .then(text => {
+                if (!text) {
+                    console.error('No text found for the given hash:', textHash);
+                    return;
                 }
-                return word;
+                let parsedText = text
+                    .replaceAll('\n', ' \n ')
+                    .split(' ')
+                    .map((word, index) => {
+                        if (word != '#' && !RegExp(/[<>\d|-]/).test(word)) {
+                            let sanitizedWord = word.replace(/[^a-zA-Z]/g, '');
+                            let stemmedWord = stemmer(sanitizedWord).toLocaleLowerCase();
+                            word = word.replace(
+                                /(\w+)/g,
+                                `<span id="${sanitizedWord + index}" onclick="Annotation.createAnnotation('${sanitizedWord}', '${sanitizedWord + index}')" onmouseleave="hideRelatedWordStems()" onmouseenter="showRelatedWordStems('${stemmedWord}')" class='word ${stemmedWord}'>${sanitizedWord}</span>`
+                            );
+                        }
+                        return word;
+                    })
+                    .join(' ');
+                TEXTWRAPPER.innerHTML = marked.parse(parsedText);
+            }).then(() => {
+                decodeStateFromURLHash();
+                updateConnectionsWrapperSize();
+                loop();
             })
-            .join(' ');
-            TEXTWRAPPER.innerHTML = marked.parse(parsedText);
-        }).then(() => {
-            decodeStateFromURLHash();
-            updateConnectionsWrapperSize();
-            loop();
-        })
     </script>
 </body>
 
