@@ -50,9 +50,13 @@
         }
 
         .hovered:not(.extracted) {
-            text-decoration: dotted underline;
+            background-color: rgba(0,0,0,0.1);
+            box-shadow: 0px 0px 5px 4px rgba(0,0,0,0.1);
+            padding: 2px 4px;
+            margin: -2px -4px;
+            border-radius: 3px;
             cursor: pointer;
-            transition: all 50ms;
+            transition: all 33ms;
         }
 
         .extracted {
@@ -104,7 +108,10 @@
         .hovered:not(.extracted) {
             border-radius: 3px;
             padding: 1px 4px;
-            margin: -1px -4px
+            margin: -1px -4px;
+            width: fit-content;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
 
         .abstraction-texts {
@@ -190,7 +197,7 @@
             }
             static createAnnotation(word, reference) {
                 // Check if the annotation already exists
-                let annotation = ANNOTATIONS.find((el) => el.text === word)
+                let annotation = ANNOTATIONS.find((el) => el.stem === stemmer(word).toLocaleLowerCase())
                 if (annotation) {
                     annotation.deleteAnnotation();
                     return;
