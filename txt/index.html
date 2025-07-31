@@ -49,10 +49,10 @@
             overflow: hidden;
         }
 
-        .hovered:not(.extracted) {
-            background-color: lightslategray;
+        .hovered:not(.extracted){
+            text-decoration: dotted underline;
             cursor: pointer;
-            transition: all 150ms;
+            transition: all 50ms;
         }
 
         .extracted {
@@ -108,8 +108,8 @@
         .annotation,
         .hovered:not(.extracted) {
             border-radius: 3px;
-            padding: 2px 4px;
-            margin: -2px -4px
+            padding: 1px 4px;
+            margin: -1px -4px
         }
 
         .abstraction-texts {
@@ -165,7 +165,7 @@
         const iFRAME = window.self !== window.top;
         //Animation related variables
         let annotationLineOpacity = 0.3;
-        const ANNOTATIONLINEWIDTH = 5;
+        const ANNOTATIONLINEWIDTH = 0.8;
         const STEMINSTANCELINEWIDTH = 0.8;
         const ABSTRACTIONSMINIMUMDISTANCE = 50;
         const ABSTRACTIONSMAXIMUMDISTANCE = 350; // Minimum distance between annotations to create an abstraction
