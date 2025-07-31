@@ -138,6 +138,7 @@
         const ANNOTATIONSWRAPPER = document.getElementById('annotations-wrapper');
         const CONNECTIONSWRAPPER = document.getElementById('connections-wrapper');
         const CTX = CONNECTIONSWRAPPER.getContext('2d');
+        CTX.globalAlpha = 1;
         const COLORS = [
             '#a6cee3',
             '#1f78b4',
@@ -189,7 +190,7 @@
             }
             static createAnnotation(word, reference) {
                 // Check if the annotation already exists
-                let annotation = ANNOTATIONS.find((el) => el.reference === reference)
+                let annotation = ANNOTATIONS.find((el) => el.text === word)
                 if (annotation) {
                     annotation.deleteAnnotation();
                     return;
@@ -313,12 +314,12 @@
                     CTX.beginPath();
                     CTX.moveTo(positionX, positionY);
                     CTX.lineTo(stemInstanceX, stemInstanceY);
-                    let verticalDistance = Math.abs(stemInstanceY);
-                    let opacity = Math.max(0.2, Math.pow((TEXTWRAPPER.scrollHeight - verticalDistance) / TEXTWRAPPER.scrollHeight, 6));
+                    let verticalDistance = Math.abs(stemInstanceY- positionY);
+                    let opacity = Math.max(0.3,Math.pow((TEXTWRAPPER.scrollHeight - verticalDistance) / TEXTWRAPPER.scrollHeight, 10));
                     let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
-                    CTX.strokeStyle = this.color + hexOpacity;
-                    CTX.lineWidth = ANNOTATIONLINEWIDTH + 2 * opacity;
-                    CTX.closePath();
+                    CTX.strokeStyle = `${this.color}${hexOpacity}`;
+                    CTX.lineWidth = ANNOTATIONLINEWIDTH + 3 * opacity;
+                    CTX.globalAlpha = opacity;
                     CTX.stroke();
 
                 });
