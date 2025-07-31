@@ -166,7 +166,6 @@
         //Animation related variables
         let annotationLineOpacity = 0.3;
         const ANNOTATIONLINEWIDTH = 0.8;
-        const STEMINSTANCELINEWIDTH = 0.8;
         const ABSTRACTIONSMINIMUMDISTANCE = 50;
         const ABSTRACTIONSMAXIMUMDISTANCE = 350; // Minimum distance between annotations to create an abstraction
 
@@ -190,7 +189,7 @@
                 this.positionY = positionY ? positionY : referenceElement.getBoundingClientRect().top; // Y position of the extraction
                 this.color = COLORS[(colorCounter++ % COLORS.length)]; // Color based on the text content
                 this.textColor = this.getColor(this.color); // Default text color
-                this.stems = TEXTWRAPPER.querySelectorAll(`.${this.stem}:not(#${this.reference})`); // All stems of the word in the text
+                this.stems = TEXTWRAPPER.querySelectorAll(`.${this.stem}`); // All stems of the word in the text
                 this.abstraction = null;
                 this.firstPaint();
             }
@@ -229,10 +228,6 @@
                     stemInstance.style.backgroundColor = this.color;
                     stemInstance.style.color = this.textColor;
                 });
-                let referenceElement = TEXTWRAPPER.querySelector('#' + this.reference);
-                referenceElement.classList.add('extracted');
-                referenceElement.style.backgroundColor = this.color;
-                referenceElement.style.color = this.textColor;
                 ANNOTATIONS.push(this);
                 encodeStateAsURLHash();
             }
@@ -280,24 +275,11 @@
                 });
             }
             renderConnections() {
+                let referenceElementBoundingBox = this.element.getBoundingClientRect();
+                if (!referenceElementBoundingBox) return;
+                let positionX = referenceElementBoundingBox.left + referenceElementBoundingBox.width / 2;
+                let positionY = referenceElementBoundingBox.top + referenceElementBoundingBox.height / 2;
                 // Render the connections to the stems
-                let referenceElement = TEXTWRAPPER.querySelector('#' + this.reference);
-                if (!referenceElement) return;
-                let referenceBoundingBox = referenceElement.getBoundingClientRect();
-                let referenceX = referenceBoundingBox.left + referenceBoundingBox.width / 2;
-                let referenceY = referenceBoundingBox.top + referenceBoundingBox.height / 2;
-                let positionX = this.positionX;
-                let positionY = this.positionY;
-                CTX.beginPath();
-                CTX.moveTo(positionX, positionY);
-                CTX.lineTo(referenceX, referenceY);
-                CTX.globalAlpha = annotationLineOpacity;
-                CTX.lineWidth = ANNOTATIONLINEWIDTH;
-                CTX.strokeStyle = this.color;
-                CTX.stroke();
-                CTX.closePath();
-
-                // Render the stem instances
                 this.stems.forEach((stemInstance) => {
                     let stemInstanceBoundingBox = stemInstance.getBoundingClientRect();
                     let stemInstanceX = stemInstanceBoundingBox.left + stemInstanceBoundingBox.width / 2;
@@ -305,13 +287,14 @@
                     CTX.beginPath();
                     CTX.moveTo(positionX, positionY);
                     CTX.lineTo(stemInstanceX, stemInstanceY);
-                    CTX.lineWidth = STEMINSTANCELINEWIDTH;
-                    CTX.strokeStyle = this.color;
-                    let verticalDistance = Math.abs(positionY - stemInstanceY);
-                    let opacity = Math.max(0.4, 1 - verticalDistance / window.innerHeight / 2);
-                    CTX.globalAlpha = Math.min(opacity, annotationLineOpacity);
-                    CTX.stroke();
+                    let verticalDistance = Math.abs(stemInstanceY);
+                    let opacity = Math.max(0.2, Math.pow((TEXTWRAPPER.scrollHeight - verticalDistance)/TEXTWRAPPER.scrollHeight, 6));
+                    let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
+                    CTX.strokeStyle = this.color + hexOpacity;
+                    CTX.lineWidth = ANNOTATIONLINEWIDTH + 2 * opacity;
                     CTX.closePath();
+                    CTX.stroke();
+
                 });
             }
             encodeAsURLHash() {
