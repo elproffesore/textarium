@@ -424,8 +424,8 @@
                 }, { left: Infinity, top: Infinity, right: -Infinity, bottom: -Infinity })
                 let centerX = (boundingBox.left + boundingBox.right) / 2;
                 let centerY = (boundingBox.top + boundingBox.bottom) / 2;
-                this.element.style.left = `${centerX - this.element.offsetWidth / (this.annotations.length > 2 ? 3 : 2)}px`;
-                this.element.style.top = `${centerY - this.element.offsetHeight / (this.annotations.length > 2 ? 3 : 2)}px`;
+                this.element.style.left = `${centerX - this.element.offsetWidth / 1.5}px`;
+                this.element.style.top = `${centerY}px`;
             }
             renderHull() {
                 if (!this.checkAnnotations()) return;
@@ -706,7 +706,7 @@
             let minDistance = Infinity;
             ANNOTATIONS.forEach(annotation => {
                 annotation.isClosest = false; // Reset the closest flag for all annotations
-                let refEl = annotation.element TEXTWRAPPER.querySelector('#' + annotation.reference);
+                let refEl = TEXTWRAPPER.querySelector('#' + annotation.reference);
                 if (refEl) {
                     console.log('Checking annotation:', annotation.reference);
                     let rect = refEl.getBoundingClientRect();
