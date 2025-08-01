@@ -121,6 +121,10 @@
             background: none;
             border: none;
             width: fit-content;
+            cursor: grab;
+        }
+        .abstraction-texts.editable{
+            cursor: text;
         }
     </style>
 </head>
@@ -179,6 +183,10 @@
         let annotationsMovementObject = null
         let annotationsMovementOffsetX = 0;
         let annotationsMovementOffsetY = 0;
+        let abstractionMovement = false;
+        let abstractionMovementObject = null;
+        let abstractionMovementOffsetX = 0;
+        let abstractionMovementOffsetY = 0;
 
         class Annotation {
             constructor(text, reference = null, positionX = window.innerWidth / 1.5, positionY = null) {
@@ -265,14 +273,15 @@
                 ANNOTATIONS.push(this);
                 encodeStateAsURLHash();
             }
-            updatePosition(x, y) {
+            updatePosition(x, y, updateAbstraction = true) {
                 this.positionX = x;
                 this.positionY = y;
+                console.log('Updating position of annotation', this.reference, x, y);
                 if (this.element) {
                     this.element.style.left = `${x}px`;
                     this.element.style.top = `${y}px`;
                 }
-                if (this.abstraction) {
+                if (this.abstraction && updateAbstraction) {
                     this.abstraction.updateTextElementPosition();
                 }
                 this.checkAbstractions();
@@ -346,16 +355,33 @@
             }
             initialize() {
                 let abstractionTextElement = document.createElement("span");
-                abstractionTextElement.contentEditable = iFRAME ? false : true;
+                abstractionTextElement.contentEditable = false;
                 abstractionTextElement.type = "text";
                 abstractionTextElement.classList.add("abstraction-texts");
                 abstractionTextElement.innerText = this.text;
+                abstractionTextElement.addEventListener('mousedown', (e) => {
+                    if (iFRAME) return;
+                    e.preventDefault();
+                    let abstractionTextElementBoundingBox = abstractionTextElement.getBoundingClientRect();
+                    abstractionMovement = true;
+                    abstractionMovementObject = this;
+                    abstractionMovementOffsetX = e.clientX - (abstractionTextElementBoundingBox.left + abstractionTextElementBoundingBox.width / 2);
+                    abstractionMovementOffsetY = e.clientY - (abstractionTextElementBoundingBox.top + abstractionTextElementBoundingBox.height / 2);
+                });
+                abstractionTextElement.addEventListener("dblclick", (e) => {
+                    if (iFRAME) return;
+                    abstractionTextElement.contentEditable = true;
+                    abstractionTextElement.classList.add("editable");
+                    abstractionTextElement.focus();
+                });
                 abstractionTextElement.addEventListener("focus", (e) => {
                     console.log("focus")
                     stopLoop = true;
                 });
                 abstractionTextElement.addEventListener("blur", (e) => {
                     console.log("blur")
+                    abstractionTextElement.contentEditable = false;
+                    abstractionTextElement.classList.remove("editable");
                     this.updateTextElementPosition();
                     encodeStateAsURLHash();
                     stopLoop = false;
@@ -369,6 +395,20 @@
             }
             removeElement(annotation) {
                 this.annotations = this.annotations.filter((el) => el !== annotation);
+            }
+            updatePosition(x, y) {
+                if (!this.element) return;
+                // Move all annotations relative to the abstraction's previous position
+                const prevX = parseFloat(this.element.style.left) || 0;
+                const prevY = parseFloat(this.element.style.top) || 0;
+                const deltaX = x - prevX;
+                const deltaY = y - prevY;
+                this.element.style.left = `${x}px`;
+                this.element.style.top = `${y}px`;
+                this.annotations.forEach((annotation) => {
+                    annotation.updatePosition(annotation.positionX + deltaX, annotation.positionY + deltaY, false);
+                });
+                this.renderHull();
             }
             updateTextElementPosition() {
                 if (!this.element) return;
@@ -625,11 +665,23 @@
                 let newTop = e.clientY - annotationsMovementOffsetY;
                 annotationsMovementObject.updatePosition(newLeft, newTop);
             }
+            if (abstractionMovement && !iFRAME) {
+                let newLeft = e.clientX - abstractionMovementOffsetX;
+                let newTop = e.clientY - abstractionMovementOffsetY;
+                abstractionMovementObject.updatePosition(newLeft, newTop);
+            }
         });
         window.addEventListener('mouseup', (e) => {
             if (annotationsMovement && !iFRAME) {
                 annotationsMovement = false;
                 annotationsMovementObject = null;
+                encodeStateAsURLHash();
+            }
+            if (abstractionMovement && !iFRAME) {
+                abstractionMovement = false;
+                abstractionMovementObject = null;
+                abstractionMovementOffsetX = 0;
+                abstractionMovementOffsetY = 0;
                 encodeStateAsURLHash();
             }
         });
@@ -654,7 +706,7 @@
             let minDistance = Infinity;
             ANNOTATIONS.forEach(annotation => {
                 annotation.isClosest = false; // Reset the closest flag for all annotations
-                let refEl = TEXTWRAPPER.querySelector('#' + annotation.reference);
+                let refEl = annotation.element TEXTWRAPPER.querySelector('#' + annotation.reference);
                 if (refEl) {
                     console.log('Checking annotation:', annotation.reference);
                     let rect = refEl.getBoundingClientRect();
@@ -668,7 +720,7 @@
                 }
             });
             closest.isClosest = true; // Set the closest flag for the nearest annotation
-            encodeStateAsURLHash(); // COULD BE TO COMPUTATIONALLY EXPENSIVE
+            //encodeStateAsURLHash(); // COULD BE TO COMPUTATIONALLY EXPENSIVE
         })
         // Get request text from server and parse it via marked.js
         textHash = window.location.hash.slice(1).match(/\w+/)[0];
@@ -683,11 +735,11 @@
                     .replaceAll('\n', ' \n ')
                     .split(' ')
                     .map((word, index) => {
-                        if (word != '#' && !RegExp(/[<>\d|-]/).test(word)) {
-                            let sanitizedWord = word.replace(/[^a-zA-Z]/g, '');
+                        if (word != '#' && !RegExp(/[<>\d|]/).test(word)) {
+                            let sanitizedWord = word.replace(/[^a-zA-Z-]/g, '');
                             let stemmedWord = stemmer(sanitizedWord).toLocaleLowerCase();
-                            word = word.replace(
-                                /(\w+)/g,
+                            return word.replace(
+                                /(\w+-?\w+)/,
                                 `<span id="${sanitizedWord + index}" onclick="Annotation.createAnnotation('${sanitizedWord}', '${sanitizedWord + index}')" onmouseleave="hideRelatedWordStems()" onmouseenter="showRelatedWordStems('${stemmedWord}')" class='word ${stemmedWord}'>${sanitizedWord}</span>`
                             );
                         }
