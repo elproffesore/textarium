@@ -87,6 +87,7 @@
             transform: translate(-50%, -50%);
             cursor: grab;
             z-index: 30;
+            transition: opacity 150ms ease-in-out;
             user-select: none; /* standard syntax */
             -webkit-user-select: none; /* webkit (safari, chrome) browsers */
             -moz-user-select: none; /* mozilla browsers */
@@ -348,7 +349,24 @@
                     CTX.stroke();
                 });
             }
+            checkAnyRelatedVisible() {
+                // Check if any of the related elements are visible in the viewport
+                let visibility = this.related.some((related) => {
+                    let relatedBB = related.getBoundingClientRect();
+                    return (
+                        relatedBB.top > 0   &&
+                        relatedBB.bottom < window.innerHeight 
+                    );  
+                });
+                console.log(visibility);
+                if(visibility){
+                    this.referenceElement.style.opacity = 1;
+                }else {
+                    this.referenceElement.style.opacity = 0.3;
+                } 
+            }
             getDistanceToCenter(){
+                this.checkAnyRelatedVisible();
                 let centerX = window.innerWidth / 2;
                 let centerY = TEXTWRAPPER.scrollTop + window.innerHeight / 2;
                 let minDistance = Infinity;
