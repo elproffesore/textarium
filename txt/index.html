@@ -108,24 +108,19 @@
             pointer-events: none;
             z-index: -1;
         }
-
-        .extracted,
-        .annotation,
-        .hovered:not(.extracted) {
-            border-radius: 3px;
-            padding: 1px 4px;
-            margin: -1px -4px;
-            width: fit-content;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-
         .abstraction-texts {
-            font-size: 1.5em;
-            line-height: 1.3;
+            font-size: 14pt;
             position: absolute;
             background: none;
             border: none;
+            width: fit-content;
+        }
+        .extracted,
+        .annotation,
+        .hovered:not(.extracted){
+            border-radius: 3px;
+            padding: 1px 4px;
+            margin: -1px -4px;
             width: fit-content;
         }
 
@@ -168,19 +163,28 @@
         CONNECTIONSWRAPPER.height = window.innerHeight;
         CTX.globalAlpha = 1;
         const COLORS = [
-            '#a6cee3',
-            '#1f78b4',
-            '#b2df8a',
-            '#33a02c',
-            '#fb9a99',
-            '#e31a1c',
-            '#fdbf6f',
-            '#ff7f00',
-            '#cab2d6',
-            '#6a3d9a',
-            '#ffff99',
-            '#b15928',
+            '#648fff', // Blue
+            '#785ef0', // Green 
+            '#dc267f', // Vermillion 
+            '#fe6100', // Yellow 
+            '#ffb000', // Purple 
+            '#59a14f', // Green 
+            '#56B4E9', // Sky Blue
+            '#000000'
         ];
+        // const COLORS = [
+        //     "#4e79a7",
+        //     "#59a14f",
+        //     "#9c755f",
+        //     "#f28e2b",
+        //     "#edc948",
+        //     "#bab0ac",
+        //     "#e15759",
+        //     "#b07aa1",
+        //     "#76b7b2",
+        //     "#ff9da7"
+        // ];
+
         //Animation related variables
         const MINIMUMOPACITY = 0.1; // Minimum duration in ms for animations
         const ANNOTATIONLINEWIDTH = 0.8;
@@ -240,18 +244,10 @@
                 delete this;
             }
             setExtractedElement(el){
-                    el.classList.add('extracted');
-                    el.classList.add('annotation-'+this.id);
-                    el.style.backgroundColor = this.color;
-                    el.style.color = getReadableTextColor(this.color);
-                    window.setTimeout(() => {
-                        el.addEventListener('click', (e) => {
-                            if (EMBEDDED) return;
-                            e.preventDefault();
-                            e.stopPropagation();
-                            this.deleteAnnotation();
-                        })
-                    }, 300)
+                el.classList.add('extracted');
+                el.classList.add('annotation-'+this.id);
+                el.style.backgroundColor = this.color;
+                el.style.color = getReadableTextColor(this.color);
                 return el
             }
             initialize() {
@@ -262,6 +258,12 @@
                 referenceElement.style.color = getReadableTextColor(this.color);
                 referenceElement.innerText = this.text;
                 referenceElement.addEventListener('mousedown', (e) => setDragMovement(e, this));
+                referenceElement.addEventListener('dblclick', (e) => {
+                    if (EMBEDDED) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.deleteAnnotation();
+                });
                 this.referenceElement = referenceElement;
                 ANNOTATIONSWRAPPER.appendChild(referenceElement);
                 this.updatePosition(window.innerWidth / 1.5, this.referenceElement.getBoundingClientRect().top);
@@ -345,6 +347,7 @@
                     let opacity = Math.max(MINIMUMOPACITY, Math.pow((TEXTWRAPPER.scrollHeight - verticalDistance) / TEXTWRAPPER.scrollHeight, 10));
                     let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
                     CTX.strokeStyle = `${this.color}${hexOpacity}`;
+                    CTX.setLineDash([]);
                     CTX.lineWidth = ANNOTATIONLINEWIDTH + 3 * opacity;
                     CTX.stroke();
                 });
@@ -399,6 +402,7 @@
                 this.id = self.crypto.randomUUID();
                 this.referenceElement = null
                 this.text = text; // The text content of the abstraction
+                this.color = COLORS[(colorCounter++ % COLORS.length)]; // Color based on the text content
                 this.initialize();
             }
             initialize() {
@@ -421,9 +425,6 @@
                     abstractionTextElement.classList.add("editable");
                     abstractionTextElement.focus();
                     abstractionTextElement.select();
-                });
-                abstractionTextElement.addEventListener("focus", (e) => {
-                    console.log("focus")
                 });
                 abstractionTextElement.addEventListener("blur", (e) => {
                     console.log("blur")
@@ -504,7 +505,7 @@
                     CTX.lineTo(point[0], point[1]);
                 });
                 CTX.closePath();
-                CTX.fillStyle = this.annotations[0].color + "90";
+                CTX.fillStyle = "#0001";
                 CTX.fill();
             }
             checkAnnotations() {

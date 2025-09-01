@@ -1,12 +1,10 @@
 # A Cautious Prometheus? 
-## How the word "Design" is defined in English and French
+## What are the most important concepts of this text?
 
-[](txt/#latour&annotations=Abstraction(!1Philosophy_of_Design(0.73,0.26),successive_connotations(0.78,0.44)))
+[](/txt/#latour&annotations=Core_Concepts(!8Design(0.74,0.70),Philosophy(0.77,0.44)))
 
 In this section, Latour discusses the different meanings of the word "design" in English and French. He highlights how the term is used in various contexts and how its meaning can change based on the language and cultural background.
 
-
-In this section Latour introduces the different meanings of the design term in the different languages. 
 
 
 ### What are Hypernyms?
