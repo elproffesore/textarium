@@ -138,7 +138,8 @@
 
 <body>
     <script>
-        let local = window.location.href.includes('localhost')
+         const LOCAL = window.location.href.includes('localhost')
+         console.log('Local environment:', LOCAL);
     </script>
     <script src="../src/marked.min.js"></script>
     <script src="../src/porter-stemmer.js"></script>
@@ -151,6 +152,7 @@
         <canvas id="connections-wrapper"></canvas>
     </div>
     <script>
+       
         const TEXTWRAPPER = document.getElementById('text-wrapper');
         const ANNOTATIONSWRAPPER = document.getElementById('annotations-wrapper');
         const CONNECTIONSWRAPPER = document.getElementById('connections-wrapper');
@@ -584,7 +586,9 @@
                         }
                         setURLHashState();
                     }
-                    nonVisible.push(this.annotations[x].checkAnyRelatedVisible());
+                    if(this.annotations[x]){
+                        nonVisible.push(this.annotations[x].checkAnyRelatedVisible());
+                    }
                 }
                 nonVisible = nonVisible.filter(n => n);
                 if (nonVisible.length == 0) {
@@ -892,7 +896,7 @@
         }
         let bigramsMap = null;
         let trigramsMap = null;
-        fetch(`/${local ? '' : 'textarium/'}${SOURCETEXT}.md`)
+        fetch(`/${LOCAL ? '' : 'textarium/'}${SOURCETEXT}.md`)
             .then(response => response.text())
             .then(text => {
                 if (!text) {
@@ -904,7 +908,6 @@
                     .split(' ')
                     .map((word, index) => {
                         if (word != '#' && !RegExp(/[<>\d|]/).test(word)) {
-                            console.log('Processing word:', word.length);
                             let sanitizedWord = word.replace(/[^a-zA-Z-]/g, '');
                             let stemmedWord = stemmer(sanitizedWord).toLocaleLowerCase();
                             if (sanitizedWord.length == 0) return word; // Skip empty words
