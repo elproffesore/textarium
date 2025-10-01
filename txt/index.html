@@ -277,7 +277,7 @@
                 el.classList.add('extracted');
                 el.classList.add('annotation-' + this.id);
                 el.style.backgroundColor = this.color;
-                // el.style.color = getReadableTextColor(this.color);
+                el.style.color = getReadableTextColor(this.color);
                 return el
             }
             initialize() {
@@ -288,13 +288,13 @@
                     if(this.related.length > 1){
                         this.abstractionType = false;
                         referenceElement.style.backgroundColor = this.color;
-                        // referenceElement.style.color = getReadableTextColor(this.color);
+                        referenceElement.style.color = getReadableTextColor(this.color);
                     }else{
                         referenceElement.classList.add('abstraction-type');
                     }
                 } else {
                     referenceElement.style.backgroundColor = this.color;
-                    // referenceElement.style.color = getReadableTextColor(this.color);
+                    referenceElement.style.color = getReadableTextColor(this.color);
                 }
                 referenceElement.innerText = this.text;
                 referenceElement.addEventListener('mousedown', (e) => setDragMovement(e, this));
