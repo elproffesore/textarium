@@ -118,6 +118,7 @@
             background: none;
             border: none;
             width: fit-content;
+            /* font-style: italic; */
             font-size: 1rem;
         }
 
@@ -290,7 +291,7 @@
                     }
                 } else {
                     referenceElement.style.backgroundColor = this.color;
-                    referenceElement.style.color = getReadableTextColor(this.color);
+                    // referenceElement.style.color = getReadableTextColor(this.color);
                 }
                 referenceElement.innerText = this.text;
                 referenceElement.addEventListener('mousedown', (e) => setDragMovement(e, this));
@@ -451,7 +452,7 @@
                 this.id = self.crypto.randomUUID();
                 this.referenceElement = null
                 this.text = text; // The text content of the abstraction
-                this.color = COLORS[colorCounter++ % COLORS.length]; // Color based on the text content
+                // this.color = COLORS[colorCounter++ % COLORS.length]; // Color based on the text content
                 this.initialize();
             }
             initialize() {
