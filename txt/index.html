@@ -274,7 +274,7 @@
                 el.classList.add('extracted');
                 el.classList.add('annotation-' + this.id);
                 el.style.backgroundColor = this.color;
-                el.style.color = getReadableTextColor(this.color);
+                // el.style.color = getReadableTextColor(this.color);
                 return el
             }
             initialize() {
@@ -285,7 +285,7 @@
                     if(this.related.length > 1){
                         this.abstractionType = false;
                         referenceElement.style.backgroundColor = this.color;
-                        referenceElement.style.color = getReadableTextColor(this.color);
+                        // referenceElement.style.color = getReadableTextColor(this.color);
                     }else{
                         referenceElement.classList.add('abstraction-type');
                     }
@@ -479,7 +479,7 @@
                     });
                     abstractionTextElement.addEventListener("blur", (e) => {
                         abstractionTextElement.classList.remove("editable");
-                        this.color = COLORS[colorCounter++ % COLORS.length];
+                        // this.color = COLORS[colorCounter++ % COLORS.length];
                         abstractionTextElement.style.color = this.color;
                     });
                 }
@@ -525,6 +525,7 @@
                 this.referenceElement.style.left = `${centerX - this.referenceElement.offsetWidth / 2}px`;
                 this.referenceElement.style.top = `${centerY}px`;
             }
+            
             render() {
                 if (!this.checkAnnotations()) return;
                 // Render the hull of the abstraction
