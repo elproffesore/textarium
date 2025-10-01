@@ -950,7 +950,7 @@
                 TEXTWRAPPER.innerHTML = marked.parse(parsedText);
                 if (EMBEDDED) {
                     // Remove all interactive elements
-                    document.querySelector('#app').classList.add('embedded');
+                    document.querySelector('body').classList.add('embedded');
                 }
             }).then(() => {
                 bigramsMap = searchNGrams(WORDINDEX, 2);
