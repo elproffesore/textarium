@@ -540,7 +540,7 @@
                     ABSTRACTIONS.splice(ABSTRACTIONS.indexOf(this), 1);
                     return;
                 }
-                let padding = 5;
+                let padding = 20;
                 let coordinates = this.annotations.map((annotation) => {
                     let element = annotation.referenceElement.getBoundingClientRect();
                     // return all points of the bounding rect as a two-dimensional array
@@ -565,10 +565,14 @@
                 if (hull.length < 3) return;
                 // Draw the hull
                 CTX.beginPath();
-                CTX.moveTo(hull[0][0], hull[0][1]);
-                hull.forEach((point) => {
-                    CTX.lineTo(point[0], point[1]);
-                });
+                for (let i = 0; i < hull.length; i++) {
+                    const p1 = hull[i];
+                    const p2 = hull[(i + 1) % hull.length];
+                    const midX = (p1[0] + p2[0]) / 2;
+                    const midY = (p1[1] + p2[1]) / 2;
+                    if (i === 0) CTX.moveTo(midX, midY);                
+                    CTX.quadraticCurveTo(p1[0], p1[1], midX, midY);
+                }
                 CTX.closePath();
                 CTX.fillStyle = "#0001";
                 CTX.fill();
