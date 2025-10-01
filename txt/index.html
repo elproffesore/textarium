@@ -915,7 +915,7 @@
         }
         let bigramsMap = null;
         let trigramsMap = null;
-        fetch(`/${LOCAL ? '' : 'textarium/'}${SOURCETEXT}.md`)
+        fetch(`${SOURCETEXT}.md`)
             .then(response => response.text())
             .then(text => {
                 if (!text) {
