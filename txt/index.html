@@ -565,15 +565,25 @@
                 if (hull.length < 3) return;
                 // Draw the hull
                 CTX.beginPath();
+                let firstMidX, firstMidY;
+
                 for (let i = 0; i < hull.length; i++) {
                     const p1 = hull[i];
                     const p2 = hull[(i + 1) % hull.length];
                     const midX = (p1[0] + p2[0]) / 2;
                     const midY = (p1[1] + p2[1]) / 2;
-                    if (i === 0) CTX.moveTo(midX, midY);                
+                    if (i === 0) {
+                        CTX.moveTo(midX, midY);
+                        firstMidX = midX;
+                        firstMidY = midY;
+                    }
                     CTX.quadraticCurveTo(p1[0], p1[1], midX, midY);
+
+                    if (i === hull.length - 1) {
+                        const pNext = hull[0];
+                        CTX.quadraticCurveTo(p2[0], p2[1], firstMidX, firstMidY);
+                    }
                 }
-                CTX.closePath();
                 CTX.fillStyle = "#0001";
                 CTX.fill();
             }
