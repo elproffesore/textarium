@@ -34,6 +34,10 @@
             font-weight: bold;
         }
 
+        :root {
+            font-size: calc(0.85vw + 0.85vh);
+        }
+
         html,
         #text-wrapper {
             overscroll-behavior: none;
@@ -41,7 +45,6 @@
 
         body {
             font-family: Atkinson, sans-serif;
-            font-size: calc(0.85vw + 0.85vh);
             margin: 0;
             padding: 0;
             background-color: #ffffff;
@@ -53,9 +56,9 @@
         .extracted,
         .annotation {
             transition: all 150ms;
-            border-radius: 3px;
-            padding: 1px 4px;
-            margin: 0px -2px;
+            border-radius: .2rem;
+            padding: .1rem .2rem;
+            margin: 0 -.2rem;
             width: fit-content;
         }
 
@@ -90,7 +93,7 @@
 
         #text-wrapper {
             z-index: 20;
-            padding: 12px 24px;
+            padding: 1rem 2rem;
             overflow-y: scroll;
             height: 100vh;
             scrollbar-width: none;
@@ -115,7 +118,7 @@
             background: none;
             border: none;
             width: fit-content;
-            font-size: calc(0.85vw + 0.85vh);
+            font-size: 1rem;
         }
 
         .abstraction-texts:not(.editable) {
@@ -127,8 +130,8 @@
         }
 
         .ngram {
-            padding: 1px 0.15em;
-            margin: -1px -0.21em;
+            padding: .1rem 0.2rem;
+            margin: -.1rem -0.2rem;
             z-index: -1;
         }
 
