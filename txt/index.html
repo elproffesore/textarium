@@ -306,7 +306,7 @@
                 });
                 this.referenceElement = referenceElement;
                 ANNOTATIONSWRAPPER.appendChild(referenceElement);
-                this.updatePosition(window.innerWidth / 1.5, this.referenceElement.getBoundingClientRect().top);
+                this.updatePosition(window.innerWidth / 1.5, this.referenceElement.getBoundingClientRect().top, true);
                 // Get the bi- or trigrams of the text if necessary
                 if (this.elements.length > 1) {
                     // If the annotation consists of multiple elements, we need to find the first and last element
@@ -743,7 +743,7 @@
                                 newAbstraction.addElement(annotationInstance);
                                 annotationInstance.updatePosition(
                                     parseFloat(annotationParts[i + 1]) * window.innerWidth,
-                                    parseFloat(annotationParts[i + 2]) * window.innerHeight
+                                    parseFloat(annotationParts[i + 2]) * window.innerHeight, true
                                 );
                             }
                         } else {
