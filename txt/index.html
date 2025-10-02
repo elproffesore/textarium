@@ -76,7 +76,6 @@
             transform: translate(-50%, -50%);
             cursor: grab;
             z-index: 30;
-            transition: opacity 150ms ease-in-out;
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -114,7 +113,14 @@
             pointer-events: none;
             z-index: -1;
         }
-
+        .annotation,
+        .abstraction-texts {
+            opacity: 0;
+            transition-property: opacity;
+            transition-delay: .2s;                               /* start hidden */
+            transition-duration: .3s;                   /* delay matches your smooth scroll */
+        }
+    
         .abstraction-texts {
             position: absolute;
             background: none;
@@ -338,6 +344,7 @@
                 this.positionY = y;
                 this.referenceElement.style.left = `${this.positionX}px`;
                 this.referenceElement.style.top = `${this.positionY}px`;
+                this.referenceElement.style.opacity = 1;
                 if (this.abstraction != null && updateAbstraction) {
                     this.abstraction.updateTextElementPosition();
                 }
@@ -747,7 +754,7 @@
                                 );
                             }
                             newAbstraction.updateTextElementPosition();
-
+                            newAbstraction.referenceElement.style.opacity = 1;
                         } else {
                             let annotationInstance = null;
                             if (annotationParts[0].startsWith('!')) {
