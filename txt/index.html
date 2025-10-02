@@ -247,7 +247,7 @@
                 this.referenceElement.remove();
                 ANNOTATIONS.splice(ANNOTATIONS.indexOf(this), 1);
                 // Unmark the related
-                TEXTWRAPPER.querySelectorAll(`.annotation-${this.id}`).forEach((element) => {
+                TEXTWRAPPER.querySelectorAll(`.annotation-textarium_${this.id}`).forEach((element) => {
                     let multiSelect = ANNOTATIONS.filter(a => a !== this).find(a => {
                         if (a.related.includes(element)){
                             return a
@@ -704,7 +704,7 @@
                     annotationsArray = annotationsString.split(';');
                     let annotationsToCreate = [];
                     annotationsArray.map((annotation, annotationIndex) => {
-                        let annotationParts = annotation.match(/([!$]?[\w-]+)/g);
+                        let annotationParts = annotation.match(/([!$]?(\w-?)+\.?\d?\d?)/g);
                         if (!annotationParts) {
                             console.warn('No valid annotation parts found in', annotation);
                             return;
