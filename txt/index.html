@@ -767,8 +767,39 @@
         }
         window.addEventListener('mousemove', (e) => {
             if (dragMovement && !EMBEDDED) {
-                let newLeft = e.clientX - dragMovementOffsetX;
-                let newTop = e.clientY - dragMovementOffsetY;
+                let x = e.clientX - dragMovementOffsetX;
+                let y = e.clientY - dragMovementOffsetY;
+
+                const w = window.innerWidth, h = window.innerHeight;
+                const padX = w * 0.1, padY = h * 0.1;
+                const stick = 200;
+
+                let newLeft = x, newTop = y;
+
+                // left
+                if (x < w / 2 + padX) {
+                    let d = w / 2 + padX - x;
+                    newLeft = w / 2 + padX - d * Math.max(0, 1 - d / stick);
+                }
+
+                // right
+                if (x > w - padX) {
+                    let d = x - (w - padX);
+                    newLeft = w - padX + d * Math.max(0, 1 - d / stick);
+                }
+
+                // top
+                if (y < padY) {
+                    let d = padY - y;
+                    newTop = padY - d * Math.max(0, 1 - d / stick);
+                }
+
+                // bottom
+                if (y > h - padY) {
+                    let d = y - (h - padY);
+                    newTop = h - padY + d * Math.max(0, 1 - d / stick);
+                }
+
                 dragMovementObject.updatePosition(newLeft, newTop);
             }
         });
