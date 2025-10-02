@@ -340,8 +340,9 @@
                 if (this.abstraction != null && updateAbstraction) {
                     this.abstraction.updateTextElementPosition();
                 }
-                this.checkAbstractions();
+                if (updateAbstraction) this.checkAbstractions();
             }
+
             checkAbstractions() {
                 //Check distance to all other annotations 
                 ANNOTATIONS.forEach((annotation) => {
