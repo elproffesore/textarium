@@ -730,7 +730,12 @@
                                     annotationInstance = new Annotation(cleanText.split('_').join(' '));
                                     annotationInstance.isClosest = true;
                                     annotationInstance.related[closestStem].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                } else {
+                                } 
+                                else if (annotationParts[i].startsWith('$')) {
+                                    let cleanText = annotationParts[i].slice(1).replace(/^_/, '');
+                                    annotationInstance = new Annotation(cleanText.split('_').join(' '), true);
+                                }
+                                else {
                                     let cleanText = annotationParts[i].replace(/^_/, '');
                                     annotationInstance = new Annotation(cleanText.split('_').join(' '));
                                 }
