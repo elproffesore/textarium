@@ -332,7 +332,7 @@
                 ANNOTATIONS.push(this);
                 setURLHashState();
             }
-            updatePosition(x, y, updateAbstraction = true) {
+            updatePosition(x, y, updateAbstraction = false) {
                 this.positionX = x;
                 this.positionY = y;
                 this.referenceElement.style.left = `${this.positionX}px`;
@@ -822,7 +822,7 @@
                     newTop = h - padY + d * Math.max(0, 1 - d / stick);
                 }
 
-                dragMovementObject.updatePosition(newLeft, newTop);
+                dragMovementObject.updatePosition(newLeft, newTop, true);
             }
         });
         window.addEventListener('mouseup', (e) => {
