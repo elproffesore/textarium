@@ -120,8 +120,9 @@
             background: none;
             border: none;
             width: fit-content;
-            /* font-style: italic; */
-            font-size: 1rem;
+            text-wrap: wrap;
+            max-width: 50vw;
+            font-size: 1rem;                        
         }
 
         .abstraction-texts:not(.editable) {
@@ -519,7 +520,6 @@
                 this.annotations.forEach((annotation) => {
                     annotation.updatePosition(annotation.positionX + deltaX, annotation.positionY + deltaY, false);
                 });
-                this.render();
             }
             updateTextElementPosition() {
                 if (!this.referenceElement) return;
@@ -540,7 +540,7 @@
             }
             
             render() {
-                if (!this.checkAnnotations()) return;
+                if (dragMovement && !this.checkAnnotations()) return;
                 // Render the hull of the abstraction
                 if (this.annotations.length < 2) {
                     this.annotations.forEach((annotation) => {
@@ -729,12 +729,7 @@
                                         .replace(/^_/, '');        // remove leading underscore if present
                                     annotationInstance = new Annotation(cleanText.split('_').join(' '));
                                     annotationInstance.isClosest = true;
-                                    window.setTimeout(() => {
-                                        annotationInstance.related[closestStem].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                    }, 100);
-                                } else if (annotationParts[i].startsWith('$')) {
-                                    let cleanText = annotationParts[i].slice(1).replace(/^_/, '');
-                                    annotationInstance = new Annotation(cleanText.split('_').join(' '), true);
+                                    annotationInstance.related[closestStem].scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 } else {
                                     let cleanText = annotationParts[i].replace(/^_/, '');
                                     annotationInstance = new Annotation(cleanText.split('_').join(' '));
@@ -743,9 +738,11 @@
                                 newAbstraction.addElement(annotationInstance);
                                 annotationInstance.updatePosition(
                                     parseFloat(annotationParts[i + 1]) * window.innerWidth,
-                                    parseFloat(annotationParts[i + 2]) * window.innerHeight, true
+                                    parseFloat(annotationParts[i + 2]) * window.innerHeight, false
                                 );
                             }
+                            newAbstraction.updateTextElementPosition();
+
                         } else {
                             let annotationInstance = null;
                             if (annotationParts[0].startsWith('!')) {
@@ -767,7 +764,7 @@
                             }
                             annotationInstance.updatePosition(
                                 parseFloat(annotationParts[1]) * window.innerWidth,
-                                parseFloat(annotationParts[2]) * window.innerHeight
+                                parseFloat(annotationParts[2]) * window.innerHeight, true
                             );
                         }
                     });
