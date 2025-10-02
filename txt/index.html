@@ -445,10 +445,14 @@
                 } else {
                     hashString += `${this.isClosest && this.closestStem ? '!' + this.closestStem : ''}`;
                 }
+                const safeElements = this.elements.map(el =>
+                    el.match(/^\d/) ? '_' + el : el
+                ) ;
+
                 return hashString +
-                    `${this.elements.join('_')}` +
+                    safeElements.join('_') +
                     `(${(this.positionX / window.innerWidth).toFixed(2)},${(this.positionY / window.innerHeight).toFixed(2)})`;
-            }
+                }
         }
         class Abstraction {
             constructor(text = "Abstraction") {
@@ -715,41 +719,57 @@
                             let newAbstraction = new Abstraction(abstractionName);
                             annotationParts = annotationParts.slice(1);
                             for (let i = 0; i < annotationParts.length; i += 3) {
-                                let annotationInstance = null
+                                let annotationInstance = null;
                                 if (annotationParts[i].startsWith('!')) {
-                                    let closestStem = annotationParts[i].match(/\d{1,3}/)[0]
-                                    annotationInstance = new Annotation(annotationParts[i].replace(/!\d{1,3}/, '').split('_').join(' '));
+                                    let closestStem = annotationParts[i].match(/\d{1,3}/)[0];
+                                    // strip the !n prefix and also any leading underscore we added in getAsURLHash
+                                    let cleanText = annotationParts[i]
+                                        .replace(/!\d{1,3}/, '')  // remove !n
+                                        .replace(/^_/, '');        // remove leading underscore if present
+                                    annotationInstance = new Annotation(cleanText.split('_').join(' '));
                                     annotationInstance.isClosest = true;
                                     window.setTimeout(() => {
-                                        console
                                         annotationInstance.related[closestStem].scrollIntoView({ behavior: 'smooth', block: 'center' });
                                     }, 100);
                                 } else if (annotationParts[i].startsWith('$')) {
-                                    annotationInstance = new Annotation(annotationParts[i].slice(1).split('_').join(' '), true);
+                                    let cleanText = annotationParts[i].slice(1).replace(/^_/, '');
+                                    annotationInstance = new Annotation(cleanText.split('_').join(' '), true);
                                 } else {
-                                    annotationInstance = new Annotation(annotationParts[i].split('_').join(' '));
+                                    let cleanText = annotationParts[i].replace(/^_/, '');
+                                    annotationInstance = new Annotation(cleanText.split('_').join(' '));
                                 }
                                 annotationInstance.abstraction = newAbstraction;
                                 newAbstraction.addElement(annotationInstance);
-                                annotationInstance.updatePosition(parseFloat(annotationParts[i + 1]) * window.innerWidth, parseFloat(annotationParts[i + 2]) * window.innerHeight);
+                                annotationInstance.updatePosition(
+                                    parseFloat(annotationParts[i + 1]) * window.innerWidth,
+                                    parseFloat(annotationParts[i + 2]) * window.innerHeight
+                                );
                             }
                         } else {
-                            let annotationInstance = null
+                            let annotationInstance = null;
                             if (annotationParts[0].startsWith('!')) {
-                                let closestStem = annotationParts[0].match(/\d{1,3}/)[0]
-                                annotationInstance = new Annotation(annotationParts[0].replace(/!\d{1,3}/, '').split('_').join(' '));
+                                let closestStem = annotationParts[0].match(/\d{1,3}/)[0];
+                                let cleanText = annotationParts[0]
+                                    .replace(/!\d{1,3}/, '')
+                                    .replace(/^_/, '');
+                                annotationInstance = new Annotation(cleanText.split('_').join(' '));
                                 annotationInstance.isClosest = true;
                                 window.setTimeout(() => {
                                     annotationInstance.related[closestStem].scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 }, 100);
                             } else if (annotationParts[0].startsWith('$')) {
-                                annotationInstance = new Annotation(annotationParts[0].slice(1).split('_').join(' '), true);
+                                let cleanText = annotationParts[0].slice(1).replace(/^_/, '');
+                                annotationInstance = new Annotation(cleanText.split('_').join(' '), true);
                             } else {
-                                annotationInstance = new Annotation(annotationParts[0].split('_').join(' '));
+                                let cleanText = annotationParts[0].replace(/^_/, '');
+                                annotationInstance = new Annotation(cleanText.split('_').join(' '));
                             }
-                            annotationInstance.updatePosition(parseFloat(annotationParts[1]) * window.innerWidth, parseFloat(annotationParts[2]) * window.innerHeight);
+                            annotationInstance.updatePosition(
+                                parseFloat(annotationParts[1]) * window.innerWidth,
+                                parseFloat(annotationParts[2]) * window.innerHeight
+                            );
                         }
-                    })
+                    });
                 }
             }
             gotState = true;
