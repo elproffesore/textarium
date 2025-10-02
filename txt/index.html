@@ -233,7 +233,8 @@
                 this.color = COLORS[colorCounter++ % COLORS.length]; // Color based on the text content
                 this.abstraction = null;  // List of abstractions this annotation is part of
                 this.stems = this.elements.map(stemmer).map(s => s.toLocaleLowerCase()); // The stemmed version of the word
-                this.related = Array.from(TEXTWRAPPER.querySelectorAll(`.${this.stems.join(' .')}`)) // All related of the word in the text
+                // this.related = Array.from(TEXTWRAPPER.querySelectorAll(`.${this.stems.join(' .')}`)) // All related of the word in the text
+                this.related = Array.from(TEXTWRAPPER.querySelectorAll( this.stems.map(s => `.textarium_${s}`).join(' ') ))
                 this.isClosest = false; // Whether this annotation is the closest to the center of the screen
                 this.closestStem = null; // The closest stem to the center of the screen
                 this.abstractionType = abstractionType;
@@ -313,17 +314,17 @@
                     // If the annotation consists of multiple elements, we need to find the first and last element
                     if (this.elements.length == 2) {
                         bigramsMap.get(this.stems.join(' '))?.map(match => {
-                            this.setExtractedElement(TEXTWRAPPER.querySelector(`#${match[0]}`)).classList.add('ngram');
-                            this.related.push(TEXTWRAPPER.querySelector(`#${match[0]}`));
-                            this.related.push(TEXTWRAPPER.querySelector(`#${match[1]}`));
+                            this.setExtractedElement(TEXTWRAPPER.querySelector(`#textarium_${match[0]}`)).classList.add('ngram');
+                            this.related.push(TEXTWRAPPER.querySelector(`#textarium_${match[0]}`));
+                            this.related.push(TEXTWRAPPER.querySelector(`#textarium_${match[1]}`));
                         });
                     } else if (this.elements.length == 3) {
                         trigramsMap.get(this.stems.join(' '))?.map(match => {
-                            this.setExtractedElement(TEXTWRAPPER.querySelector(`#${match[0]}`)).classList.add('ngram');
-                            this.setExtractedElement(TEXTWRAPPER.querySelector(`#${match[1]}`)).classList.add('ngram');
-                            this.related.push(TEXTWRAPPER.querySelector(`#${match[0]}`));
-                            this.related.push(TEXTWRAPPER.querySelector(`#${match[1]}`));
-                            this.related.push(TEXTWRAPPER.querySelector(`#${match[2]}`));
+                            this.setExtractedElement(TEXTWRAPPER.querySelector(`#textarium_${match[0]}`)).classList.add('ngram');
+                            this.setExtractedElement(TEXTWRAPPER.querySelector(`#textarium_${match[1]}`)).classList.add('ngram');
+                            this.related.push(TEXTWRAPPER.querySelector(`#textarium_${match[0]}`));
+                            this.related.push(TEXTWRAPPER.querySelector(`#textarium_${match[1]}`));
+                            this.related.push(TEXTWRAPPER.querySelector(`#textarium_${match[2]}`));
                         });
                     }
                 }
@@ -703,7 +704,7 @@
                     annotationsArray = annotationsString.split(';');
                     let annotationsToCreate = [];
                     annotationsArray.map((annotation, annotationIndex) => {
-                        let annotationParts = annotation.match(/([!$]?(\w-?)+\.?\d?\d?)/g);
+                        let annotationParts = annotation.match(/([!$]?[\w-]+)/g);
                         if (!annotationParts) {
                             console.warn('No valid annotation parts found in', annotation);
                             return;
@@ -975,8 +976,8 @@
                     .replaceAll('\n', ' \n ')
                     .split(' ')
                     .map((word, index) => {
-                        if (word != '#' && !RegExp(/[<>\d|]/).test(word)) {
-                            let sanitizedWord = word.replace(/[^a-zA-Z-]/g, '');
+                        if (word != '#' && !RegExp(/[<>|]/).test(word)) {
+                            let sanitizedWord = word.replace(/[^a-zA-Z0-9-]/g, '');
                             let stemmedWord = stemmer(sanitizedWord).toLocaleLowerCase();
                             if (sanitizedWord.length == 0) return word; // Skip empty words
                             WORDINDEX.push({
@@ -985,12 +986,12 @@
                                 index: index
                             });
                             if (sanitizedWord.length == 1) {
-                                return `<span id="${sanitizedWord + index}" class='word ${stemmedWord}'>${word}</span>`; // Skip single character words
+                                return `<span id="textarium_${sanitizedWord + index}" class='word textarium_${stemmedWord}'>${word}</span>`; // Skip single character words
                             } else {
                                 return word.replace(
-                                    /(\w+-?\w+)/g,
+                                    /([\w-]+)/g,
                                     //`<span id="${sanitizedWord + index}" onclick="Annotation.createAnnotation('${sanitizedWord}', '${sanitizedWord + index}')" onmouseleave="hideRelatedWordrelated()" onmouseenter="showRelatedWordrelated('${stemmedWord}')" class='word ${stemmedWord}'>${sanitizedWord}</span>`
-                                    `<span id="${sanitizedWord + index}" class='word ${stemmedWord}'>$1</span>`
+                                    `<span id="textarium_${sanitizedWord + index}" class='word textarium_${stemmedWord}'>$1</span>`
                                 );
                             }
                         }
