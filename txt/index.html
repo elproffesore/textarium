@@ -254,7 +254,7 @@
                 this.referenceElement.remove();
                 ANNOTATIONS.splice(ANNOTATIONS.indexOf(this), 1);
                 // Unmark the related
-                TEXTWRAPPER.querySelectorAll(`.annotation-textarium_${this.id}`).forEach((element) => {
+                TEXTWRAPPER.querySelectorAll(`.annotation-${this.id}`).forEach((element) => {
                     let multiSelect = ANNOTATIONS.filter(a => a !== this).find(a => {
                         if (a.related.includes(element)){
                             return a
@@ -275,6 +275,7 @@
                 // If the annotation is part of an abstraction, remove it from the abstraction
                 if (this.abstraction) {
                     this.abstraction.removeElement(this);
+                    this.abstraction.referenceElement.remove();
                 }
                 // Encode the state as a URL hash
                 setURLHashState();
@@ -527,6 +528,7 @@
                 this.annotations.forEach((annotation) => {
                     annotation.updatePosition(annotation.positionX + deltaX, annotation.positionY + deltaY, false);
                 });
+                this.render();
             }
             updateTextElementPosition() {
                 if (!this.referenceElement) return;
