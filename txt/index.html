@@ -440,17 +440,23 @@
                 let hashString = '';
                 if (this.abstractionType) {
                     hashString += '$';
-                } else {
-                    hashString += `${this.isClosest && this.closestStem ? '!' + this.closestStem : ''}`;
+                } else if (this.isClosest && this.closestStem != null) {
+                    hashString += '!' + this.closestStem;
                 }
+
                 const safeElements = this.elements.map(el =>
                     el.match(/^\d/) ? '_' + el : el
-                ) ;
+                );
+
+                const elementString = safeElements.join('_');
+                if (hashString.startsWith('!') && !elementString.startsWith('_')) {
+                    hashString += '_';
+                }
 
                 return hashString +
-                    safeElements.join('_') +
+                    elementString +
                     `(${(this.positionX / window.innerWidth).toFixed(2)},${(this.positionY / window.innerHeight).toFixed(2)})`;
-                }
+            }
         }
         class Abstraction {
             constructor(text = "Abstraction") {
