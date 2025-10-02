@@ -253,7 +253,6 @@
                             return a
                         }
                     });
-                    console.log('Multi select', multiSelect);
                     if(multiSelect){
                         element.classList.add(`annotation-${multiSelect.id}`);
                         element.style.backgroundColor = multiSelect.color;
@@ -310,7 +309,6 @@
                 this.updatePosition(window.innerWidth / 1.5, this.referenceElement.getBoundingClientRect().top);
                 // Get the bi- or trigrams of the text if necessary
                 if (this.elements.length > 1) {
-                    console.log('Annotation consists of multiple elements:', this.stems);
                     // If the annotation consists of multiple elements, we need to find the first and last element
                     if (this.elements.length == 2) {
                         bigramsMap.get(this.stems.join(' '))?.map(match => {
@@ -538,7 +536,6 @@
                 if (!this.checkAnnotations()) return;
                 // Render the hull of the abstraction
                 if (this.annotations.length < 2) {
-                    console.log("removing abstraction")
                     this.annotations.forEach((annotation) => {
                         // Remove the annotation from the abstraction
                         annotation.abstraction = null;
@@ -674,7 +671,6 @@
             dragMovementObject = dragElement;
             dragMovementObject.referenceElement.style.cursor = 'grabbing';
             let boundingClient = dragElement.referenceElement.getBoundingClientRect();
-            console.log('Setting drag movement', boundingClient);
             dragMovementOffsetX = e.clientX - boundingClient.left
             if (!dragMovementObject.annotations) {
                 dragMovementOffsetX -= boundingClient.width / 2;
@@ -684,7 +680,6 @@
         function setURLHashState() {
             if (resetPage) return;
             updatingHash = true;
-            console.log('Setting URL hash');
             // Set the URL hash to the current annotations
             let annotationHash = ANNOTATIONS.map((annotation) => {
                 if (annotation.abstraction) return null;
@@ -713,7 +708,6 @@
                             console.warn('No valid annotation parts found in', annotation);
                             return;
                         }
-                        console.log('Annotation parts', annotationParts);
                         if (RegExp(/\([!$a-zA-Z]/g).test(annotation)) {
                             let abstractionName = annotationParts[0].replaceAll('_', ' ');
                             let newAbstraction = new Abstraction(abstractionName);
@@ -870,7 +864,6 @@
                     let positioned = false;
                     let tries = 0;
                     while (!positioned && tries < 5) {
-                        console.log('Trying to position annotation', tries);
                         let x = annotation.positionX + tries * 50;
                         let y = selectionRect.top + annotationRect.height / 2;
                         let collision = ANNOTATIONS.find(annotationRef => {
@@ -913,7 +906,6 @@
             }
         });
         function resetState() {
-            console.log(window.location.hash);
             gotState = false;
             // Remove all annotations and abstractions from the DOM
             ANNOTATIONS.splice(0, ANNOTATIONS.length)
@@ -942,7 +934,6 @@
         window.addEventListener('popstate', (e) => {
             if (EMBEDDED) return;
             if (updatingHash) return;
-            console.log('Popstate event', e);
             resetState();
         });
         window.addEventListener('keydown', (e) => {
