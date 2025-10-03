@@ -1,12 +1,12 @@
 # A Cautious Prometheus? 
 ## What are the most important concepts of this text?
 
-[](txt/#latour&annotations=!1_3rd_September_2008(0.67,0.35))
+[](txt/#latour&annotations=Abstraction(Cornwall(0.73,0.61),Networks(0.67,0.44)))
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit...
 
 
-[](txt/#latour&annotations=this_should_be_way_more_prominent($ok_this_seems_odd_to_bee(0.78,0.53),$Design(0.66,0.36));!0_digitalization(0.73,0.73))
+[](txt/#latour&annotations=this_should_be($ok_this_seems_odd_to_bee(0.78,0.53),$Design(0.66,0.36));!0_digitalization(0.73,0.73))
 
 In this section, Latour discusses the different meanings of the word "design" in English and French. He highlights how the term is used in various contexts and how its meaning can change based on the language and cultural background.
 
