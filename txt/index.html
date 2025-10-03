@@ -126,15 +126,15 @@
             text-align: center;
             opacity: 0;
             transition-property: opacity;
-            transition-delay: .3s;                         
-            transition-duration: .3s;                   
+            transition-delay: .5s;                         
+            transition-duration: .5s;                   
         }
 
         .annotation {
             opacity: 0;
             transition-property: opacity;
-            transition-delay: .1s;          
-            transition-duration: .3s;                   
+            transition-delay: 0s;          
+            transition-duration: .5s;                   
         }
     
         .abstraction-texts {
@@ -375,7 +375,7 @@
                 this.positionY = y;
                 this.referenceElement.style.left = `${this.positionX}px`;
                 this.referenceElement.style.top = `${this.positionY}px`;
-                this.referenceElement.style.opacity = 1;
+                this.checkAnyRelatedVisible();
                 if (this.abstraction != null && updateAbstraction) {
                     this.abstraction.updateTextElementPosition();
                 }
@@ -937,6 +937,7 @@
                             if (Math.abs((annotationRefRect.top + annotationRefRect.height / 2) - y) > 20) return false; // if the bboxes are not on the same y level, ignore
                             return !(Math.abs((x + annotationRect.width / 2) - (annotationRefRect.left + annotationRefRect.width / 2)) > (annotationRefRect.width));
                         })
+                        annotation.style.opacity = 1;
                         if (!collision) {
                             annotation.updatePosition(x, y);
                             positioned = true;
@@ -1008,6 +1009,7 @@
             }
         });
         TEXTWRAPPER.addEventListener('scroll', (e) => {
+            ANNOTATIONS.forEach(a => a.checkAnyRelatedVisible());
             if (EMBEDDED) return;
             updateClosestAnnotation();
         })
