@@ -235,6 +235,15 @@
         let dragMovementOffsetX = 0;
         let dragMovementOffsetY = 0;
 
+        function updateClosestAnnotation() {
+            ANNOTATIONS.map(a => a.getDistanceToCenter())
+                .sort((a, b) => a.minDistance - b.minDistance)
+                .map((a, index) => {
+                    if (!a) return; // Skip abstractions
+                    a.annotation.isClosest = index == 0;
+                });
+            setURLHashState();
+        }
         class Annotation {
             constructor(text, abstractionType = false) {
                 this.text = text; // The word or text content of the annotation
@@ -348,6 +357,7 @@
                 });
                 ANNOTATIONS.push(this);
                 setURLHashState();
+                updateClosestAnnotation();
             }
             updatePosition(x, y, updateAbstraction = false) {
                 this.positionX = x;
@@ -478,6 +488,7 @@
                     elementString +
                     `(${(this.positionX / window.innerWidth).toFixed(2)},${(this.positionY / window.innerHeight).toFixed(2)})`;
             }
+            
         }
         class Abstraction {
             constructor(text = "Abstraction") {
@@ -979,13 +990,15 @@
         });
         TEXTWRAPPER.addEventListener('scroll', (e) => {
             if (EMBEDDED) return;
-            ANNOTATIONS.map(a => a.getDistanceToCenter())
-                .sort((a, b) => a.minDistance - b.minDistance)
-                .map((a, index) => {
-                    if (!a) return; // Skip abstractions
-                    a.annotation.isClosest = index == 0; // Set the closest annotation to true
-                });
-                setURLHashState();
+            updateClosestAnnotation();
+
+            // ANNOTATIONS.map(a => a.getDistanceToCenter())
+            //     .sort((a, b) => a.minDistance - b.minDistance)
+            //     .map((a, index) => {
+            //         if (!a) return; // Skip abstractions
+            //         a.annotation.isClosest = index == 0; // Set the closest annotation to true
+            //     });
+            //     setURLHashState();
         })
         ANNOTATIONSWRAPPER.addEventListener('dblclick', (e) => {
             e.preventDefault();

@@ -1,7 +1,7 @@
 # A Cautious Prometheus? 
 ## What are the most important concepts of this text?
 
-[](txt/#latour&annotations=Abstraction(Cornwall(0.73,0.61),Networks(0.67,0.44)))
+[](txt/#latour&annotations=hello(Cornwall(0.74,0.51),!1_Networks(0.67,0.41)))
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit...
 
