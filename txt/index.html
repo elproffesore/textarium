@@ -244,9 +244,12 @@
                 });
             setURLHashState();
         }
+        function sanitize(input) {
+           return input.replace(/[^a-zA-Z]/g, ' ');
+        }
         class Annotation {
             constructor(text, abstractionType = false) {
-                this.text = text; // The word or text content of the annotation
+                this.text = sanitize(text); // The word or text content of the annotation
                 this.elements = this.text.match(/(\w+-?)+/g) || []; // The elements of the text, split by whitespace
                 this.id = self.crypto.randomUUID();
                 this.referenceElement = null; // The HTML element representing the annotation
@@ -495,7 +498,7 @@
                 this.annotations = [];
                 this.id = self.crypto.randomUUID();
                 this.referenceElement = null;
-                this.text = text;
+                this.text = sanitize(text);
                 this.opacity = 0;            // start transparent
                 this.fadeInStart = Date.now();
                 if (EMBEDDED) this.fadeInDuration = 300;
@@ -513,10 +516,18 @@
                     abstractionTextElement.readOnly = true;
                 } else {
                     abstractionTextElement.addEventListener('input', (e) => {
-                        this.text = e.target.value;
-                        abstractionTextElement.style.width = (this.text.length - Math.max(0, (this.text.length * 0.15)-1)) + "ch";
+                        const cleaned = sanitize(e.target.value);
+                        this.text = cleaned;
+                        e.target.value = cleaned; // enforce sanitized string in the field itself
+                        abstractionTextElement.style.width = (cleaned.length - Math.max(0, (cleaned.length * 0.15) - 1)) + "ch";
                         this.updateTextElementPosition();
                         setURLHashState();
+                    });
+                    abstractionTextElement.addEventListener("keydown", (e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            e.target.blur();
+                        }
                     });
                     abstractionTextElement.addEventListener('mousedown', (e) => setDragMovement(e, this));
                     abstractionTextElement.addEventListener("dblclick", (e) => {
@@ -991,14 +1002,6 @@
         TEXTWRAPPER.addEventListener('scroll', (e) => {
             if (EMBEDDED) return;
             updateClosestAnnotation();
-
-            // ANNOTATIONS.map(a => a.getDistanceToCenter())
-            //     .sort((a, b) => a.minDistance - b.minDistance)
-            //     .map((a, index) => {
-            //         if (!a) return; // Skip abstractions
-            //         a.annotation.isClosest = index == 0; // Set the closest annotation to true
-            //     });
-            //     setURLHashState();
         })
         ANNOTATIONSWRAPPER.addEventListener('dblclick', (e) => {
             e.preventDefault();
@@ -1049,7 +1052,6 @@
                             } else {
                                 return word.replace(
                                     /([\w-]+)/g,
-                                    //`<span id="${sanitizedWord + index}" onclick="Annotation.createAnnotation('${sanitizedWord}', '${sanitizedWord + index}')" onmouseleave="hideRelatedWordrelated()" onmouseenter="showRelatedWordrelated('${stemmedWord}')" class='word ${stemmedWord}'>${sanitizedWord}</span>`
                                     `<span id="textarium_${sanitizedWord + index}" class='word textarium_${stemmedWord}'>$1</span>`
                                 );
                             }
