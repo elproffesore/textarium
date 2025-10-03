@@ -113,11 +113,18 @@
             pointer-events: none;
             z-index: -1;
         }
-        .annotation,
+        
         .abstraction-texts {
             opacity: 0;
             transition-property: opacity;
-            transition-delay: .2s;                         
+            transition-delay: .3s;                         
+            transition-duration: .3s;                   
+        }
+
+        .annotation {
+            opacity: 0;
+            transition-property: opacity;
+            transition-delay: .1s;          
             transition-duration: .3s;                   
         }
     
@@ -209,7 +216,7 @@
 
         //Animation related variables
         const MINIMUMOPACITY = 0.1; // Minimum duration in ms for animations
-        const ABSTRACTIONSMINIMUMDISTANCE = 30; // Minimum distance in px between annotations to create an abstraction
+        const ABSTRACTIONSMINIMUMDISTANCE = 50; // Minimum distance in px between annotations to create an abstraction
         const ABSTRACTIONSMAXIMUMDISTANCE = 300; // Maximum distance in px between annotations to delete an abstraction
 
         // Application related variables
@@ -243,6 +250,9 @@
                 this.isClosest = false; // Whether this annotation is the closest to the center of the screen
                 this.closestStem = null; // The closest stem to the center of the screen
                 this.abstractionType = abstractionType;
+                this.fadeInStart = Date.now();
+                this.fadeInDuration = 800;
+                this.opacity = 0;
                 this.initialize();
             }
             deleteAnnotation() {
@@ -383,6 +393,8 @@
             render() {
                 let referenceElementBB = this.referenceElement.getBoundingClientRect();
                 if (!referenceElementBB) return;
+                let t = (Date.now() - this.fadeInStart) / this.fadeInDuration;
+                this.opacity = Math.min(1, t);
                 let positionX = referenceElementBB.left
                 let positionY = referenceElementBB.top + referenceElementBB.height / 2;
                 // Render the connections to the related
@@ -397,7 +409,7 @@
                     CTX.moveTo(positionX, positionY);
                     CTX.lineTo(stemX, stemY);   
                     let verticalDistance = Math.abs(stemY - positionY);
-                    let opacity = Math.max(MINIMUMOPACITY, Math.pow((TEXTWRAPPER.scrollHeight - verticalDistance) / TEXTWRAPPER.scrollHeight, 10));
+                    let opacity = this.opacity * Math.max(MINIMUMOPACITY, Math.pow((TEXTWRAPPER.scrollHeight - verticalDistance) / TEXTWRAPPER.scrollHeight, 10));
                     let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
                     CTX.strokeStyle = `${this.color}${hexOpacity}`;
                     CTX.setLineDash([]);
@@ -546,8 +558,7 @@
                 let centerX = (boundingBox.left + boundingBox.right) / 2;
                 let centerY = (boundingBox.top + boundingBox.bottom) / 2;
                 this.referenceElement.style.left = `${centerX - this.referenceElement.offsetWidth / 2}px`;
-                this.referenceElement.style.top = `${centerY}px`;
-            }
+                this.referenceElement.style.top  = `${centerY - this.referenceElement.offsetHeight / 2}px`;            }
             
             render() {
                 if (dragMovement && !this.checkAnnotations()) return;
