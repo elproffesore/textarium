@@ -210,7 +210,6 @@
 
         //Animation related variables
         const MINIMUMOPACITY = 0.1; // Minimum duration in ms for animations
-        const ANNOTATIONLINEWIDTH = 0.8;
         const ABSTRACTIONSMINIMUMDISTANCE = 30; // Minimum distance in px between annotations to create an abstraction
         const ABSTRACTIONSMAXIMUMDISTANCE = 300; // Maximum distance in px between annotations to delete an abstraction
 
@@ -403,7 +402,7 @@
                     let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
                     CTX.strokeStyle = `${this.color}${hexOpacity}`;
                     CTX.setLineDash([]);
-                    CTX.lineWidth = ANNOTATIONLINEWIDTH + 1.5 * opacity;
+                    CTX.lineWidth = (parseFloat(getComputedStyle(document.documentElement).fontSize)/10).toFixed(2);
                     CTX.stroke();
                 });
             }
