@@ -552,6 +552,14 @@
 
                 this.referenceElement = abstractionTextElement;
                 document.body.appendChild(abstractionTextElement);
+
+                if (dragMovement) {
+                    this.hiddenOnCreate = true;
+                    abstractionTextElement.style.visibility = 'hidden';
+                    abstractionTextElement.style.pointerEvents = 'none';
+                    abstractionTextElement.style.opacity = 0;
+                }
+
                 ABSTRACTIONS.push(this);
             }
             addElement(annotation) {
@@ -592,6 +600,7 @@
                 this.referenceElement.style.top  = `${centerY - this.referenceElement.offsetHeight / 2}px`;            }
             
             render() {
+
                 if (dragMovement && !this.checkAnnotations()) return;
 
                 let t = (Date.now() - this.fadeInStart) / this.fadeInDuration;
@@ -608,6 +617,7 @@
                     ABSTRACTIONS.splice(ABSTRACTIONS.indexOf(this), 1);
                     return;
                 }
+
                 let padding = 20;
                 let coordinates = this.annotations.map((annotation) => {
                     let element = annotation.referenceElement.getBoundingClientRect();
@@ -695,10 +705,13 @@
                     this.referenceElement.style.opacity = 1;
                 }
                 if (this.annotations.length < 2) {
-                    new Annotation(this.text, true).updatePosition(
-                        parseFloat(this.referenceElement.style.left) + this.referenceElement.offsetWidth / 2,
-                        parseFloat(this.referenceElement.style.top) + this.referenceElement.offsetHeight / 2, false
-                    );
+                    if (this.hiddenOnCreate!=true) {
+                        new Annotation(this.text, true).updatePosition(
+                            parseFloat(this.referenceElement.style.left) + this.referenceElement.offsetWidth / 2,
+                            parseFloat(this.referenceElement.style.top) + this.referenceElement.offsetHeight / 2, false
+                        );
+                    }
+                    
                     this.annotations.forEach((annotation) => {
                         // Remove the abstraction from the annotation
                         annotation.abstraction = null;
@@ -888,6 +901,27 @@
                 dragMovement = false;
                 dragMovementObject.referenceElement.style.cursor = 'grab';
                 dragMovementObject = null;
+
+                ABSTRACTIONS.slice().forEach(abs => {
+                    const el = abs.referenceElement;
+                    if (!el) return;
+
+                    if (abs.hiddenOnCreate === true) {
+                        if (abs.annotations.length >= 2) {
+                            el.style.visibility = 'visible';
+                            el.style.pointerEvents = 'auto';
+                            el.style.opacity = 1;
+                            abs.hiddenOnCreate = false;
+                            abs.updateTextElementPosition();
+                        } else {
+                            abs.annotations.forEach(a => a.abstraction = null);
+                            el.remove();
+                            const idx = ABSTRACTIONS.indexOf(abs);
+                            if (idx > -1) ABSTRACTIONS.splice(idx, 1);
+                        }
+                    }
+                });
+
                 setURLHashState();
             } else if (!EMBEDDED) {
                 let selection = window.getSelection();
@@ -937,7 +971,7 @@
                             if (Math.abs((annotationRefRect.top + annotationRefRect.height / 2) - y) > 20) return false; // if the bboxes are not on the same y level, ignore
                             return !(Math.abs((x + annotationRect.width / 2) - (annotationRefRect.left + annotationRefRect.width / 2)) > (annotationRefRect.width));
                         })
-                        annotation.style.opacity = 1;
+                        // annotation.style.opacity = 1;
                         if (!collision) {
                             annotation.updatePosition(x, y);
                             positioned = true;
