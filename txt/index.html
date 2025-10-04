@@ -301,10 +301,12 @@
                     }
 
                 });
+
                 // If the annotation is part of an abstraction, remove it from the abstraction
                 if (this.abstraction) {
                     this.abstraction.removeElement(this);
-                    this.abstraction.referenceElement.remove();
+                    this.abstraction.checkAnnotations();
+                    this.abstraction.updateTextElementPosition();
                 }
                 // Encode the state as a URL hash
                 setURLHashState();
@@ -607,7 +609,6 @@
 
                 let t = (Date.now() - this.fadeInStart) / this.fadeInDuration;
                 this.opacity = Math.min(1, t);
-
                 // Render the hull of the abstraction
                 if (this.annotations.length < 2) {
                     this.annotations.forEach((annotation) => {
