@@ -383,6 +383,8 @@
             }
 
             checkAbstractions() {
+                if (this.abstraction) return;
+
                 //Check distance to all other annotations 
                 ANNOTATIONS.forEach((annotation) => {
                     if (annotation !== this) {
