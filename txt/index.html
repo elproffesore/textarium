@@ -618,7 +618,8 @@
                     return;
                 }
 
-                let padding = 20;
+                let padding = (parseInt(getComputedStyle(document.documentElement).fontSize));
+
                 let coordinates = this.annotations.map((annotation) => {
                     let element = annotation.referenceElement.getBoundingClientRect();
                     // return all points of the bounding rect as a two-dimensional array
