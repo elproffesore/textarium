@@ -125,6 +125,7 @@
         .abstraction-texts {
             text-align: center;
             opacity: 0;
+            display: none;
             transition-property: opacity;
             transition-delay: .5s;                         
             transition-duration: .5s;                   
@@ -280,7 +281,7 @@
                 this.closestStem = null; // The closest stem to the center of the screen
                 this.abstractionType = abstractionType;
                 this.fadeInStart = Date.now();
-                this.fadeInDuration = 800;
+                this.fadeInDuration = 500;
                 this.opacity = 0;
                 this.initialize();
             }
@@ -413,7 +414,7 @@
                 this.positionX = x;
                 this.positionY = y;
                 this.referenceElement.style.left = `${this.positionX}px`;
-                this.referenceElement.style.top = `${this.positionY}px`;
+                this.referenceElement.style.top = `${this.positionY - window.scrollY}px`;
                 this.checkAnyRelatedVisible();
                 if (this.abstraction != null && updateAbstraction) {
                     this.abstraction.updateTextElementPosition();
@@ -466,34 +467,34 @@
                 if (this.elements.length > 2) markables = this.related.filter((r,i) => i % 3 == 2); // only take the last one
                 markables.forEach((stem) => {
                     let stemBB = stem.getBoundingClientRect();
-                    let stemX = stemBB.left + stemBB.width ;
+                    let stemX = stemBB.left + stemBB.width;
                     let stemY = stemBB.top + stemBB.height / 2;
 
-                    // Ensure curve enters horizontally into annotation from left
                     let annotationEnterX = positionX;
                     let annotationEnterY = positionY;
 
-                    // Exit horizontally from the text span
-                    let textExitX = stemX;
-                    let textExitY = stemY;
-                    let control1X = stemX + REM*3;  // Pull curve rightward out of text
-                    let control1Y = stemY;
+                    // Strong horizontal exit and approach
+                    let cp1X = stemX + REM * 10;       // Pull far right out of text
+                    let cp1Y = stemY;
 
-                    let control2X = positionX - REM*5;  // Pull curve leftward into annotation
-                    let control2Y = positionY;
+                    let cp2X = annotationEnterX - REM * 6;  // Pull from left into annotation
+                    let cp2Y = annotationEnterY;
 
+                    // Draw the cubic Bézier curve
                     CTX.beginPath();
-                    CTX.moveTo(textExitX, textExitY);
-                    CTX.bezierCurveTo(control1X, control1Y, control2X, control2Y, annotationEnterX, annotationEnterY);
+                    CTX.moveTo(stemX, stemY);
+                    CTX.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, annotationEnterX, annotationEnterY);
 
-                    let verticalDistance = Math.abs(stemY - positionY);
-                    let opacity = this.opacity * Math.max(MINIMUMOPACITY, Math.pow((TEXTWRAPPER.scrollHeight - verticalDistance) / TEXTWRAPPER.scrollHeight, 10));
+                    // Opacity based on vertical distance
+                    const rect = stem.getBoundingClientRect();
+                    const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+                    let opacity = this.opacity * (isVisible ? 1 : MINIMUMOPACITY);
                     let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
 
                     // Style
                     CTX.strokeStyle = `${this.color}${hexOpacity}`;
                     CTX.setLineDash([]);
-                    CTX.lineWidth = (parseFloat(getComputedStyle(document.documentElement).fontSize)/10).toFixed(2);
+                    CTX.lineWidth = (parseFloat(getComputedStyle(document.documentElement).fontSize) / 15).toFixed(1);
                     CTX.stroke();
                 });
             }
@@ -509,7 +510,7 @@
                 if (visibility || this.abstractionType) {
                     this.referenceElement.style.opacity = 1;
                 } else {
-                    this.referenceElement.style.opacity = 0.3;
+                    this.referenceElement.style.opacity = 0.2;
                 }
                 return visibility;
             }
@@ -565,7 +566,7 @@
             
         }
         class Abstraction {
-            constructor(text = "Abstraction") {
+            constructor(text = "A") {
                 this.annotations = [];
                 this.id = self.crypto.randomUUID();
                 this.referenceElement = null;
@@ -613,7 +614,7 @@
                 }
 
                 this.referenceElement = abstractionTextElement;
-                document.body.appendChild(abstractionTextElement);
+                ANNOTATIONSWRAPPER.appendChild(abstractionTextElement);
 
                 if (dragMovement) {
                     this.hiddenOnCreate = true;
@@ -657,9 +658,10 @@
                     return acc;
                 }, { left: Infinity, top: Infinity, right: -Infinity, bottom: -Infinity })
                 let centerX = (boundingBox.left + boundingBox.right) / 2;
-                let centerY = (boundingBox.top + boundingBox.bottom) / 2;
+                let centerY = (boundingBox.top + boundingBox.bottom) / 2;                
                 this.referenceElement.style.left = `${centerX - this.referenceElement.offsetWidth / 2}px`;
-                this.referenceElement.style.top  = `${centerY - this.referenceElement.offsetHeight / 2}px`;            }
+                this.referenceElement.style.top  = `${centerY - this.referenceElement.offsetHeight / 2}px`;
+            }
             
             render() {
 
@@ -691,16 +693,16 @@
                         [element.left - padding, element.top + element.height + padding],
                     ];
                 })
-                // Add the reference element to the coordinates
-                let referenceElementBB = this.referenceElement.getBoundingClientRect();
-                coordinates.push(
-                    [
-                        [referenceElementBB.left - padding, referenceElementBB.top - padding],
-                        [referenceElementBB.left + referenceElementBB.width + padding, referenceElementBB.top - padding],
-                        [referenceElementBB.left + referenceElementBB.width + padding, referenceElementBB.bottom + referenceElementBB.height + padding],
-                        [referenceElementBB.left - padding, referenceElementBB.bottom + referenceElementBB.height + padding],
-                    ]
-                )
+                // // Add the reference element to the coordinates
+                // let referenceElementBB = this.referenceElement.getBoundingClientRect();
+                // coordinates.push(
+                //     [
+                //         [referenceElementBB.left - padding, referenceElementBB.top - padding],
+                //         [referenceElementBB.left + referenceElementBB.width + padding, referenceElementBB.top - padding],
+                //         [referenceElementBB.left + referenceElementBB.width + padding, referenceElementBB.bottom + referenceElementBB.height + padding],
+                //         [referenceElementBB.left - padding, referenceElementBB.bottom + referenceElementBB.height + padding],
+                //     ]
+                // )
                 let hull = monotoneChainConvexHull(coordinates.flat());
                 if (hull.length < 3) return;
                 // Draw the hull
@@ -762,17 +764,17 @@
                 }
                 nonVisible = nonVisible.filter(n => n);
                 if (nonVisible.length == 0) {
-                    this.referenceElement.style.opacity = 0.3;
+                    this.referenceElement.style.opacity = 0.2;
                 }else{
                     this.referenceElement.style.opacity = 1;
                 }
                 if (this.annotations.length < 2) {
-                    if (this.hiddenOnCreate!=true) {
-                        new Annotation(this.text, true).updatePosition(
-                            parseFloat(this.referenceElement.style.left) + this.referenceElement.offsetWidth / 2,
-                            parseFloat(this.referenceElement.style.top) + this.referenceElement.offsetHeight / 2, false
-                        );
-                    }
+                    // if (this.hiddenOnCreate!=true) {
+                    //     new Annotation(this.text, true).updatePosition(
+                    //         parseFloat(this.referenceElement.style.left) + this.referenceElement.offsetWidth / 2,
+                    //         parseFloat(this.referenceElement.style.top) + this.referenceElement.offsetHeight / 2, false
+                    //     );
+                    // }
                     
                     this.annotations.forEach((annotation) => {
                         // Remove the abstraction from the annotation
@@ -818,7 +820,7 @@
             if (!dragMovementObject.annotations) {
                 dragMovementOffsetX -= boundingClient.width / 2;
             }
-            dragMovementOffsetY = e.clientY - (boundingClient.top + boundingClient.height / 2);
+            dragMovementOffsetY = e.clientY - (boundingClient.top + boundingClient.height);
         }
         function setURLHashState() {
             if (resetPage) return;
@@ -912,8 +914,11 @@
                 ann.color = hex;
 
                 // set color for annotation label
-                ann.referenceElement.style.backgroundColor = hex;
-                ann.referenceElement.style.color = getReadableTextColor(hex);
+                if (ann.related.length>0) {
+                    ann.referenceElement.style.backgroundColor = hex;
+                    ann.referenceElement.style.color = getReadableTextColor(hex);
+                }
+                else ann.referenceElement.style.backgroundColor = "#ffffffff";
 
                 // apply color to stems
                 ann.related.forEach(el => {
@@ -970,7 +975,20 @@
                     newTop = h - padY + d * Math.max(0, 1 - d / stick);
                 }
 
-                dragMovementObject.updatePosition(newLeft, newTop, true);
+                if (e.shiftKey && dragMovementObject.abstraction) {
+                    let dx = newLeft - dragMovementObject.positionX;
+                    let dy = newTop - dragMovementObject.positionY;
+
+                    dragMovementObject.abstraction.annotations.forEach((annotation) => {
+                        annotation.updatePosition(annotation.positionX + dx, annotation.positionY + dy, false);
+                    });
+
+                    // dragMovementObject.abstraction.updateTextElementPosition();
+
+                } else {
+                    dragMovementObject.updatePosition(newLeft, newTop, true);
+                }
+
             }
         });
         window.addEventListener('mouseup', (e) => {
@@ -1048,7 +1066,6 @@
                             if (Math.abs((annotationRefRect.top + annotationRefRect.height / 2) - y) > 20) return false; // if the bboxes are not on the same y level, ignore
                             return !(Math.abs((x + annotationRect.width / 2) - (annotationRefRect.left + annotationRefRect.width / 2)) > (annotationRefRect.width));
                         })
-                        // annotation.style.opacity = 1;
                         if (!collision) {
                             annotation.updatePosition(x, y);
                             positioned = true;
@@ -1087,6 +1104,7 @@
             }
         });
         function resetState() {
+            hidePicker();
             gotState = false;
             // Remove all annotations and abstractions from the DOM
             ANNOTATIONS.splice(0, ANNOTATIONS.length)

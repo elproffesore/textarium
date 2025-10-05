@@ -10,7 +10,7 @@
 Lorem ipsum dolor sit amet, consectetur adipisicing elit...
 
 
-[](txt/#latour&annotations=foo(Cornwall(0.77,0.51,100,143,255),Networks(0.73,0.38,120,94,240));Abstraction(!26_design(0.79,0.67,254,97,0),look(0.69,0.71,220,38,127)))
+[](txt/#latour&annotations=foo(Cornwall(0.77,0.51,100,143,255),Networks(0.76,0.37,120,94,240));Abstraction(!48_design(0.67,0.60,254,97,0),look(0.77,0.73,220,38,127)))
 
 ...sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
