@@ -180,6 +180,7 @@
         <div id="text-wrapper"></div>
         <div id="annotations-wrapper"></div>
         <canvas id="connections-wrapper"></canvas>
+        <input type="color" id="annotation-color-picker" style="position: absolute; display: none; z-index: 1000;" />
     </div>
     <script>       
         const TEXTWRAPPER = document.getElementById('text-wrapper');
@@ -342,6 +343,31 @@
                     e.preventDefault();
                     e.stopPropagation();
                     this.deleteAnnotation();
+                });
+                referenceElement.addEventListener('mouseenter', (e) => {
+                    if (this.abstractionType || EMBEDDED) return;
+
+                    const colorPicker = document.getElementById('annotation-color-picker');
+                    const rect = referenceElement.getBoundingClientRect();
+
+                    colorPicker.style.left = `${rect.right}px`;
+                    colorPicker.style.top = `${rect.top}px`;
+                    colorPicker.style.width = "1rem";
+                    colorPicker.style.height = "1rem";
+                    colorPicker.style.display = 'block';
+                    colorPicker.value = this.color;
+
+                    colorPicker.annotation = this;
+                });
+                referenceElement.addEventListener('mouseleave', (e) => {
+                    const colorPicker = document.getElementById('annotation-color-picker');
+                    // Use a short delay to avoid hiding before the input can be clicked
+                    setTimeout(() => {
+                        if (!colorPicker.matches(':hover')) {
+                            colorPicker.style.display = 'none';
+                            colorPicker.annotation = null;
+                        }
+                    }, 200);
                 });
                 this.referenceElement = referenceElement;
                 ANNOTATIONSWRAPPER.appendChild(referenceElement);
@@ -752,6 +778,10 @@
             
         function setDragMovement(e, dragElement) {
             if (EMBEDDED) return;
+            const picker = document.getElementById('annotation-color-picker');
+            picker.style.display = 'none';
+            picker.annotation = null;
+
             e.preventDefault();
             dragMovement = true;
             dragMovementObject = dragElement;
@@ -1078,6 +1108,41 @@
                 annotation.color="#ffffff";
                 annotation.updatePosition(e.clientX, e.clientY, true);
                 setURLHashState();
+            }
+        });
+        document.getElementById('annotation-color-picker').addEventListener('input', function () {
+            const ann = this.annotation;
+            if (!ann) return;
+
+            ann.color = this.value;
+            ann.referenceElement.style.backgroundColor = ann.color;
+            ann.referenceElement.style.color = getReadableTextColor(ann.color);
+
+            // Update all related word spans
+            ann.related.forEach(el => {
+                el.style.backgroundColor = ann.color;
+                el.style.color = getReadableTextColor(ann.color);
+            });
+
+            setURLHashState(); // Persist in URL hash
+        });
+        // document.getElementById('annotation-color-picker').addEventListener('mouseleave', function () {
+        //     this.style.display = 'none';
+        //     this.annotation = null;
+        // });
+        document.addEventListener('click', (event) => {
+            const picker = document.getElementById('annotation-color-picker');
+            const target = event.target;
+
+            // Only hide if the click is outside both the picker and its linked annotation
+            if (
+                picker.style.display === 'block' &&
+                target !== picker &&
+                target !== picker.annotation?.referenceElement &&
+                !picker.contains(target)
+            ) {
+                picker.style.display = 'none';
+                picker.annotation = null;
             }
         });
         // Function to search for n-grams
