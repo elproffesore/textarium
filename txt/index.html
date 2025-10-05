@@ -167,6 +167,9 @@
             cursor: unset;
             pointer-events: none;
         }
+
+        #annotation-color-picker {opacity: .5;}
+        #annotation-color-picker:hover {opacity: 1;}
     </style>
 </head>
 
@@ -350,10 +353,17 @@
                     const colorPicker = document.getElementById('annotation-color-picker');
                     const rect = referenceElement.getBoundingClientRect();
 
-                    colorPicker.style.left = `${rect.right}px`;
-                    colorPicker.style.top = `${rect.top}px`;
-                    colorPicker.style.width = "1rem";
-                    colorPicker.style.height = "1rem";
+                    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+                    const pickerRemSize = 1.5; 
+                    const pickerPxSize = pickerRemSize * rem;
+                    const spacingPx = 0.1 * rem;
+
+                    // Position to the right of label, vertically centered
+                    colorPicker.style.left = `${rect.right + spacingPx}px`;
+                    colorPicker.style.top = `${rect.top + window.scrollY + (rect.height - pickerPxSize) / 2}px`;
+
+                    colorPicker.style.width = `${pickerRemSize}rem`;
+                    colorPicker.style.height = `${pickerRemSize}rem`;
                     colorPicker.style.display = 'block';
                     colorPicker.value = this.color;
 
@@ -1089,8 +1099,10 @@
         });
         window.addEventListener('keydown', (e) => {
             if (EMBEDDED) return;
+            
             if (e.key === 'Escape') {
-                window.location.hash = `#${SOURCETEXT}`;
+                if (document.getElementById('annotation-color-picker').style.display === 'block') hidePicker();
+                else window.location.hash = `#${SOURCETEXT}`;                
             }
         });
         TEXTWRAPPER.addEventListener('scroll', (e) => {
@@ -1118,7 +1130,6 @@
             ann.referenceElement.style.backgroundColor = ann.color;
             ann.referenceElement.style.color = getReadableTextColor(ann.color);
 
-            // Update all related word spans
             ann.related.forEach(el => {
                 el.style.backgroundColor = ann.color;
                 el.style.color = getReadableTextColor(ann.color);
@@ -1126,10 +1137,6 @@
 
             setURLHashState(); // Persist in URL hash
         });
-        // document.getElementById('annotation-color-picker').addEventListener('mouseleave', function () {
-        //     this.style.display = 'none';
-        //     this.annotation = null;
-        // });
         document.addEventListener('click', (event) => {
             const picker = document.getElementById('annotation-color-picker');
             const target = event.target;
@@ -1140,11 +1147,13 @@
                 target !== picker &&
                 target !== picker.annotation?.referenceElement &&
                 !picker.contains(target)
-            ) {
-                picker.style.display = 'none';
-                picker.annotation = null;
-            }
+            ) hidePicker();
         });
+        function hidePicker() {
+            const picker = document.getElementById('annotation-color-picker');
+            picker.style.display = 'none';
+            picker.annotation = null;
+        }
         // Function to search for n-grams
         function searchNGrams(wordIndex, n) {
             const ngramMap = new Map();
