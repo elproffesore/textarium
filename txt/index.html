@@ -1049,6 +1049,7 @@
         }
         window.addEventListener('hashchange', (e) => {
             if (!EMBEDDED) return;
+            if (updatingHash) return;
             resetState();
         });
         window.addEventListener('popstate', (e) => {
