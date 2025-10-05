@@ -193,6 +193,7 @@
         const CONNECTIONSWRAPPER = document.getElementById('connections-wrapper');
         const CTX = CONNECTIONSWRAPPER.getContext('2d');
         let pickerTimeout;
+        let REM = parseInt(getComputedStyle(document.documentElement).fontSize);
         CONNECTIONSWRAPPER.width = window.innerWidth;
         CONNECTIONSWRAPPER.height = window.innerHeight;
         if (window.devicePixelRatio > 1) {
@@ -232,8 +233,8 @@
 
         //Animation related variables
         const MINIMUMOPACITY = 0.1; // Minimum duration in ms for animations
-        const ABSTRACTIONSMINIMUMDISTANCE = 50; // Minimum distance in px between annotations to create an abstraction
-        const ABSTRACTIONSMAXIMUMDISTANCE = 300; // Maximum distance in px between annotations to delete an abstraction
+        let ABSTRACTIONSMINIMUMDISTANCE = REM*2; // Minimum distance in px between annotations to create an abstraction
+        let ABSTRACTIONSMAXIMUMDISTANCE = REM*10; // Maximum distance in px between annotations to delete an abstraction
 
         // Application related variables
         const SOURCETEXT = window.location.hash.slice(1).match(/\w+/)[0];
@@ -351,17 +352,16 @@
                     this.deleteAnnotation();
                 });
                 referenceElement.addEventListener('mouseenter', (e) => {
-                    if (this.abstractionType || EMBEDDED) return;
+                    if (this.abstractionType || EMBEDDED || dragMovement) return;
                     clearTimeout(pickerTimeout);
                     
                     const colorPicker = document.getElementById('annotation-color-picker');
                     colorPicker.classList.remove("hiding");
                     const rect = referenceElement.getBoundingClientRect();
 
-                    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
                     const pickerRemSize = 1.5; 
-                    const pickerPxSize = pickerRemSize * rem;
-                    const spacingPx = 0.1 * rem;
+                    const pickerPxSize = pickerRemSize * REM;
+                    const spacingPx = 0.1 * REM;
 
                     // Position to the right of label, vertically centered
                     colorPicker.style.left = `${rect.right + spacingPx}px`;
@@ -466,14 +466,31 @@
                 if (this.elements.length > 2) markables = this.related.filter((r,i) => i % 3 == 2); // only take the last one
                 markables.forEach((stem) => {
                     let stemBB = stem.getBoundingClientRect();
-                    let stemX = stemBB.left + stemBB.width / 2;
+                    let stemX = stemBB.left + stemBB.width ;
                     let stemY = stemBB.top + stemBB.height / 2;
+
+                    // Ensure curve enters horizontally into annotation from left
+                    let annotationEnterX = positionX;
+                    let annotationEnterY = positionY;
+
+                    // Exit horizontally from the text span
+                    let textExitX = stemX;
+                    let textExitY = stemY;
+                    let control1X = stemX + REM*3;  // Pull curve rightward out of text
+                    let control1Y = stemY;
+
+                    let control2X = positionX - REM*5;  // Pull curve leftward into annotation
+                    let control2Y = positionY;
+
                     CTX.beginPath();
-                    CTX.moveTo(positionX, positionY);
-                    CTX.lineTo(stemX, stemY);   
+                    CTX.moveTo(textExitX, textExitY);
+                    CTX.bezierCurveTo(control1X, control1Y, control2X, control2Y, annotationEnterX, annotationEnterY);
+
                     let verticalDistance = Math.abs(stemY - positionY);
                     let opacity = this.opacity * Math.max(MINIMUMOPACITY, Math.pow((TEXTWRAPPER.scrollHeight - verticalDistance) / TEXTWRAPPER.scrollHeight, 10));
                     let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
+
+                    // Style
                     CTX.strokeStyle = `${this.color}${hexOpacity}`;
                     CTX.setLineDash([]);
                     CTX.lineWidth = (parseFloat(getComputedStyle(document.documentElement).fontSize)/10).toFixed(2);
@@ -591,7 +608,6 @@
                     });
                     abstractionTextElement.addEventListener("blur", (e) => {
                         abstractionTextElement.classList.remove("editable");
-                        // this.color = COLORS[colorCounter++ % COLORS.length];
                         abstractionTextElement.style.color = this.color;
                     });
                 }
@@ -1052,6 +1068,10 @@
             }
         });
         window.addEventListener('resize', (e) => {
+            REM = parseInt(getComputedStyle(document.documentElement).fontSize);
+            ABSTRACTIONSMINIMUMDISTANCE = REM*2; // Minimum distance in px between annotations to create an abstraction
+            ABSTRACTIONSMAXIMUMDISTANCE = REM*10; // Maximum distance in px between annotations to delete an abstraction
+
             CONNECTIONSWRAPPER.width = window.innerWidth;
             CONNECTIONSWRAPPER.height = window.innerHeight;
             if (window.devicePixelRatio > 1) {
