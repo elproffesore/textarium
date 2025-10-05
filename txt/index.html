@@ -324,7 +324,7 @@
             setExtractedElement(el) {
                 el.classList.add('extracted');
                 el.classList.add('annotation-' + this.id);
-                el.style.backgroundColor = this.color;
+                el.style.backgroundColor = this.color;                
                 el.style.color = getReadableTextColor(this.color);
                 return el
             }
@@ -914,12 +914,11 @@
                 ann.color = hex;
 
                 // set color for annotation label
-                if (ann.related.length>0) {
+                if (ann.related.length>0) {                    
                     ann.referenceElement.style.backgroundColor = hex;
                     ann.referenceElement.style.color = getReadableTextColor(hex);
                 }
-                else ann.referenceElement.style.backgroundColor = "#ffffffff";
-
+                
                 // apply color to stems
                 ann.related.forEach(el => {
                     el.style.backgroundColor = hex;
