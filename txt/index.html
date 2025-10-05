@@ -168,8 +168,10 @@
             pointer-events: none;
         }
 
-        #annotation-color-picker {opacity: .5;}
-        #annotation-color-picker:hover {opacity: 1;}
+        #annotation-color-picker {opacity: .5; transition: opacity 200ms; }
+        #annotation-color-picker:hover {opacity: 1; }
+        #annotation-color-picker.hiding {opacity: 0; }
+
     </style>
 </head>
 
@@ -190,6 +192,7 @@
         const ANNOTATIONSWRAPPER = document.getElementById('annotations-wrapper');
         const CONNECTIONSWRAPPER = document.getElementById('connections-wrapper');
         const CTX = CONNECTIONSWRAPPER.getContext('2d');
+        let pickerTimeout;
         CONNECTIONSWRAPPER.width = window.innerWidth;
         CONNECTIONSWRAPPER.height = window.innerHeight;
         if (window.devicePixelRatio > 1) {
@@ -349,8 +352,10 @@
                 });
                 referenceElement.addEventListener('mouseenter', (e) => {
                     if (this.abstractionType || EMBEDDED) return;
-
+                    clearTimeout(pickerTimeout);
+                    
                     const colorPicker = document.getElementById('annotation-color-picker');
+                    colorPicker.classList.remove("hiding");
                     const rect = referenceElement.getBoundingClientRect();
 
                     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
@@ -371,12 +376,8 @@
                 });
                 referenceElement.addEventListener('mouseleave', (e) => {
                     const colorPicker = document.getElementById('annotation-color-picker');
-                    // Use a short delay to avoid hiding before the input can be clicked
-                    setTimeout(() => {
-                        if (!colorPicker.matches(':hover')) {
-                            colorPicker.style.display = 'none';
-                            colorPicker.annotation = null;
-                        }
+                    pickerTimeout = setTimeout(() => {
+                        if (!colorPicker.matches(':hover')) hidePicker();                            
                     }, 200);
                 });
                 this.referenceElement = referenceElement;
@@ -1151,7 +1152,8 @@
         });
         function hidePicker() {
             const picker = document.getElementById('annotation-color-picker');
-            picker.style.display = 'none';
+            picker.classList.add("hiding");
+            pickerTimeout = setTimeout(function(){ picker.style.display = 'none'; }, 200);            
             picker.annotation = null;
         }
         // Function to search for n-grams
