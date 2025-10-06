@@ -473,25 +473,30 @@
                     let annotationEnterX = positionX;
                     let annotationEnterY = positionY;
 
-                    // Strong horizontal exit and approach
-                    let cp1X = stemX + REM * 10;       // Pull far right out of text
+                    // Euclidean distance from stem to annotation
+                    let dx = annotationEnterX - stemX;
+                    let dy = annotationEnterY - stemY;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    let offset = Math.min(distance * 0.5, REM * 5);
+
+                    // Control points for cubic Bézier
+                    let cp1X = stemX + offset;
                     let cp1Y = stemY;
 
-                    let cp2X = annotationEnterX - REM * 6;  // Pull from left into annotation
+                    let cp2X = annotationEnterX - offset;
                     let cp2Y = annotationEnterY;
 
-                    // Draw the cubic Bézier curve
+                    // Draw the curve
                     CTX.beginPath();
                     CTX.moveTo(stemX, stemY);
                     CTX.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, annotationEnterX, annotationEnterY);
 
-                    // Opacity based on vertical distance
+                    // Visibility and styling
                     const rect = stem.getBoundingClientRect();
                     const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
                     let opacity = this.opacity * (isVisible ? 1 : MINIMUMOPACITY);
                     let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
 
-                    // Style
                     CTX.strokeStyle = `${this.color}${hexOpacity}`;
                     CTX.setLineDash([]);
                     CTX.lineWidth = (parseFloat(getComputedStyle(document.documentElement).fontSize) / 15).toFixed(1);
