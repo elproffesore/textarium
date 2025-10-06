@@ -1142,10 +1142,30 @@
         });
         window.addEventListener('keydown', (e) => {
             if (EMBEDDED) return;
-            
+
             if (e.key === 'Escape') {
-                if (document.getElementById('annotation-color-picker').style.display === 'block') hidePicker();
-                else window.location.hash = `#${SOURCETEXT}`;                
+                if (document.getElementById('annotation-color-picker').style.display === 'block') {
+                    hidePicker();
+                } else {
+                    window.location.hash = `#${SOURCETEXT}`;                
+                }
+            }
+
+            const isCopyShortcut = (e.metaKey && e.key === 'c') || (e.ctrlKey && e.key === 'c');
+            const selection = window.getSelection();
+            const isTextSelected = selection && selection.toString().trim().length > 0;
+
+            if (isCopyShortcut && !isTextSelected && !document.activeElement.matches('input, textarea')) {
+                e.preventDefault();
+
+                const hash = window.location.hash; // e.g., #bush&annotations=...
+                const markdownLink = `[](txt/${hash})`;
+
+                navigator.clipboard.writeText(markdownLink).then(() => {
+                    // console.log("Copied:", markdownLink);
+                }).catch(err => {
+                    console.error("Copy failed:", err);
+                });
             }
         });
         TEXTWRAPPER.addEventListener('scroll', (e) => {
