@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Textarium: Bridging Annotation, Abstraction and Argumentation</title>
+    <title>Textarium</title>
     <style>
         @font-face {
             font-family: 'Atkinson';
@@ -1219,7 +1219,7 @@
                     console.error('No text found for the given hash:', SOURCETEXT);
                     return;
                 }
-                let parsedText = text
+                let parsedText = marked.parse(text)
                     .replaceAll('\n', ' \n ')
                     .split(' ')
                     .map((word, index) => {
@@ -1244,7 +1244,7 @@
                         return word;
                     })
                     .join(' ');
-                TEXTWRAPPER.innerHTML = marked.parse(parsedText);
+                TEXTWRAPPER.innerHTML = parsedText;
                 if (EMBEDDED) {
                     // Remove all interactive elements
                     document.querySelector('body').classList.add('embedded');
