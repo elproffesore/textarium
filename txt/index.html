@@ -35,7 +35,7 @@
         }
 
         :root {
-            font-size: calc(0.85vw + 0.85vh);
+            font-size: calc(0.8vw + 0.8vh);
         }
 
         html,
@@ -70,7 +70,10 @@
             border-radius: 1rem;
             padding: .1rem .4rem;
             position: absolute;
-            max-width: 300px;
+            max-width: 10rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-wrap: nowrap;            
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -384,22 +387,28 @@
                 this.referenceElement = referenceElement;
                 ANNOTATIONSWRAPPER.appendChild(referenceElement);
                 this.updatePosition(window.innerWidth / 1.5, this.referenceElement.getBoundingClientRect().top, false);
-                // Get the bi- or trigrams of the text if necessary
-                if (this.elements.length > 1) {
-                    // If the annotation consists of multiple elements, we need to find the first and last element
-                    if (this.elements.length == 2) {
-                        bigramsMap.get(this.stems.join(' '))?.map(match => {
-                            this.setExtractedElement(TEXTWRAPPER.querySelector(`#textarium_${match[0]}`)).classList.add('ngram');
-                            this.related.push(TEXTWRAPPER.querySelector(`#textarium_${match[0]}`));
-                            this.related.push(TEXTWRAPPER.querySelector(`#textarium_${match[1]}`));
-                        });
-                    } else if (this.elements.length == 3) {
-                        trigramsMap.get(this.stems.join(' '))?.map(match => {
-                            this.setExtractedElement(TEXTWRAPPER.querySelector(`#textarium_${match[0]}`)).classList.add('ngram');
-                            this.setExtractedElement(TEXTWRAPPER.querySelector(`#textarium_${match[1]}`)).classList.add('ngram');
-                            this.related.push(TEXTWRAPPER.querySelector(`#textarium_${match[0]}`));
-                            this.related.push(TEXTWRAPPER.querySelector(`#textarium_${match[1]}`));
-                            this.related.push(TEXTWRAPPER.querySelector(`#textarium_${match[2]}`));
+                // Get the ngrams of the text if necessary
+                if (this.elements.length > 1 && this.elements.length <= 5) {
+                    const n = this.elements.length;
+                    const joinedStem = this.stems.join(' ');
+
+                    let matches;
+                    switch (n) {
+                        case 2: matches = bigramsMap.get(joinedStem); break;
+                        case 3: matches = trigramsMap.get(joinedStem); break;
+                        case 4: matches = quadgramsMap.get(joinedStem); break;
+                        case 5: matches = quintgramsMap.get(joinedStem); break;
+                    }
+
+                    if (matches) {
+                        matches.forEach(match => {
+                            match.forEach(index => {
+                                const el = TEXTWRAPPER.querySelector(`#textarium_${index}`);
+                                if (el) {
+                                    this.setExtractedElement(el).classList.add('ngram');
+                                    this.related.push(el);
+                                }
+                            });
                         });
                     }
                 }
@@ -463,8 +472,10 @@
                 let positionY = referenceElementBB.top + referenceElementBB.height / 2;
                 // Render the connections to the related
                 let markables = this.related;
-                if (this.elements.length > 1) markables = this.related.filter((r,i) => i % 2 == 1); // only take the last one
-                if (this.elements.length > 2) markables = this.related.filter((r,i) => i % 3 == 2); // only take the last one
+                if (this.elements.length > 1) {
+                    const n = this.elements.length;
+                    markables = this.related.filter((r, i) => i % n === n - 1);
+                }
                 markables.forEach((stem) => {
                     let stemBB = stem.getBoundingClientRect();
                     let stemX = stemBB.left + stemBB.width;
@@ -698,16 +709,6 @@
                         [element.left - padding, element.top + element.height + padding],
                     ];
                 })
-                // // Add the reference element to the coordinates
-                // let referenceElementBB = this.referenceElement.getBoundingClientRect();
-                // coordinates.push(
-                //     [
-                //         [referenceElementBB.left - padding, referenceElementBB.top - padding],
-                //         [referenceElementBB.left + referenceElementBB.width + padding, referenceElementBB.top - padding],
-                //         [referenceElementBB.left + referenceElementBB.width + padding, referenceElementBB.bottom + referenceElementBB.height + padding],
-                //         [referenceElementBB.left - padding, referenceElementBB.bottom + referenceElementBB.height + padding],
-                //     ]
-                // )
                 let hull = monotoneChainConvexHull(coordinates.flat());
                 if (hull.length < 3) return;
                 // Draw the hull
@@ -1051,7 +1052,7 @@
                     // Clear the current selection and apply the new range
                     selection.removeAllRanges();
                     selection.addRange(range);
-                    if (selection.toString().split(/[.,\s!?]/).length > 3) return;
+                    if (selection.toString().split(/[.,\s!?]/).length > 5) return;
                     // Check if an annotation with the same text already exists
                     let duplicate = ANNOTATIONS.find(a => a.text === selection.toString().trim());
                     if (duplicate) return;
@@ -1232,6 +1233,8 @@
         }
         let bigramsMap = null;
         let trigramsMap = null;
+        let quadgramsMap = null;
+        let quintgramsMap = null;
         fetch(`${SOURCETEXT}.md`)
             .then(response => response.text())
             .then(text => {
@@ -1272,6 +1275,8 @@
             }).then(() => {
                 bigramsMap = searchNGrams(WORDINDEX, 2);
                 trigramsMap = searchNGrams(WORDINDEX, 3);
+                quadgramsMap = searchNGrams(WORDINDEX, 4);
+                quintgramsMap = searchNGrams(WORDINDEX, 5);
                 getURLHashState();
                 renderApplication();
             })
