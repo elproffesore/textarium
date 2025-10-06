@@ -1219,7 +1219,7 @@
                     console.error('No text found for the given hash:', SOURCETEXT);
                     return;
                 }
-                let parsedText = marked.parse(text)
+                let parsedText = text
                     .replaceAll('\n', ' \n ')
                     .split(' ')
                     .map((word, index) => {
@@ -1244,7 +1244,7 @@
                         return word;
                     })
                     .join(' ');
-                TEXTWRAPPER.innerHTML = parsedText;
+                TEXTWRAPPER.innerHTML = marked.parse(parsedText);
                 if (EMBEDDED) {
                     // Remove all interactive elements
                     document.querySelector('body').classList.add('embedded');
