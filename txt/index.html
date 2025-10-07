@@ -70,7 +70,7 @@
             border-radius: 1rem;
             padding: .1rem .4rem;
             position: absolute;
-            max-width: 10rem;
+            max-width: 12rem;
             overflow: hidden;
             text-overflow: ellipsis;
             text-wrap: nowrap;            
@@ -238,7 +238,7 @@
         //Animation related variables
         const MINIMUMOPACITY = 0.1; // Minimum duration in ms for animations
         let ABSTRACTIONSMINIMUMDISTANCE = REM*2; // Minimum distance in px between annotations to create an abstraction
-        let ABSTRACTIONSMAXIMUMDISTANCE = REM*10; // Maximum distance in px between annotations to delete an abstraction
+        let ABSTRACTIONSMAXIMUMDISTANCE = REM*8; // Maximum distance in px between annotations to delete an abstraction
 
         // Application related variables
         const SOURCETEXT = window.location.hash.slice(1).match(/\w+/)[0];
@@ -368,7 +368,7 @@
                     const spacingPx = 0.1 * REM;
 
                     // Position to the right of label, vertically centered
-                    colorPicker.style.left = `${rect.right + spacingPx}px`;
+                    colorPicker.style.left = `${rect.right}px`;
                     colorPicker.style.top = `${rect.top + window.scrollY + (rect.height - pickerPxSize) / 2}px`;
 
                     colorPicker.style.width = `${pickerRemSize}rem`;
@@ -377,12 +377,14 @@
                     colorPicker.value = this.color;
 
                     colorPicker.annotation = this;
+                    colorPicker.addEventListener('mouseenter', () => { clearTimeout(pickerTimeout); });
+
                 });
                 referenceElement.addEventListener('mouseleave', (e) => {
                     const colorPicker = document.getElementById('annotation-color-picker');
                     pickerTimeout = setTimeout(() => {
-                        if (!colorPicker.matches(':hover')) hidePicker();                            
-                    }, 200);
+                        if (!colorPicker.matches(':hover')) hidePicker();
+                    }, 500);
                 });
                 this.referenceElement = referenceElement;
                 ANNOTATIONSWRAPPER.appendChild(referenceElement);
@@ -576,7 +578,7 @@
                 return (
                     hashString +
                     elementString +
-                    `(${(this.positionX / window.innerWidth).toFixed(2)},${(this.positionY / window.innerHeight).toFixed(2)},${r},${g},${b})`
+                    `(${Math.round((this.positionX / window.innerWidth) * 1000)},${Math.round((this.positionY / window.innerHeight)*1000)},${r},${g},${b})`
                 );
             }
             
@@ -732,7 +734,7 @@
                         CTX.quadraticCurveTo(p2[0], p2[1], firstMidX, firstMidY);
                     }
                 }
-                CTX.fillStyle = `rgba(0,0,0,${0.05 * this.opacity})`;
+                CTX.fillStyle = `rgba(0,0,0,${0.033 * this.opacity})`;
                 CTX.fill();
             }
             checkAnnotations() {
@@ -912,7 +914,7 @@
             }
 
             if (!isNaN(x) && !isNaN(y)) {
-                ann.updatePosition(x * window.innerWidth, y * window.innerHeight, false);
+                ann.updatePosition((x / 1000) * window.innerWidth, (y / 1000) * window.innerHeight, false);
             }
 
             if ([r, g, b].every(n => !isNaN(n))) {
@@ -1092,7 +1094,7 @@
         window.addEventListener('resize', (e) => {
             REM = parseInt(getComputedStyle(document.documentElement).fontSize);
             ABSTRACTIONSMINIMUMDISTANCE = REM*2; // Minimum distance in px between annotations to create an abstraction
-            ABSTRACTIONSMAXIMUMDISTANCE = REM*10; // Maximum distance in px between annotations to delete an abstraction
+            ABSTRACTIONSMAXIMUMDISTANCE = REM*8; // Maximum distance in px between annotations to delete an abstraction
 
             CONNECTIONSWRAPPER.width = window.innerWidth;
             CONNECTIONSWRAPPER.height = window.innerHeight;
@@ -1213,12 +1215,15 @@
                 !picker.contains(target)
             ) hidePicker();
         });
-        function hidePicker() {
-            const picker = document.getElementById('annotation-color-picker');
-            picker.classList.add("hiding");
-            pickerTimeout = setTimeout(function(){ picker.style.display = 'none'; }, 200);            
-            picker.annotation = null;
-        }
+function hidePicker() {
+    const picker = document.getElementById('annotation-color-picker');
+    if (picker.matches(':hover')) return; // Prevent flicker
+    picker.classList.add("hiding");
+    pickerTimeout = setTimeout(() => {
+        picker.style.display = 'none';
+        picker.annotation = null;
+    }, 200);
+}
         // Function to search for n-grams
         function searchNGrams(wordIndex, n) {
             const ngramMap = new Map();
@@ -1243,7 +1248,7 @@
                     return;
                 }
                 let parsedText = text
-                    .replaceAll('\n', ' \n ')
+                    .replaceAll(/(?:\r\n|[\n\r\u2028\u2029])/g, '\n ')
                     .split(' ')
                     .map((word, index) => {
                         if (word != '#' && !RegExp(/[<>|]/).test(word)) {
