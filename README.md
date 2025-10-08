@@ -44,11 +44,11 @@ Beyond the record, Bush distinguishes between data as raw input, material as wor
 Scientific work depends on the flow between these phases.
 
 
-[](txt/#bush&annotations=!2_memex(750,520,255,64,255))
+[](txt/#bush&annotations=!1_memex(750,520,255,64,255))
 Bush describes the Memex as a technologically enhanced workspace for storing and navigating large collections of documents, notes, and communication.
 
 
-[](txt/#bush&annotations=A(book(656,740,145,145,145),page(647,697,145,145,145),desk(675,569,145,145,145),levers(651,655,145,145,145),keyboard(663,614,145,145,145),library(676,783,145,145,145),shelf(702,817,145,145,145),$legacy_hardware(743,689,255,255,255));!4_memex(720,428,255,64,255))
+[](txt/#bush&annotations=A(book(656,740,145,145,145),page(647,697,145,145,145),!1_desk(675,569,145,145,145),levers(651,655,145,145,145),keyboard(663,614,145,145,145),library(676,783,145,145,145),shelf(702,817,145,145,145),$legacy_hardware(743,689,255,255,255));memex(720,428,255,64,255))
 He mentions a range of well-known artifacts, to help readers of the 1940s imagine this special reading setup.
 
 
