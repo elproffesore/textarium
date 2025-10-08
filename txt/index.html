@@ -7,32 +7,27 @@
     <title>Textarium</title>
     <style>
         @font-face {
-            font-family: 'Atkinson';
-            src: url('include/fonts/Atkinson-Hyperlegible-Regular-102a.woff2') format('woff2-variations');
+            font-family: "Atkinson";
+            src: url("../src/fonts/AtkinsonHyperlegibleNextVF-Variable.woff2") format("woff2-variations");
             font-style: normal;
-            font-weight: normal;
         }
 
         @font-face {
-            font-family: 'Atkinson';
-            src: url('include/fonts/Atkinson-Hyperlegible-Italic-102a.woff2') format('woff2-variations');
-            font-style: italic;
-            font-weight: normal;
+            font-family: "AtkinsonMono";
+            src: url("src/fonts/AtkinsonHyperlegibleMono-Medium.woff2") format("woff2-variations");
+            font-style: normal;
         }
 
         @font-face {
-            font-family: 'Atkinson';
-            src: url('include/fonts/Atkinson-Hyperlegible-Bold-102a.woff2') format('woff2-variations');
+            font-family: "AtkinsonMono";
+            src: url("src/fonts/AtkinsonHyperlegibleMono-Bold.woff2") format("woff2-variations");
             font-style: normal;
             font-weight: bold;
         }
 
-        @font-face {
-            font-family: 'Atkinson';
-            src: url('include/fonts/Atkinson-Hyperlegible-BoldItalic-102a.woff2') format('woff2-variations');
-            font-style: italic;
-            font-weight: bold;
-        }
+        code, pre, kbd, samp, tt, textarea {
+            font-family: "AtkinsonMono", monospace;
+        } 
 
         :root {
             font-size: calc(0.8vw + 0.8vh);
