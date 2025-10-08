@@ -1158,7 +1158,9 @@
             if (updatingHash) return;
             resetState();
         });
-        window.addEventListener('keydown', (e) => {
+        window.addEventListener('keydown', (e) => {            
+            if (EMBEDDED) return;
+            
             if (e.key === 'Escape') {
                 if (document.getElementById('annotation-color-picker').style.display === 'block') {
                     hidePicker();                    
@@ -1166,7 +1168,7 @@
                     window.location.hash = `#${SOURCETEXT}`;                
                     TEXTWRAPPER.scrollTo({ top: 0, behavior: 'smooth' });                    
                 }
-            }
+            }            
 
             const isCopyShortcut = (e.metaKey && e.key === 'c') || (e.ctrlKey && e.key === 'c');
             const selection = window.getSelection();
