@@ -890,6 +890,10 @@
             }
             gotState = true;
             resetPage = false;
+            
+            if (ANNOTATIONS.length === 0 ||
+                ANNOTATIONS.every(a => a.closestStem === null || a.closestStem === undefined)
+            ) TEXTWRAPPER.scrollTo({ top: 0, behavior: 'smooth' });                        
         }
 
         function parseRichAnnotation(entry) {
@@ -1153,13 +1157,14 @@
             resetState();
         });
         window.addEventListener('keydown', (e) => {
-            if (EMBEDDED) return;
+            // if (EMBEDDED) return;
 
             if (e.key === 'Escape') {
                 if (document.getElementById('annotation-color-picker').style.display === 'block') {
                     hidePicker();
                 } else {
                     window.location.hash = `#${SOURCETEXT}`;                
+                    TEXTWRAPPER.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             }
 
