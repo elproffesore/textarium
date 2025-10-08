@@ -38,8 +38,7 @@
             font-size: calc(0.8vw + 0.8vh);
         }
 
-        html,
-        #text-wrapper {
+        html {
             overscroll-behavior: none;
         }
 
@@ -98,8 +97,9 @@
         #text-wrapper {
             z-index: 20;
             padding: 1rem 2rem;
-            overflow-y: scroll;
+            overflow-y: auto;            
             height: 100vh;
+            -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
         }
 
@@ -183,8 +183,8 @@
     <script src="../src/marked.min.js"></script>
     <script src="../src/porter-stemmer.js"></script>
     <script src="../src/convex-hull.js"></script>
-    <script src="../src/rangy.min.js"></script>
-    <script src="../src/d3.min.js"></script>
+    <!-- <script src="../src/rangy.min.js"></script> -->
+    <!-- <script src="../src/d3.min.js"></script> -->
     <div id="app">
         <div id="text-wrapper"></div>
         <div id="annotations-wrapper"></div>
@@ -830,7 +830,7 @@
             }
             dragMovementOffsetY = e.clientY - (boundingClient.top + boundingClient.height);
         }
-        function setURLHashState() {
+        function setURLHashState() {            
             if (resetPage) return;
             updatingHash = true;
             // Set the URL hash to the current annotations
@@ -903,7 +903,14 @@
                 ann = new Annotation(cleanText.split('_').join(' '));
                 ann.isClosest = true;
                 window.setTimeout(() => {
-                    ann.related[closestStem]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // ann.related[closestStem]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    const el = ann.related[closestStem];
+                    if (el) {
+                        const wrapperTop = TEXTWRAPPER.scrollTop;
+                        const elOffset = el.getBoundingClientRect().top + TEXTWRAPPER.scrollTop;
+                        TEXTWRAPPER.scrollTo({ top: elOffset - 100, behavior: 'smooth' });
+                    }
+
                 }, 100);
             } else if (labelPart.startsWith('$')) {
                 const cleanText = labelPart.slice(1).replace(/^_/, '');

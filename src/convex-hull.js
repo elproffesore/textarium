@@ -1,10 +1,8 @@
 /**
- * Minified by jsDelivr using Terser v5.19.2.
  * Original file: /npm/monotone-chain-convex-hull@1.1.0/lib/index.js
  *
  * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
  */
-'use strict';
 function monotoneChainConvexHull(e, n = {}) {
     const { sorted: o } = n;
     o || (e = e.slice().sort(byXThenY));
@@ -30,4 +28,3 @@ function cw(e, n, o) {
 function byXThenY(e, n) {
     return e[0] === n[0] ? e[1] - n[1] : e[0] - n[0];
 }
-//# sourceMappingURL=/sm/e183dce3dc26b65fa5142cdfae542e6d69cecb964459bb3709b5e684e9488c05.map
