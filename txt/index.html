@@ -243,6 +243,7 @@
         let ABSTRACTIONSMAXIMUMDISTANCE = REM*8; // Maximum distance in px between annotations to delete an abstraction
 
         // Application related variables
+        const BLOBBYHULL = false;
         const SOURCETEXT = window.location.hash.slice(1).match(/\w+/)[0];
         const WORDINDEX = [];
         const EMBEDDED = window.self !== window.top;
@@ -701,7 +702,7 @@
                     return;
                 }
 
-                let padding = (parseInt(getComputedStyle(document.documentElement).fontSize));
+                let padding = (parseInt(getComputedStyle(document.documentElement).fontSize)/2);
 
                 let coordinates = this.annotations.map((annotation) => {
                     let element = annotation.referenceElement.getBoundingClientRect();
@@ -716,26 +717,34 @@
                 let hull = monotoneChainConvexHull(coordinates.flat());
                 if (hull.length < 3) return;
                 // Draw the hull
+
                 CTX.beginPath();
-                let firstMidX, firstMidY;
 
-                for (let i = 0; i < hull.length; i++) {
-                    const p1 = hull[i];
-                    const p2 = hull[(i + 1) % hull.length];
-                    const midX = (p1[0] + p2[0]) / 2;
-                    const midY = (p1[1] + p2[1]) / 2;
-                    if (i === 0) {
-                        CTX.moveTo(midX, midY);
-                        firstMidX = midX;
-                        firstMidY = midY;
+                if (BLOBBYHULL) {
+                    let firstMidX, firstMidY;
+                    for (let i = 0; i < hull.length; i++) {
+                        const p1 = hull[i];
+                        const p2 = hull[(i + 1) % hull.length];
+                        const midX = (p1[0] + p2[0]) / 2;
+                        const midY = (p1[1] + p2[1]) / 2;
+                        if (i === 0) {
+                            CTX.moveTo(midX, midY);
+                            firstMidX = midX;
+                            firstMidY = midY;
+                        }
+                        CTX.quadraticCurveTo(p1[0], p1[1], midX, midY);
+                        if (i === hull.length - 1) {
+                            CTX.quadraticCurveTo(p2[0], p2[1], firstMidX, firstMidY);
+                        }
                     }
-                    CTX.quadraticCurveTo(p1[0], p1[1], midX, midY);
-
-                    if (i === hull.length - 1) {
-                        const pNext = hull[0];
-                        CTX.quadraticCurveTo(p2[0], p2[1], firstMidX, firstMidY);
+                } else {
+                    CTX.moveTo(hull[0][0], hull[0][1]);
+                    for (let i = 1; i < hull.length; i++) {
+                        CTX.lineTo(hull[i][0], hull[i][1]);
                     }
+                    CTX.closePath();
                 }
+
                 CTX.fillStyle = `rgba(0,0,0,${0.033 * this.opacity})`;
                 CTX.fill();
             }
@@ -1160,7 +1169,7 @@
         });
         window.addEventListener('keydown', (e) => {            
             if (EMBEDDED) return;
-            
+
             if (e.key === 'Escape') {
                 if (document.getElementById('annotation-color-picker').style.display === 'block') {
                     hidePicker();                    
