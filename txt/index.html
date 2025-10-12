@@ -49,18 +49,14 @@
 
         .extracted,
         .annotation {
-            transition: all 150ms;
             padding: 0 .2rem;
             margin: 0 -.2rem;
             width: fit-content;
             text-align: center;
         }
 
-        .extracted {
-            transition: all 150ms;
-        }
-
         .annotation {
+            background-color: transparent;
             border-radius: 1rem;
             padding: .1rem .4rem;
             position: absolute;
@@ -137,13 +133,21 @@
             transition-duration: .5s;                   
         }
 
-        .annotation {
+        .embedded .annotation {
             opacity: 0;
-            transition-property: opacity;
+            transition-property: opacity top left;
             transition-delay: 0s;          
             transition-duration: .5s;                   
         }
-    
+        
+        .annotation.no-transition {
+           transition-property: opacity !important;
+        }
+
+        .annotation.maybeRemove {
+            transition-duration: .2s !important;
+        }
+
         .abstraction-texts {
             position: absolute;
             background: none;
@@ -186,8 +190,6 @@
     <script src="../src/marked.min.js"></script>
     <script src="../src/porter-stemmer.js"></script>
     <script src="../src/convex-hull.js"></script>
-    <!-- <script src="../src/rangy.min.js"></script> -->
-    <!-- <script src="../src/d3.min.js"></script> -->
     <div id="app">
         <div id="text-wrapper"></div>
         <div id="annotations-wrapper"></div>
@@ -269,11 +271,20 @@
         function sanitize(input) {
            return input.replace(/[^a-zA-Z]/g, ' ');
         }
+        function slugify(text) {
+            return text
+                .toLowerCase()                  // convert to lowercase
+                .normalize('NFD')               // decompose accents
+                .replace(/[\u0300-\u036f]/g, '')// remove accents
+                .replace(/[^a-z0-9_-]/g, '-')   // replace non-alphanumerics with -
+                .replace(/^-+|-+$/g, '')        // trim leading/trailing dashes
+                .replace(/--+/g, '-');          // collapse multiple dashes
+        }
         class Annotation {
             constructor(text, abstractionType = false) {
                 this.text = sanitize(text); // The word or text content of the annotation
                 this.elements = this.text.match(/(\w+-?)+/g) || []; // The elements of the text, split by whitespace
-                this.id = self.crypto.randomUUID();
+                this.id = slugify(this.text);
                 this.referenceElement = null; // The HTML element representing the annotation
                 this.positionX = 0;
                 this.positionY = 0; 
@@ -335,64 +346,75 @@
                 return el
             }
             initialize() {
-                // Create the reference element for the annotation
-                let referenceElement = document.createElement('div');
-                referenceElement.classList.add('annotation');
-                if (this.abstractionType) {
-                    if(this.related.length > 1){
-                        this.abstractionType = false;
-                        referenceElement.style.backgroundColor = this.color;
-                        referenceElement.style.color = getReadableTextColor(this.color);
-                    }else{
-                        referenceElement.classList.add('abstraction-type');
-                    }
-                } else {
+                // Try to get existing DOM element by ID
+                let referenceElement = this.referenceElement || document.getElementById(`annotation-${this.id}`);
+
+                const needsNewElement = !referenceElement;
+
+                if (needsNewElement) {
+                    referenceElement = document.createElement('div');
+                    referenceElement.id = `annotation-${this.id}`;
+                    referenceElement.innerText = this.text;
+                    referenceElement.classList.add('annotation');
+                    referenceElement.classList.add('no-transition');
+
+                    referenceElement.addEventListener('mousedown', (e) => setDragMovement(e, this));
+                    referenceElement.addEventListener('dblclick', (e) => {
+                        if (EMBEDDED) return;
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.deleteAnnotation();
+                    });
+
+                    referenceElement.addEventListener('mouseenter', (e) => {
+                        if (this.abstractionType || EMBEDDED || dragMovement) return;
+                        clearTimeout(pickerTimeout);
+
+                        const colorPicker = document.getElementById('annotation-color-picker');
+                        colorPicker.classList.remove("hiding");
+                        const rect = referenceElement.getBoundingClientRect();
+
+                        const pickerRemSize = 1.5; 
+                        const pickerPxSize = pickerRemSize * REM;
+                        const spacingPx = 0.1 * REM;
+
+                        colorPicker.style.left = `${rect.right}px`;
+                        colorPicker.style.top = `${rect.top + window.scrollY + (rect.height - pickerPxSize) / 2}px`;
+
+                        colorPicker.style.width = `${pickerRemSize}rem`;
+                        colorPicker.style.height = `${pickerRemSize}rem`;
+                        colorPicker.style.display = 'block';
+                        colorPicker.value = this.color;
+
+                        colorPicker.annotation = this;
+                        colorPicker.addEventListener('mouseenter', () => clearTimeout(pickerTimeout));
+                    });
+
+                    referenceElement.addEventListener('mouseleave', () => {
+                        const colorPicker = document.getElementById('annotation-color-picker');
+                        pickerTimeout = setTimeout(() => {
+                            if (!colorPicker.matches(':hover')) hidePicker();
+                        }, 500);
+                    });
+
+                    ANNOTATIONSWRAPPER.appendChild(referenceElement);
+                }
+
+                this.referenceElement = referenceElement;
+                this.referenceElement.classList.remove("maybeRemove");
+                
+                if (!this.abstractionType || this.related.length > 1) {
+                    this.abstractionType = false;
                     referenceElement.style.backgroundColor = this.color;
                     referenceElement.style.color = getReadableTextColor(this.color);
                 }
-                referenceElement.innerText = this.text;
-                referenceElement.addEventListener('mousedown', (e) => setDragMovement(e, this));
-                referenceElement.addEventListener('dblclick', (e) => {
-                    if (EMBEDDED) return;
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.deleteAnnotation();
+                
+                this.updatePosition(window.innerWidth / 1.5, referenceElement.getBoundingClientRect().top, false);
+                requestAnimationFrame(() => {
+                    referenceElement.classList.remove('no-transition');
                 });
-                referenceElement.addEventListener('mouseenter', (e) => {
-                    if (this.abstractionType || EMBEDDED || dragMovement) return;
-                    clearTimeout(pickerTimeout);
-                    
-                    const colorPicker = document.getElementById('annotation-color-picker');
-                    colorPicker.classList.remove("hiding");
-                    const rect = referenceElement.getBoundingClientRect();
-
-                    const pickerRemSize = 1.5; 
-                    const pickerPxSize = pickerRemSize * REM;
-                    const spacingPx = 0.1 * REM;
-
-                    // Position to the right of label, vertically centered
-                    colorPicker.style.left = `${rect.right}px`;
-                    colorPicker.style.top = `${rect.top + window.scrollY + (rect.height - pickerPxSize) / 2}px`;
-
-                    colorPicker.style.width = `${pickerRemSize}rem`;
-                    colorPicker.style.height = `${pickerRemSize}rem`;
-                    colorPicker.style.display = 'block';
-                    colorPicker.value = this.color;
-
-                    colorPicker.annotation = this;
-                    colorPicker.addEventListener('mouseenter', () => { clearTimeout(pickerTimeout); });
-
-                });
-                referenceElement.addEventListener('mouseleave', (e) => {
-                    const colorPicker = document.getElementById('annotation-color-picker');
-                    pickerTimeout = setTimeout(() => {
-                        if (!colorPicker.matches(':hover')) hidePicker();
-                    }, 500);
-                });
-                this.referenceElement = referenceElement;
-                ANNOTATIONSWRAPPER.appendChild(referenceElement);
-                this.updatePosition(window.innerWidth / 1.5, this.referenceElement.getBoundingClientRect().top, false);
-                // Get the ngrams of the text if necessary
+                
+                // Set ngram associations
                 if (this.elements.length > 1 && this.elements.length <= 5) {
                     const n = this.elements.length;
                     const joinedStem = this.stems.join(' ');
@@ -417,10 +439,13 @@
                         });
                     }
                 }
-                this.related.forEach((relatedInstance) => {
-                    this.setExtractedElement(relatedInstance);
-                });
-                ANNOTATIONS.push(this);
+
+                this.related.forEach(el => this.setExtractedElement(el));
+
+                if (!ANNOTATIONS.includes(this)) {
+                    ANNOTATIONS.push(this);
+                }
+
                 setURLHashState();
                 updateClosestAnnotation();
             }
@@ -484,6 +509,10 @@
                         el.style.color = getReadableTextColor(color);
                     });
                 }
+                else {
+                    this.referenceElement.style.backgroundColor = "transparent";                    
+                }                
+
                 this.related.forEach(el => {
                     el.style.backgroundColor = color;
                     el.style.color = getReadableTextColor(color);
@@ -607,9 +636,9 @@
             constructor(text = "A") {
                 this.annotations = [];
                 this.averageColor = '#888888';
-                this.id = self.crypto.randomUUID();
                 this.referenceElement = null;
                 this.text = sanitize(text);
+                this.id = slugify(this.text);
                 this.opacity = 0;            // start transparent
                 this.fadeInStart = Date.now();
                 if (EMBEDDED) this.fadeInDuration = 300;
@@ -956,12 +985,17 @@
                 ann = new Annotation(cleanText.split('_').join(' '));
                 ann.isClosest = true;
                 window.setTimeout(() => {
-                    // ann.related[closestStem]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     const el = ann.related[closestStem];
                     if (el) {
                         const wrapperTop = TEXTWRAPPER.scrollTop;
                         const elOffset = el.getBoundingClientRect().top + TEXTWRAPPER.scrollTop;
-                        TEXTWRAPPER.scrollTo({ top: elOffset - 100, behavior: 'smooth' });
+                        const elHeight = el.getBoundingClientRect().height;
+                        const wrapperHeight = TEXTWRAPPER.getBoundingClientRect().height;
+
+                        const elCenter = elOffset + elHeight / 2;
+                        const targetScroll = elCenter - wrapperHeight / 2;
+
+                        TEXTWRAPPER.scrollTo({ top: targetScroll, behavior: 'smooth' });
                     }
 
                 }, 100);
@@ -1169,6 +1203,8 @@
 
                 CTX.scale(window.devicePixelRatio, window.devicePixelRatio);
             }
+
+            resetState();
         });
         function resetState() {
             hidePicker();
@@ -1176,7 +1212,8 @@
             // Remove all annotations and abstractions from the DOM
             ANNOTATIONS.splice(0, ANNOTATIONS.length)
             ABSTRACTIONS.splice(0, ABSTRACTIONS.length)
-            document.querySelectorAll('.annotation').forEach((el) => el.remove());
+            if (EMBEDDED) document.querySelectorAll('.annotation').forEach((el) => el.classList.add("maybeRemove"));
+            else document.querySelectorAll('.annotation').forEach((el) => el.remove());
             document.querySelectorAll('.abstraction-texts').forEach((el) => el.remove());
             // Unmark all related
             TEXTWRAPPER.querySelectorAll('.extracted').forEach((element) => {
@@ -1192,6 +1229,10 @@
             colorCounter = 0;
             dragMovement = false;
             getURLHashState();
+            if (EMBEDDED) {
+                document.querySelectorAll('.maybeRemove').forEach((el) => el.style.opacity=0);
+                setTimeout(function(){ document.querySelectorAll('.maybeRemove').forEach((el) => el.remove()); }, 300);
+            }            
         }
         window.addEventListener('hashchange', (e) => {
             if (!EMBEDDED) return;

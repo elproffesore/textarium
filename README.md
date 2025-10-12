@@ -1,29 +1,66 @@
-# What Are We Thinking?
+# How Are We Thinking?
 
 [](txt/#bush&annotations=A($to_read_the_text(681,507,255,255,255),$you_can_scroll_left(638,476,255,255,255));A($to_read_our_reaction_essay(805,723,255,255,255),$scroll_on_the_right(855,690,255,255,255)))
 In 1945, Vannevar Bush wrote a visionary essay that urged scientists to redirect their creative capacities from weapons of war to instruments for the intellect. He develops the idea of the Memex, a desk-sized device imagined to mimic the mind's associative workings in order to store and link information.
 
-Let's read about it together!
+*This is Textarium, a visual interface created in 2025 for interpreting textual sources.*
 
 
 [](txt/#bush&annotations=!2_mountain_of_research(795,516,255,252,65))
 Bush is concerned about the rapid expansion of human knowledge.
 
 
-[](txt/#bush&annotations=mass(660,670,255,252,65);maze(650,930,255,252,65);prodigious_rate(660,830,255,252,65);catastrophe(600,600,255,252,65);mountain_of_research(610,280,255,252,65);difficulty(590,730,255,252,65);methods(620,440,255,252,65);!2_inadequate_for_their_purpose(690,480,255,252,65))
-He describes an overwhelming surge of scientific output that exceeds our capacity to make sense of it. While research proliferates, the tools for navigating it cannot keep up.
+[](txt/#bush&annotations=mass(615,421,255,252,65);maze(617,569,255,252,65);!0_catastrophe(617,333,255,252,65);mountain_of_research(632,182,255,252,65);difficulty(601,497,255,252,65))
+He describes the overwhelming surge of scientific output exceeding our capacity to make sense of it. While research proliferates, the tools for navigating it cannot keep up.
 
 
-Throughout this essay, he refers to a variety of tasks associated with knowledge work and sees a mismatch in scholarly labor. 
-[](txt/#bush&annotations=A(grasp(870,470,27,245,79),writing(590,490,27,245,79),!1_reading(890,510,27,245,79),extending(630,440,27,245,79),consulted(840,430,27,245,79),digestion(880,590,27,245,79),correction(780,710,27,245,79),typesetting(590,530,27,245,79),talking(640,670,27,245,79),distribution(620,620,27,245,79),transmitting(600,580,27,245,79),interpreting(860,650,27,245,79),selection(810,390,27,245,79),comment(750,760,27,245,79),$knowledge_work(730,530,255,255,255),reviewing(770,670,27,245,79),search(760,350,27,245,79),remember(770,580,27,245,79)))
+[](txt/#bush&annotations=A($knowledge_work(756,585,255,255,255),$key_tasks_of(756,535,255,255,255)))
+Throughout this essay, Bush outlines various tasks associated with knowledge work, marked by a tension between consuming and producing knowledge.
 
 
-[](txt/#bush&annotations=A(thermionic_tubes(591,646,0,253,255),cathode_ray_tubes(732,409,0,253,255),movie_camera(587,516,0,253,255),typewriter(693,502,0,253,255),automatic_telephone_exchange(768,586,0,253,255),radio_sets(580,582,0,253,255),photocell(680,341,0,253,255),camera(782,529,0,253,255),photograph(699,856,0,253,255),facsimile(766,824,0,253,255),telephone(864,675,0,253,255),photography(619,446,0,253,255),!1_magnetic_wires(767,723,0,253,255),wax_disks(595,710,0,253,255),film(702,770,0,253,255),microphotography(838,780,0,253,255),radio(800,476,0,253,255),microfilm(638,813,0,253,255),television(609,766,0,253,255),$emerging_technologies(718,671,255,255,255)))
-However, a wave of promising technologies is ushering in an era in which complex mechanical and electrical devices are already changing knowledge work.
+[](txt/#bush&annotations=!0_reviewing(626,350,0,249,0);reading(626,765,0,249,0);grasping(600,551,0,249,0);$key_tasks_of(744,503,255,255,255);$knowledge_work(748,587,255,255,255))
+On one side are the consuming tasks strained under the weight of specialization.
 
 
-[](txt/#bush&annotations=A(thermionic_tubes(591,646,0,253,255),cathode_ray_tubes(732,409,0,253,255),movie_camera(587,516,0,253,255),typewriter(693,502,0,253,255),automatic_telephone_exchange(768,586,0,253,255),radio_sets(580,582,0,253,255),!2_photocell(680,341,0,253,255),camera(782,529,0,253,255),photograph(699,856,0,253,255),facsimile(766,824,0,253,255),telephone(864,675,0,253,255),photography(619,446,0,253,255),magnetic_wires(767,723,0,253,255),wax_disks(595,710,0,253,255),film(702,770,0,253,255),microphotography(838,780,0,253,255),radio(800,476,0,253,255),microfilm(638,813,0,253,255),television(609,766,0,253,255),$emerging_technologies(718,671,255,255,255)))
-Recording and communication media are evolving rapidly. They are shrinking in size, improving in speed, and increasing in capacity to store and transmit information.
+[](txt/#bush&annotations=transmitting(911,548,0,249,0);!0_writing(908,369,0,249,0);$key_tasks_of(744,503,255,255,255);$knowledge_work(748,587,255,255,255);publication(908,736,0,249,0))
+On the other side stand the producing tasks relying on outdated methods.
+
+
+[](txt/#bush&annotations=A(writing(909,484,0,249,0),transmitting(911,548,0,249,0),publication(913,616,0,249,0));A(!0_reviewing(615,495,0,249,0),grasping(600,551,0,249,0),reading(616,614,0,249,0));$key_tasks_of(761,529,255,255,255);$knowledge_work(763,589,255,255,255);typesetting(899,700,0,249,0);printing(873,773,0,249,0);distribution(773,819,0,249,0);by_talking(671,778,0,249,0);correction(658,394,0,249,0);comment(896,390,0,249,0);interpreting(619,706,0,249,0);remember(759,352,0,249,0))
+These tasks are part of a larger cycle of knowledge labor.
+
+
+[](txt/#bush&annotations=signs_of_a_change(649,471,0,253,255);!3_new_and_powerful_instrumentalities(692,582,0,253,255))
+At the same time, a wave of promising technologies is ushering in an era in which mechanical and electrical devices are already changing knowledge work.
+
+
+<!-- capture -->
+[](txt/#bush&annotations=A(typewriter(644,332,0,253,255),photocell(664,283,0,253,255),!0_camera(724,237,0,253,255),$recording_data(738,361,255,255,255),photography(747,318,0,253,255));$emerging_technologies(767,522,255,255,255))
+Bush recognizes an increasingly automated and ubiquitous capture of knowledge.
+
+
+<!-- store -->
+[](txt/#bush&annotations=A(typewriter(576,300,0,253,255),photocell(596,251,0,253,255),camera(656,204,0,253,255),$recording_data(670,329,255,255,255),photography(679,286,0,253,255));A(wax_disks(823,621,0,253,255),$storage_technologies(867,771,255,255,255),!1_magnetic_wires(875,569,0,253,255),microfilm(796,671,0,253,255),film(886,654,0,253,255),microphotography(865,707,0,253,255));$emerging_technologies(686,448,255,255,255))
+He highlights how advances in miniaturization enable massive compression of knowledge.
+
+
+<!-- transmit -->
+[](txt/#bush&annotations=A(typewriter(576,300,0,253,255),photocell(596,251,0,253,255),!0_camera(656,204,0,253,255),$recording_data(670,329,255,255,255),photography(679,286,0,253,255));A(wax_disks(849,389,0,253,255),$storage_technologies(893,539,255,255,255),magnetic_wires(901,337,0,253,255),microfilm(822,440,0,253,255),film(912,422,0,253,255),microphotography(891,475,0,253,255));A(telephone(726,705,0,253,255),radio(656,675,0,253,255),television(766,665,0,253,255),$means_of_transmission(718,624,255,255,255),automatic_telephone_exchange(743,745,0,253,255),facsimile(733,790,0,253,255));$emerging_technologies(615,483,255,255,255))
+Bush maps a media landscape in which transmission systems allow the remote duplication and exchange of textual and audivisual records.
+
+
+<!-- access -->
+[](txt/#bush&annotations=A(typewriter(576,300,0,253,255),photocell(596,251,0,253,255),camera(655,224,0,253,255),$recording_data(670,329,255,255,255),photography(679,286,0,253,255));A(wax_disks(829,227,0,253,255),$storage_technologies(873,377,255,255,255),magnetic_wires(881,175,0,253,255),microfilm(829,285,0,253,255),film(910,282,0,253,255),microphotography(870,338,0,253,255));A(telephone(869,587,0,253,255),radio(821,552,0,253,255),television(909,547,0,253,255),$means_of_transmission(861,506,255,255,255),automatic_telephone_exchange(886,627,0,253,255),facsimile(876,672,0,253,255));A(!1_cathode_ray_tubes(718,812,0,253,255),$access(672,685,255,255,255),translucent_screens(739,763,0,253,255),keyboard(607,790,0,253,255),projection(634,730,0,253,255));$emerging_technologies(609,503,255,255,255))
+Various access technologies appear to enable flexible control over how records can be consulted.
+
+
+<!-- process -->
+[](txt/#bush&annotations=A(typewriter(576,300,0,253,255),photocell(596,251,0,253,255),camera(656,204,0,253,255),$recording_data(670,329,255,255,255),photography(679,286,0,253,255));A(wax_disks(831,229,0,253,255),$storage_technologies(875,379,255,255,255),magnetic_wires(883,177,0,253,255),microfilm(804,280,0,253,255),film(894,262,0,253,255),microphotography(873,315,0,253,255));A(telephone(869,570,0,253,255),radio(799,540,0,253,255),television(909,530,0,253,255),$means_of_transmission(861,489,255,255,255),automatic_telephone_exchange(886,610,0,253,255),facsimile(876,655,0,253,255));A(!1_cathode_ray_tubes(848,896,0,253,255),$access(802,769,255,255,255),translucent_screens(869,847,0,253,255),keyboard(737,874,0,253,255),projection(765,814,0,253,255));A(thermionic_tubes(579,657,0,253,255),$processing_systems(619,619,255,255,255),relay_combinations(615,696,0,253,255),machine(626,735,0,253,255));$emerging_technologies(595,481,255,255,255))
+Processing is where Bush places great transformative potential.
+
+
+[](txt/#bush&annotations=A(typewriter(558,374,0,253,255),photocell(578,325,0,253,255),camera(649,317,0,253,255),$recording_data(652,403,255,255,255),photography(661,360,0,253,255));A(wax_disks(792,331,0,253,255),$storage_technologies(839,444,255,255,255),magnetic_wires(841,293,0,253,255),microfilm(770,372,0,253,255),film(856,370,0,253,255),microphotography(836,407,0,253,255));A(telephone(815,607,0,253,255),radio(758,574,0,253,255),television(863,577,0,253,255),$means_of_transmission(815,536,255,255,255),automatic_telephone_exchange(835,649,0,253,255),facsimile(820,684,0,253,255));A(!1_cathode_ray_tubes(737,824,0,253,255),$access(688,739,255,255,255),translucent_screens(750,781,0,253,255),keyboard(627,824,0,253,255),projection(635,780,0,253,255));A(thermionic_tubes(567,572,0,253,255),$processing_systems(607,534,255,255,255),relay_combinations(603,611,0,253,255),machine(614,650,0,253,255));$emerging_technologies(667,473,255,255,255))
+Overall, these technologies are becoming smaller, faster, and more capable of recording, storing, transmitting, displaying, and processing information.
 
 
 For Bush, a central concept is the record. The way he writes about it, it is both archive and infrastructure, a cumulative body of human knowledge that is continuously extended, stored, and consulted. 
