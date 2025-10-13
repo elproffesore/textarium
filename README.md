@@ -10,29 +10,32 @@ In 1945, Vannevar Bush wrote a visionary essay that urged scientists to redirect
 Bush is concerned about the rapid expansion of human knowledge.
 
 
-[](txt/#bush&annotations=mass(615,421,255,252,65);maze(617,569,255,252,65);!0_catastrophe(617,333,255,252,65);mountain_of_research(632,182,255,252,65);difficulty(601,497,255,252,65))
+[](txt/#bush&annotations=difficulty(747,681,141,134,0);!0_mass(753,518,141,134,0);maze(684,883,141,134,0);catastrophe(721,331,141,134,0);mountain_of_research(715,82,255,252,65))
 He describes the overwhelming surge of scientific output exceeding our capacity to make sense of it. While research proliferates, the tools for navigating it cannot keep up.
 
 
-[](txt/#bush&annotations=A($knowledge_work(756,585,255,255,255),$key_tasks_of(756,535,255,255,255)))
-Throughout this essay, Bush outlines various tasks associated with knowledge work, marked by a tension between consuming and producing knowledge.
+[](txt/#bush&annotations=difficulty(587,388,141,134,0);mass(587,323,141,134,0);maze(565,449,141,134,0);catastrophe(606,262,141,134,0);mountain_of_research(635,73,255,251,0);signs_of_a_change(727,597,0,253,255);!1_powerful_instrumentalities(753,743,0,253,255))
+At the same time, a wave of promising technologies is ushering in an era in which mechanical and electrical devices are changing knowledge work.
 
 
-[](txt/#bush&annotations=!0_reviewing(626,350,0,249,0);reading(626,765,0,249,0);grasping(600,551,0,249,0);$key_tasks_of(744,503,255,255,255);$knowledge_work(748,587,255,255,255))
+[](txt/#bush&annotations=$knowledge_work(756,585,255,255,255);$key_tasks_of(754,506,255,255,255);signs_of_a_change(683,111,0,253,255);!1_powerful_instrumentalities(754,192,0,253,255))
+Throughout this essay, Bush outlines various tasks associated with knowledge work. They are marked by a tension between consuming and producing knowledge.
+
+
+[](txt/#bush&annotations=reviewing(659,480,0,249,0);!0_grasping(653,564,0,249,0);reading(656,648,0,249,0);$consuming_knowledge(657,393,255,255,255);$key_tasks_of(863,525,255,255,255);$knowledge_work(866,579,255,255,255))
 On one side are the consuming tasks strained under the weight of specialization.
 
 
-[](txt/#bush&annotations=transmitting(911,548,0,249,0);!0_writing(908,369,0,249,0);$key_tasks_of(744,503,255,255,255);$knowledge_work(748,587,255,255,255);publication(908,736,0,249,0))
+[](txt/#bush&annotations=transmitting(858,521,0,249,0);publication(852,691,0,249,0);!0_writing(852,611,0,249,0);$producing_knowledge(856,449,255,255,255);$key_tasks_of(649,542,255,255,255);$knowledge_work(643,616,255,255,255))
 On the other side stand the producing tasks relying on outdated methods.
 
 
-[](txt/#bush&annotations=A(writing(909,484,0,249,0),transmitting(911,548,0,249,0),publication(913,616,0,249,0));A(!0_reviewing(615,495,0,249,0),grasping(600,551,0,249,0),reading(616,614,0,249,0));$key_tasks_of(761,529,255,255,255);$knowledge_work(763,589,255,255,255);typesetting(899,700,0,249,0);printing(873,773,0,249,0);distribution(773,819,0,249,0);by_talking(671,778,0,249,0);correction(658,394,0,249,0);comment(896,390,0,249,0);interpreting(619,706,0,249,0);remember(759,352,0,249,0))
+[](txt/#bush&annotations=writing(917,561,0,249,0);transmitting(911,480,0,249,0);publication(914,626,0,249,0);reviewing(611,462,0,249,0);!0_grasping(586,544,0,249,0);reading(594,626,0,249,0);$key_tasks_of(760,507,255,255,255);$knowledge_work(761,653,255,255,255);typesetting(899,700,0,249,0);printing(873,773,0,249,0);distribution(773,819,0,249,0);by_talking(671,778,0,249,0);correction(658,394,0,249,0);comment(860,395,0,249,0);interpreting(619,706,0,249,0);remember(759,352,0,249,0))
 These tasks are part of a larger cycle of knowledge labor.
 
 
-[](txt/#bush&annotations=signs_of_a_change(649,471,0,253,255);!3_new_and_powerful_instrumentalities(692,582,0,253,255))
-At the same time, a wave of promising technologies is ushering in an era in which mechanical and electrical devices are already changing knowledge work.
-
+[](txt/#bush&annotations=difficulty(591,336,141,134,0);mass(686,371,141,134,0);maze(618,434,141,134,0);catastrophe(655,239,141,134,0);mountain_of_research(635,73,196,188,0);signs_of_a_change(614,552,245,236,0);!1_powerful_instrumentalities(681,637,245,236,0))
+Let us consider some of these new technologies..txt
 
 <!-- capture -->
 [](txt/#bush&annotations=A(typewriter(644,332,0,253,255),photocell(664,283,0,253,255),!0_camera(724,237,0,253,255),$recording_data(738,361,255,255,255),photography(747,318,0,253,255));$emerging_technologies(767,522,255,255,255))
