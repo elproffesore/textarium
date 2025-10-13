@@ -47,8 +47,7 @@
             overflow: hidden;
         }
 
-        .extracted,
-        .annotation {
+        .extracted {
             padding: 0 .2rem;
             margin: 0 -.2rem;
             width: fit-content;
@@ -58,9 +57,9 @@
         .annotation {
             background-color: transparent;
             border-radius: 1rem;
-            padding: .1rem .4rem;
+            padding: .1rem .4rem 0 .4rem;
             position: absolute;
-            max-width: 12rem;
+            max-width: 14rem;
             overflow: hidden;
             text-overflow: ellipsis;
             text-wrap: nowrap;            
@@ -75,6 +74,7 @@
             -khtml-user-select: none;
             -ms-user-select: none;
         }
+        
         .annotation.abstraction-type {
             color: black;
             font-style: italic;
@@ -577,7 +577,7 @@
                 if (visibility || this.abstractionType) {
                     this.referenceElement.style.opacity = 1;
                 } else {
-                    this.referenceElement.style.opacity = 0.2;
+                    this.referenceElement.style.opacity = 0.33;
                 }
                 return visibility;
             }
