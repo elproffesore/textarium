@@ -183,6 +183,21 @@
         #annotation-color-picker:hover {opacity: 1; }
         #annotation-color-picker.hiding {opacity: 0; }
 
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                filter: blur(0.1rem);
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+
+        .embedded .annotation.fade-in {
+            animation: fadeIn .6s ease-in .3s both;
+        }
+
     </style>
 </head>
 
@@ -398,6 +413,11 @@
                     });
 
                     ANNOTATIONSWRAPPER.appendChild(referenceElement);
+
+                    if (EMBEDDED) {
+                        referenceElement.classList.add('fade-in');
+                        setTimeout(() => referenceElement.classList.remove('fade-in'), 1000);
+                    }
                 }
 
                 this.referenceElement = referenceElement;
@@ -409,7 +429,7 @@
                     referenceElement.style.color = getReadableTextColor(this.color);
                 }
                 
-                this.updatePosition(window.innerWidth / 1.5, referenceElement.getBoundingClientRect().top, false);
+                if (!EMBEDDED) this.updatePosition(window.innerWidth / 1.5, referenceElement.getBoundingClientRect().top, false);                    
                 requestAnimationFrame(() => {
                     referenceElement.classList.remove('no-transition');
                 });
