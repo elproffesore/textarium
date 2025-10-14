@@ -18,8 +18,8 @@ He describes the overwhelming surge of scientific output exceeding our capacity 
 At the same time, a wave of promising technologies is ushering in an era in which mechanical and electrical devices are changing knowledge work.
 
 
-[](txt/#bush&annotations=$KNOWLEDGE_WORK(756,585,255,255,255);$KEY_TASKS_OF(754,506,255,255,255);signs_of_a_change(683,111,0,253,255);!1_powerful_instrumentalities(754,192,0,253,255))
-Throughout this essay, Bush outlines various tasks associated with knowledge work. They are marked by a tension between consuming and producing knowledge.
+[](txt/#bush&annotations=$KNOWLEDGE_WORK(753,577,255,255,255);signs_of_a_change(683,111,0,253,255);!0_powerful_instrumentalities(754,192,0,253,255))
+Throughout this essay, Bush focuses on knowledge work, which is marked by a tension between consuming and producing.
 
 
 [](txt/#bush&annotations=reviewing(659,480,0,200,0);grasping(653,564,0,200,0);!0_reading(656,648,0,200,0);$consuming_knowledge(657,393,255,255,255);$KEY_TASKS_OF(867,547,255,255,255);$KNOWLEDGE_WORK(865,610,255,255,255))
@@ -41,7 +41,7 @@ Bush pays close attention to the new technologies of the time that could help ac
 
 <!-- capture -->
 [](txt/#bush&annotations=A(typewriter(664,465,0,253,255),photocell(681,376,0,253,255),!0_camera(756,340,0,253,255),$capturing_data(770,494,255,255,255),photography(811,417,0,253,255));$EMERGING_TECHNOLOGIES(739,579,255,255,255))
-First, he recognizes new ways of capturing of data.
+First, he recognizes new ways of capturing data.
 
 
 <!-- store -->
@@ -65,7 +65,7 @@ Lastly, processing is where Bush places maybe the greatest transformative potent
 
 
 [](txt/#bush&annotations=A(typewriter(558,374,0,253,255),photocell(578,325,0,253,255),camera(649,317,0,253,255),$capturing_data(652,403,255,255,255),photography(661,360,0,253,255));A(wax_disks(802,305,0,253,255),$storage_technologies(849,418,255,255,255),magnetic_wires(851,267,0,253,255),microfilm(780,346,0,253,255),film(866,344,0,253,255),microphotography(846,381,0,253,255));A(telephone(815,607,0,253,255),radio(758,574,0,253,255),television(863,577,0,253,255),$means_of_transmission(815,536,255,255,255),automatic_telephone_exchange(835,649,0,253,255),facsimile(820,684,0,253,255));A(cathode_ray_tubes(737,824,0,253,255),$access(688,739,255,255,255),translucent_screens(750,781,0,253,255),keyboard(627,824,0,253,255),projection(635,780,0,253,255));A(!0_thermionic_tubes(567,572,0,253,255),$processing_systems(607,534,255,255,255),relay_combinations(603,611,0,253,255),machine(614,650,0,253,255));$EMERGING_TECHNOLOGIES(667,473,255,255,255))
-Overall, these technologies are becoming smaller, faster, and more capable of recording, storing, transmitting, displaying, and processing information.
+Overall, these technologies are becoming smaller, faster, and more capable of recording, storing, transmitting, displaying, and processing information. It is almost as if these technologies herald the advent of the information society…
 
 
 For Bush, the central concept is the record. In his writing, it is both an archive and an infrastructure: a cumulative body of human knowledge that is continuously extended, stored, and consulted. 
@@ -73,7 +73,7 @@ For Bush, the central concept is the record. In his writing, it is both an archi
 
 
 Records can be texts, observations, images, or notes. They are the building blocks of the larger record, but their value lies not in mere accumulation, but in being accessed and made sense of. 
-[](txt/#bush&annotations=!5_record(750,485,0,109,143))
+[](txt/#bush&annotations=!7_record(750,554,0,109,143))
 
 Without effective mechanisms of consultation, the whole point of the record becomes inert.
 
@@ -81,14 +81,14 @@ Without effective mechanisms of consultation, the whole point of the record beco
 Beyond the record, Bush distinguishes between data as raw input, material as working medium, and records as structured output. 
 [](txt/#bush&annotations=!16_record(739,416,0,109,143);data(686,649,0,109,143);material(792,548,0,109,143))
 
-Scholarly work depends on the efficient flow between these phases. This is where he situates his futuristic vision for knowledge work.
+Scholarly work depends on the efficient flow between these phases. This is where he situates his futuristic vision of knowledge work augmented by technology.
 
 
 [](txt/#bush&annotations=!1_MEMEX(750,520,255,64,255))
-Bush describes the Memex as a technologically enhanced workspace for storing and navigating large collections of documents, notes, and communication.
+Bush describes the Memex as a technologically enhanced workspace for storing and navigating large collections of documents, notes, and correspondence.
 
 
-[](txt/#bush&annotations=A(book(656,740,145,145,145),page(647,697,145,145,145),!1_desk(675,569,145,145,145),levers(651,655,145,145,145),keyboard(663,614,145,145,145),library(676,783,145,145,145),shelf(702,817,145,145,145),$legacy_hardware(743,689,255,255,255));MEMEX(720,428,255,64,255))
+[](txt/#bush&annotations=A(book(656,740,145,145,145),page(647,697,145,145,145),desk(666,620,145,145,145),levers(651,655,145,145,145),library(676,783,145,145,145),shelf(702,817,145,145,145),$legacy_hardware(758,709,255,255,255));!1_MEMEX(720,428,255,64,255))
 He mentions a range of well-known artifacts, to help readers of the 1940s imagine this unique setup.
 
 
@@ -104,10 +104,14 @@ These trails are navigable paths between records that can be extended, revisited
 The concept of navigable trails is widely considered an early precursor to hypertext, and consequently, the web.
 
 
-The Memex vision anticipated many of today's information systems, as well as enduring challenges. 
-While some aspects of its associative principle have been realized, others remain to be done.
-[](txt/#bush&annotations=A(path(640,839,148,33,146),association(577,865,148,33,146),$the_web_avant_la_link(666,910,255,255,255),trails(566,910,148,33,146),linking(658,959,148,33,146),joining(601,952,148,33,146));A(book(899,940,145,145,145),page(934,936,145,145,145),desk(864,909,145,145,145),levers(932,900,145,145,145),library(852,945,145,145,145),shelf(800,944,145,145,145),$legacy_hardware(850,876,255,255,255));A(typewriter(579,480,0,253,255),photocell(574,444,0,253,255),camera(632,451,0,253,255),$capturing_data(634,506,255,255,255),photography(657,479,0,253,255));A(wax_disks(812,444,0,253,255),$storage_technologies(859,509,255,255,255),magnetic_wires(900,439,0,253,255),microfilm(804,481,0,253,255),film(853,469,0,253,255),microphotography(932,476,0,253,255));A(telephone(906,648,0,253,255),radio(833,618,0,253,255),television(952,613,0,253,255),$means_of_transmission(890,580,255,255,255),automatic_telephone_exchange(906,647,0,253,255),facsimile(886,612,0,253,255));A(thermionic_tubes(582,614,0,253,255),$processing_systems(582,583,255,255,255),relay_combinations(582,650,0,253,255),machine(584,692,0,253,255));A(projection(725,650,0,253,255),$access(728,591,255,255,255),cathode_ray_tubes(723,629,0,253,255),translucent_screens(729,674,0,253,255));A(data(781,780,0,109,143),record(839,786,0,109,143),material(912,781,0,109,143),$core_concepts(704,774,255,255,255));A(remember(665,195,0,200,0),correction(608,208,0,200,0),comment(743,188,0,200,0),transmitting(822,190,0,200,0),writing(875,212,0,200,0),publication(906,243,0,200,0),typesetting(895,265,0,200,0),printing(867,301,0,200,0),distribution(824,326,0,200,0),talking(761,343,0,200,0),interpreting(705,330,0,200,0),reading(639,307,0,200,0),grasping(606,273,0,200,0),$KNOWLEDGE_WORK(749,271,255,255,255),$KEY_TASKS_OF(747,240,255,255,255),reviewing(581,237,0,200,0));!0_MEMEX(750,848,255,64,255);$EMERGING_TECHNOLOGIES(715,540,255,255,255);difficulty(658,113,141,134,0);mass(746,116,141,134,0);maze(592,88,141,134,0);catastrophe(839,93,141,134,0);mountain_of_research(713,48,255,252,65))
+The Memex vision anticipated many of today's information systems, as well as some of the enduring challenges they present. While some aspects of its associative principle have been realized, there is still more to be done.
+[](txt/#bush&annotations=A(path(640,839,148,33,146),association(577,865,148,33,146),$the_web_avant_la_link(666,910,255,255,255),trails(566,910,148,33,146),linking(658,959,148,33,146),joining(601,952,148,33,146));A(book(899,940,145,145,145),page(934,936,145,145,145),desk(864,909,145,145,145),levers(932,900,145,145,145),library(852,945,145,145,145),shelf(800,944,145,145,145),$legacy_hardware(850,876,255,255,255));A(typewriter(579,480,0,253,255),photocell(574,444,0,253,255),camera(632,451,0,253,255),$capturing_data(634,506,255,255,255),photography(657,479,0,253,255));A(wax_disks(812,444,0,253,255),$storage_technologies(859,509,255,255,255),magnetic_wires(900,439,0,253,255),microfilm(804,481,0,253,255),film(853,469,0,253,255),microphotography(932,476,0,253,255));A(telephone(906,648,0,253,255),radio(833,618,0,253,255),television(952,613,0,253,255),$means_of_transmission(890,580,255,255,255),automatic_telephone_exchange(906,647,0,253,255),facsimile(886,612,0,253,255));A(thermionic_tubes(582,614,0,253,255),$processing_systems(582,583,255,255,255),relay_combinations(582,650,0,253,255),machine(584,692,0,253,255));A(projection(725,650,0,253,255),$access(728,591,255,255,255),cathode_ray_tubes(723,629,0,253,255),translucent_screens(729,674,0,253,255));A(data(781,780,0,109,143),record(839,786,0,109,143),material(912,781,0,109,143),$CORE_CONCEPTS(704,774,255,255,255));A(remember(665,195,0,200,0),correction(608,208,0,200,0),comment(743,188,0,200,0),transmitting(822,190,0,200,0),writing(875,212,0,200,0),publication(906,243,0,200,0),typesetting(895,265,0,200,0),printing(867,301,0,200,0),distribution(824,326,0,200,0),talking(761,343,0,200,0),interpreting(705,330,0,200,0),reading(639,307,0,200,0),grasping(606,273,0,200,0),$KNOWLEDGE_WORK(749,271,255,255,255),$KEY_TASKS_OF(747,240,255,255,255),reviewing(581,237,0,200,0));!0_MEMEX(750,848,255,64,255);$EMERGING_TECHNOLOGIES(715,540,255,255,255);difficulty(658,113,141,134,0);mass(746,116,141,134,0);maze(592,88,141,134,0);catastrophe(839,93,141,134,0);mountain_of_research(713,48,255,252,65))
 
-<!-- [](txt/#bush&annotations=A(methods(534,68,255,252,65),mountain_of_research(638,76,255,252,65),catastrophe(523,100,255,252,65),!2_inadequate_for_their_purpose(584,134,255,252,65),mass(514,168,255,252,65),difficulty(585,200,255,252,65),prodigious_rate(594,168,255,252,65),maze(529,198,255,252,65),$information_explosion(635,104,255,255,255));A(grasp(907,193,27,245,79),writing(757,180,27,245,79),reading(923,153,27,245,79),extending(786,147,27,245,79),consulted(869,122,27,245,79),correction(836,297,27,245,79),typesetting(758,219,27,245,79),talking(806,337,27,245,79),distribution(753,296,27,245,79),transmitting(746,257,27,245,79),interpreting(876,337,27,245,79),selection(851,161,27,245,79),comment(826,257,27,245,79),$KNOWLEDGE_WORK(858,226,255,255,255),reviewing(896,257,27,245,79),search(800,112,27,245,79),remember(841,195,27,245,79),digestion(916,287,27,245,79));A(thermionic_tubes(735,565,0,253,255),cathode_ray_tubes(857,472,0,253,255),movie_camera(742,481,0,253,255),typewriter(803,515,0,253,255),automatic_telephone_exchange(881,567,0,253,255),radio_sets(729,523,0,253,255),photocell(844,432,0,253,255),camera(865,525,0,253,255),photograph(818,734,0,253,255),facsimile(795,695,0,253,255),telephone(936,608,0,253,255),photography(745,445,0,253,255),magnetic_wires(864,649,0,253,255),wax_disks(714,617,0,253,255),film(791,645,0,253,255),microphotography(898,692,0,253,255),radio(920,518,0,253,255),microfilm(726,704,0,253,255),television(728,657,0,253,255),$EMERGING_TECHNOLOGIES(824,608,255,255,255));A(material(625,382,0,109,143),record(594,301,0,109,143),data(545,368,0,109,143),$core_concepts(599,340,255,255,255));A(book(589,649,145,145,145),page(579,609,145,145,145),desk(569,469,145,145,145),levers(569,549,145,145,145),keyboard(569,509,145,145,145),library(590,692,145,145,145),shelf(603,734,145,145,145),$legacy_hardware(579,579,255,255,255));A(path(629,815,148,33,146),association(649,855,148,33,146),$the_web_avant_la_link(769,895,255,255,255),trails(669,895,148,33,146),linking(759,935,148,33,146),joining(699,925,148,33,146),MEMEX(739,855,255,64,255))) -->
 
-Textarium is a modest experiment in this tradition, driven by the desire to make interpretation more traceable.
+[](txt/#bush&annotations=mountain_of_research(726,226,255,252,65);!0_scaffolding(730,759,255,251,0);skip_trail(726,521,255,251,0))
+Textarium was created by <a href="https://philippproff.eu">Philipp Proff</a> and <a href="https://mariandoerk.de">Marian Dörk</a>. It opens a space for linking text fragments, making interpretive gestures visible, and following threads of meaning across paragraphs.
+
+Learn more about it:
+
+- <a href="https://arxiv.org/abs/2509.13191">Research paper</a> to be presented at VIS4DH during IEEE VIS 2025
+- <a href="https://github.com/elproffesore/textarium">Source code</a> of this story
