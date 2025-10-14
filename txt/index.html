@@ -129,15 +129,15 @@
             opacity: 0;
             display: none;
             transition-property: opacity;
-            transition-delay: .5s;                         
-            transition-duration: .5s;                   
+            transition-delay: .4s;                         
+            transition-duration: .4s;                   
         }
 
         .embedded .annotation {
             opacity: 0;
             transition-property: opacity top left;
             transition-delay: 0s;          
-            transition-duration: .5s;                   
+            transition-duration: .4s;                   
         }
         
         .annotation.no-transition {
@@ -189,13 +189,12 @@
                 filter: blur(0.1rem);
             }
             100% {
-                opacity: 1;
                 filter: blur(0);
             }
         }
 
         .embedded .annotation.fade-in {
-            animation: fadeIn .5s ease-in .3s both;
+            animation: fadeIn .5s .3s both;
         }
 
     </style>
