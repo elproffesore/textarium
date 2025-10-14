@@ -253,7 +253,7 @@
         ];
 
         //Animation related variables
-        const MINIMUMOPACITY = 0.1; // Minimum duration in ms for animations
+        const MINIMUMOPACITY = 0.25; // Minimum duration in ms for animations
         let ABSTRACTIONSMINIMUMDISTANCE = REM*2; // Minimum distance in px between annotations to create an abstraction
         let ABSTRACTIONSMAXIMUMDISTANCE = REM*8; // Maximum distance in px between annotations to delete an abstraction
 
@@ -574,11 +574,11 @@
                     // Visibility and styling
                     const rect = stem.getBoundingClientRect();
                     const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
-                    let opacity = this.opacity * (isVisible ? 1 : MINIMUMOPACITY);
+                    if (!isVisible) return;
+                    let opacity = this.opacity * (isVisible ? 1 : MINIMUMOPACITY);                    
                     let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
 
-                    // CTX.strokeStyle = `${this.color}${hexOpacity}`;
-                    CTX.strokeStyle = `${color}${hexOpacity}`;
+                    CTX.strokeStyle = `${this.color}${hexOpacity}`;
                     CTX.setLineDash([]);
                     CTX.lineWidth = (parseFloat(getComputedStyle(document.documentElement).fontSize) / 15).toFixed(1);
                     CTX.stroke();
@@ -836,7 +836,7 @@
                     CTX.closePath();
                 }
 
-                CTX.fillStyle = `rgba(0,0,0,${0.033 * this.opacity})`;
+                CTX.fillStyle = `rgba(245,245,245,${.85 * this.opacity})`;
                 CTX.fill();
             }
             checkAnnotations() {
@@ -1362,15 +1362,15 @@
                 !picker.contains(target)
             ) hidePicker();
         });
-function hidePicker() {
-    const picker = document.getElementById('annotation-color-picker');
-    if (picker.matches(':hover')) return; // Prevent flicker
-    picker.classList.add("hiding");
-    pickerTimeout = setTimeout(() => {
-        picker.style.display = 'none';
-        picker.annotation = null;
-    }, 200);
-}
+        function hidePicker() {
+            const picker = document.getElementById('annotation-color-picker');
+            if (picker.matches(':hover')) return; // Prevent flicker
+            picker.classList.add("hiding");
+            pickerTimeout = setTimeout(() => {
+                picker.style.display = 'none';
+                picker.annotation = null;
+            }, 200);
+        }
         // Function to search for n-grams
         function searchNGrams(wordIndex, n) {
             const ngramMap = new Map();

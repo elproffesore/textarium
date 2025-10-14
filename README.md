@@ -15,7 +15,7 @@ He describes the overwhelming surge of scientific output exceeding our capacity 
 
 
 [](txt/#bush&annotations=difficulty(587,388,141,134,0);mass(587,323,141,134,0);maze(565,449,141,134,0);catastrophe(606,262,141,134,0);mountain_of_research(635,73,255,251,0);signs_of_a_change(727,597,0,253,255);!1_powerful_instrumentalities(753,743,0,253,255))
-At the same time, a wave of promising technologies is ushering in an era in which mechanical and electrical devices are changing knowledge work.
+At the same time, a wave of promising technologies is ushering in an era in which mechanical and electrical devices are about to change how we work with information.
 
 
 [](txt/#bush&annotations=$KNOWLEDGE_WORK(753,577,255,255,255);signs_of_a_change(683,111,0,253,255);!0_powerful_instrumentalities(754,192,0,253,255))
@@ -109,9 +109,11 @@ The Memex vision anticipated many of today's information systems, as well as som
 
 
 [](txt/#bush&annotations=mountain_of_research(726,226,255,252,65);!0_scaffolding(730,759,255,251,0);skip_trail(726,521,255,251,0))
-Textarium was created by <a href="https://philippproff.eu">Philipp Proff</a> and <a href="https://mariandoerk.de">Marian Dörk</a>. It opens a space for linking text fragments, making interpretive gestures visible, and following threads of meaning across paragraphs.
+Textarium is a prototypical annotation interface designed to open a space for linking text fragments, making interpretive gestures visible, and following threads of meaning.
 
 Learn more about it:
 
 - <a href="https://arxiv.org/abs/2509.13191">Research paper</a> to be presented at VIS4DH during IEEE VIS 2025
 - <a href="https://github.com/elproffesore/textarium">Source code</a> of this story
+
+*Textarium was created by <a href="https://philippproff.eu">Philipp Proff</a> and <a href="https://mariandoerk.de">Marian Dörk</a>.*
