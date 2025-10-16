@@ -109,7 +109,7 @@ The Memex vision anticipated many of today's information systems, as well as som
 
 
 [](txt/#bush&annotations=mountain_of_research(726,226,255,252,65);!0_scaffolding(730,759,255,251,0);skip_trail(726,521,255,251,0))
-Textarium is a prototypical annotation interface designed to open a space for linking text fragments, making interpretive gestures visible, and following threads of meaning.
+Textarium is an experimental interface designed to open a space for linking text fragments, making interpretive gestures visible, and following threads of meaning.
 
 Learn more about it:
 
