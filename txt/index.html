@@ -574,13 +574,9 @@
                     // Visibility and styling
                     const rect = stem.getBoundingClientRect();
                     const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
-                    if (!isVisible) return;
-                    let opacity = this.opacity * (isVisible ? 1 : MINIMUMOPACITY);                    
-                    let hexOpacity = Math.round(opacity * 255).toString(16).padStart(2, '0');
-
-                    CTX.strokeStyle = `${this.color}${hexOpacity}`;
-                    CTX.setLineDash([]);
-                    CTX.lineWidth = (parseFloat(getComputedStyle(document.documentElement).fontSize) / 15).toFixed(1);
+                    if (isVisible) CTX.strokeStyle = this.color;
+                    else CTX.strokeStyle = "#0001";                    
+                    CTX.lineWidth = REM / 12;
                     CTX.stroke();
                 });
             }
