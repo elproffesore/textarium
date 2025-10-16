@@ -283,7 +283,7 @@
             setURLHashState();
         }
         function sanitize(input) {
-           return input.replace(/[^a-zA-Z]/g, ' ');
+           return input.replace(/[^a-zA-Z0-9-]/g, ' ');
         }
         function slugify(text) {
             return text
@@ -297,7 +297,7 @@
         class Annotation {
             constructor(text, abstractionType = false) {
                 this.text = sanitize(text); // The word or text content of the annotation
-                this.elements = this.text.match(/(\w+-?)+/g) || []; // The elements of the text, split by whitespace
+                this.elements = this.text.match(/[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*/g) || []; // The elements of the text, split by whitespace
                 this.id = slugify(this.text);
                 this.referenceElement = null; // The HTML element representing the annotation
                 this.positionX = 0;
