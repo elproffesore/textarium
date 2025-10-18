@@ -108,12 +108,20 @@ The Memex vision anticipated many of today's information systems, as well as som
 [](txt/#bush&annotations=A(path(640,839,148,33,146),association(577,865,148,33,146),$the_web_avant_la_link(666,910,255,255,255),trails(566,910,148,33,146),linking(658,959,148,33,146),joining(601,952,148,33,146));A(book(899,940,145,145,145),page(934,936,145,145,145),desk(864,909,145,145,145),levers(932,900,145,145,145),library(852,945,145,145,145),shelf(800,944,145,145,145),$legacy_hardware(850,876,255,255,255));A(typewriter(579,480,0,253,255),photocell(574,444,0,253,255),camera(632,451,0,253,255),$capturing_data(634,506,255,255,255),photography(657,479,0,253,255));A(wax_disks(812,444,0,253,255),$storage_technologies(859,509,255,255,255),magnetic_wires(900,439,0,253,255),microfilm(804,481,0,253,255),film(853,469,0,253,255),microphotography(932,476,0,253,255));A(telephone(906,648,0,253,255),radio(833,618,0,253,255),television(952,613,0,253,255),$means_of_transmission(890,580,255,255,255),automatic_telephone_exchange(906,647,0,253,255),facsimile(886,612,0,253,255));A(thermionic_tubes(582,614,0,253,255),$processing_systems(582,583,255,255,255),relay_combinations(582,650,0,253,255),machine(584,692,0,253,255));A(projection(725,650,0,253,255),$access(728,591,255,255,255),cathode_ray_tubes(723,629,0,253,255),translucent_screens(729,674,0,253,255));A(data(781,780,0,109,143),record(839,786,0,109,143),material(912,781,0,109,143),$CORE_CONCEPTS(704,774,255,255,255));A(remember(665,195,0,200,0),correction(608,208,0,200,0),comment(743,188,0,200,0),transmitting(822,190,0,200,0),writing(875,212,0,200,0),publication(906,243,0,200,0),typesetting(895,265,0,200,0),printing(867,301,0,200,0),distribution(824,326,0,200,0),talking(761,343,0,200,0),interpreting(705,330,0,200,0),reading(639,307,0,200,0),grasping(606,273,0,200,0),$KNOWLEDGE_WORK(749,271,255,255,255),$KEY_TASKS_OF(747,240,255,255,255),reviewing(581,237,0,200,0));!0_MEMEX(750,848,255,64,255);$EMERGING_TECHNOLOGIES(715,540,255,255,255);difficulty(658,113,141,134,0);mass(746,116,141,134,0);maze(592,88,141,134,0);catastrophe(839,93,141,134,0);mountain_of_research(713,48,255,252,65))
 
 
+## About
+
 [](txt/#bush&annotations=mountain_of_research(726,226,255,252,65);!0_scaffolding(730,759,255,251,0);skip_trail(726,521,255,251,0))
 Textarium is an experimental interface designed to open a space for linking text fragments, making interpretive gestures visible, and following threads of meaning.
 
-Learn more about it:
+Learn more about it in the <a href="https://arxiv.org/abs/2509.13191">research paper</a> presented at VIS4DH during IEEE VIS 2025.
 
-- <a href="https://arxiv.org/abs/2509.13191">Research paper</a> to be presented at VIS4DH during IEEE VIS 2025
-- <a href="https://github.com/elproffesore/textarium">Source code</a> of this story
 
-*Textarium was created by <a href="https://philippproff.eu">Philipp Proff</a> and <a href="https://mariandoerk.de">Marian Dörk</a>.*
+## Credits
+
+[](txt/#bush&annotations=master(638,390,0,0,0);powerful_instrumentalities(706,627,0,0,0);!0_scientific_research(722,522,0,0,0))Textarium was created by <a href="https://philippproff.eu">Philipp Proff</a> and <a href="https://mariandoerk.de">Marian Dörk</a> at <a href="https://uclab.fh-potsdam.de">UCLAB</a> of FH Potsdam. It builds on Philipp's MA thesis completed in <a href="https://www.newpractice.net/study">Design&Computation</a> at TU Berlin/UdK.
+
+Textarium uses the <a href="https://uclab.fh-potsdam.de/inflect/">!nflect framework</a> for the scrollytelling environment, the <a href="https://github.com/image-js/monotone-chain-convex-hull">Monotone Chain Convex Hull algorithm</a> to visually group annotations and the <a href="https://tartarus.org/martin/PorterStemmer/">Porter Stemmer</a> to identify annotations of the same stem.
+
+All text is rendered in <a href="https://www.brailleinstitute.org/freefont/">Atkinson Hyperlegible</a>.
+
+Textarium is <a href="https://github.com/elproffesore/textarium">freely available</a> under an MIT license: provided 'as is', you can use it for whatever, and the creators take no liability.
