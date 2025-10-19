@@ -3,7 +3,7 @@
 [](txt/#bush&annotations=A($to_read_the_text(681,507,255,255,255),$you_can_scroll_left(638,476,255,255,255));A($to_read_our_reaction_essay(805,723,255,255,255),$scroll_on_the_right(855,690,255,255,255)))
 In 1945, Vannevar Bush wrote a visionary essay that urged scientists to redirect their creative capacities from weapons of war to instruments for the intellect. In this article, he develops the idea of the Memex, a desk-sized device imagined to mimic the mind's associative workings in order to store and link information.
 
-*This is Textarium, a visual interface created in 2025 for interpreting textual sources.*
+*This is Textarium, an experimental interface created in 2025 for interpreting textual sources.*
 
 
 [](txt/#bush&annotations=!2_mountain_of_research(795,516,255,252,65))
@@ -95,17 +95,27 @@ He mentions a range of well-known artifacts, to help readers of the 1940s imagin
 The system is based on the idea that thinking is associative, not hierarchical. 
 [](txt/#bush&annotations=A(path(703,400,148,33,146),!2_association(703,450,148,33,146),trails(703,500,148,33,146));MEMEX(707,614,255,64,255))
 
-Instead of relying on indices or categories, one would create links and follow trails.
+Instead of relying on indices or categories, one would create and follow trails.
 
 
 These trails are navigable paths between records that can be extended, revisited, and shared.
-[](txt/#bush&annotations=A(path(714,376,148,33,146),!6_association(688,418,148,33,146),$the_web_avant_la_link(777,468,255,255,255),trails(659,465,148,33,146),linking(733,547,148,33,146),joining(682,508,148,33,146));MEMEX(750,690,255,64,255))
+[](txt/#bush&annotations=A(path(714,376,148,33,146),association(688,418,148,33,146),$the_web_avant_la_link(795,464,255,255,255),!15_trails(659,465,148,33,146),linking(733,547,148,33,146),joining(682,508,148,33,146));MEMEX(750,690,255,64,255))
 
 The concept of navigable trails is widely considered an early precursor to hypertext, and consequently, the web.
 
 
-The Memex vision anticipated many of today's information systems, as well as some of the enduring challenges they present. While some aspects of its associative principle have been realized, there is still more to be done.
-[](txt/#bush&annotations=A(path(640,839,148,33,146),association(577,865,148,33,146),$the_web_avant_la_link(666,910,255,255,255),trails(566,910,148,33,146),linking(658,959,148,33,146),joining(601,952,148,33,146));A(book(899,940,145,145,145),page(934,936,145,145,145),desk(864,909,145,145,145),levers(932,900,145,145,145),library(852,945,145,145,145),shelf(800,944,145,145,145),$legacy_hardware(850,876,255,255,255));A(typewriter(579,480,0,253,255),photocell(574,444,0,253,255),camera(632,451,0,253,255),$capturing_data(634,506,255,255,255),photography(657,479,0,253,255));A(wax_disks(812,444,0,253,255),$storage_technologies(859,509,255,255,255),magnetic_wires(900,439,0,253,255),microfilm(804,481,0,253,255),film(853,469,0,253,255),microphotography(932,476,0,253,255));A(telephone(906,648,0,253,255),radio(833,618,0,253,255),television(952,613,0,253,255),$means_of_transmission(890,580,255,255,255),automatic_telephone_exchange(906,647,0,253,255),facsimile(886,612,0,253,255));A(thermionic_tubes(582,614,0,253,255),$processing_systems(582,583,255,255,255),relay_combinations(582,650,0,253,255),machine(584,692,0,253,255));A(projection(725,650,0,253,255),$access(728,591,255,255,255),cathode_ray_tubes(723,629,0,253,255),translucent_screens(729,674,0,253,255));A(data(781,780,0,109,143),record(839,786,0,109,143),material(912,781,0,109,143),$CORE_CONCEPTS(704,774,255,255,255));A(remember(665,195,0,200,0),correction(608,208,0,200,0),comment(743,188,0,200,0),transmitting(822,190,0,200,0),writing(875,212,0,200,0),publication(906,243,0,200,0),typesetting(895,265,0,200,0),printing(867,301,0,200,0),distribution(824,326,0,200,0),talking(761,343,0,200,0),interpreting(705,330,0,200,0),reading(639,307,0,200,0),grasping(606,273,0,200,0),$KNOWLEDGE_WORK(749,271,255,255,255),$KEY_TASKS_OF(747,240,255,255,255),reviewing(581,237,0,200,0));!0_MEMEX(750,848,255,64,255);$EMERGING_TECHNOLOGIES(715,540,255,255,255);difficulty(658,113,141,134,0);mass(746,116,141,134,0);maze(592,88,141,134,0);catastrophe(839,93,141,134,0);mountain_of_research(713,48,255,252,65))
+[](txt/#bush&annotations=A(path(818,391,148,33,146),association(856,440,148,33,146),$the_web_avant_la_link(765,489,255,255,255),trails(890,492,148,33,146),linking(806,584,148,33,146),joining(859,535,148,33,146));MEMEX(694,722,255,64,255);!9_code(585,498,148,33,146))
+Codes serve as precise addresses for retrieving specific records and as connectors for forming associations between them.
+
+Akin to hyperlinks, codes allow users to create custom trails and quickly access records, turning static storage into a dynamic network of meaning.
+
+
+The Memex vision anticipated many of today's information systems, including some of their shortcomings. While aspects of its associative principle endure, others remain fragmentary or forgotten.
+[](txt/#bush&annotations=A(path(694,905,153,41,189),association(574,905,153,41,189),$the_web_avant_la_link(629,868,255,255,255),trails(647,910,153,41,189),linking(707,949,153,41,189),joining(642,951,153,41,189),code(584,948,153,41,189));A(book(899,940,145,145,145),page(934,936,145,145,145),desk(864,909,145,145,145),levers(932,900,145,145,145),library(852,945,145,145,145),shelf(800,944,145,145,145),$legacy_hardware(850,876,255,255,255));A(typewriter(577,465,0,253,255),photocell(572,429,0,253,255),camera(630,436,0,253,255),$capturing_data(632,491,255,255,255),photography(655,464,0,253,255));A(wax_disks(808,435,0,253,255),$storage_technologies(855,500,255,255,255),magnetic_wires(896,430,0,253,255),microfilm(800,472,0,253,255),film(849,460,0,253,255),microphotography(928,467,0,253,255));A(telephone(906,648,0,253,255),radio(833,618,0,253,255),television(952,613,0,253,255),$means_of_transmission(890,580,255,255,255),automatic_telephone_exchange(906,647,0,253,255),facsimile(886,612,0,253,255));A(thermionic_tubes(582,614,0,253,255),$processing_systems(582,583,255,255,255),relay_combinations(582,650,0,253,255),machine(584,692,0,253,255));A(projection(725,650,0,253,255),$access(728,591,255,255,255),cathode_ray_tubes(723,629,0,253,255),translucent_screens(729,674,0,253,255));A(data(781,780,0,109,143),record(839,786,0,109,143),material(912,781,0,109,143),$CORE_CONCEPTS(690,776,255,255,255));A(remember(665,195,0,200,0),correction(608,208,0,200,0),comment(743,188,0,200,0),transmitting(822,190,0,200,0),writing(875,212,0,200,0),publication(906,243,0,200,0),typesetting(895,265,0,200,0),printing(867,301,0,200,0),distribution(824,326,0,200,0),talking(761,343,0,200,0),interpreting(705,330,0,200,0),reading(639,307,0,200,0),grasping(606,273,0,200,0),$KNOWLEDGE_WORK(749,271,255,255,255),$KEY_TASKS_OF(747,240,255,255,255),reviewing(581,237,0,200,0));!6_MEMEX(751,847,255,64,255);$EMERGING_TECHNOLOGIES(715,540,255,255,255);difficulty(658,113,141,134,0);mass(746,116,141,134,0);maze(592,88,141,134,0);catastrophe(839,93,141,134,0);mountain_of_research(723,58,255,252,65))
+
+
+[](txt/#bush&annotations=A(numerous_items(668,370,255,251,0),millions_of_fine_thoughts(661,313,255,251,0),numerous_trails(742,415,255,251,0),$abundance(651,223,255,255,255),mountain_of_research(752,262,255,251,0));A(!3_mesh_of_associative_trails(782,792,0,199,252),intricate_web_of_trails(776,629,0,199,252),side_trail(710,683,0,199,252),side_excursions(769,730,0,199,252),$entanglement(771,573,255,255,255)))
+In the face of eroding trust in science, how might we think further toward a human record that is not just wider, but also deeper and more entangled?
 
 
 ## About
