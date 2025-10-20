@@ -197,18 +197,54 @@
             animation: fadeIn .5s .3s both;
         }
 
+        .icon-buttons {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            z-index: 50;
+            filter: grayscale(1);
+        }
+
+        .icon-buttons > div {
+            width: 2.2rem;
+            height: 2.2rem;
+            display: none;
+            align-items: center;
+            justify-content: center;            
+            cursor: pointer;
+        }
+        
+        .icon-buttons > div { display: flex; } 
+        .icon-buttons > div:first-of-type { display: none; transform: scaleX(-1); }
+        .embedded .icon-buttons > div:first-of-type { display: flex; transform: scaleX(-1);} 
+        .embedded .icon-buttons > div { display: none; }
+
+        #edit-icon { text-decoration: none; }
+
     </style>
 </head>
 
-<body>
+<body class="embedded">
     <script src="../src/marked.min.js"></script>
     <div id="app">
         <div id="text-wrapper"></div>
         <div id="annotations-wrapper"></div>
         <canvas id="connections-wrapper"></canvas>
         <input type="color" id="annotation-color-picker" style="position: absolute; display: none; z-index: 1000;" />
+        <div class="icon-buttons">
+            <div title="Open source text and edit annotations"><a id="edit-icon" href="#" target="_parent">✏️</a></div>
+            <div title="What can I do here?" id="help-icon">ℹ️</div>
+            <div title="Copy Markdown link for current view" id="link-icon">🔗</div>            
+        </div>
     </div>
-    <script>       
+    <script>
+        const editIcon = document.getElementById('edit-icon');
+        const linkIcon = document.getElementById('link-icon');
+        const helpIcon = document.getElementById('help-icon');
+
         const TEXTWRAPPER = document.getElementById('text-wrapper');
         const ANNOTATIONSWRAPPER = document.getElementById('annotations-wrapper');
         const CONNECTIONSWRAPPER = document.getElementById('connections-wrapper');
@@ -933,6 +969,7 @@
             let joinedHash = [...abstractionHash, ...annotationHash].join(';');
             window.location.hash = `${SOURCETEXT}&annotations=${joinedHash}`;
             updatingHash = false;
+            editIcon.href = window.location.href;
         }
 
         function getURLHashState() {
@@ -1249,6 +1286,7 @@
         }
         window.addEventListener('hashchange', (e) => {
             if (!EMBEDDED) return;
+            editIcon.href = window.location.href;
             if (updatingHash) return;
             resetState();
         });
@@ -1414,10 +1452,9 @@
                     })
                     .join(' ');
                 TEXTWRAPPER.innerHTML = marked.parse(parsedText);
-                if (EMBEDDED) {
-                    // Remove all interactive elements
-                    document.querySelector('body').classList.add('embedded');
-                }
+                
+                if (!EMBEDDED) document.querySelector('body').classList.remove('embedded');
+                
             }).then(() => {
                 bigramsMap = searchNGrams(WORDINDEX, 2);
                 trigramsMap = searchNGrams(WORDINDEX, 3);
@@ -1425,8 +1462,24 @@
                 quintgramsMap = searchNGrams(WORDINDEX, 5);
                 getURLHashState();
                 renderApplication();
+            })                
+        
+        linkIcon.addEventListener('click', () => {
+            const markdownLink = `[](txt/${window.location.hash})`;
+            navigator.clipboard.writeText(markdownLink)
+            .then(() => {
+                linkIcon.innerText = '✅';
+                setTimeout(() => linkIcon.innerText = '🔗', 1000);
             })
-    
+            .catch(err => console.error("Copy failed:", err));
+        });
+
+        helpIcon.addEventListener('click', () => {
+            alert("Usage hints:\n- Select words in the source text to create annotations.\n- Drag annotations to reposition and group them.\n- Hold Shift and drag any item to move its group.\n- Changing color of one annotation updates whole group.\n- Double-click on background to add new annotation.\n- Double-click an annotation to remove it.\n- The browser history works: go back to undo.");
+        });
+        
+        editIcon.href = window.location.href;
+
         //  Source: https://www.npmjs.com/package/monotone-chain-convex-hull?activeTab=readme
         function monotoneChainConvexHull(e, n = {}) {
             const { sorted: o } = n;
