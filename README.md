@@ -1,6 +1,6 @@
 # How Are We Thinking?
 
-[](txt/#bush&annotations=A($to_read_the_text(681,507,255,255,255),$you_can_scroll_left(638,476,255,255,255));A($to_read_our_reaction_essay(805,723,255,255,255),$scroll_on_the_right(855,690,255,255,255)))
+[](txt/#bush&annotations=A($to_read_the_text(681,507,255,255,255),$you_can_scroll_left(638,476,255,255,255));A($to_read_an_interpretation(805,723,255,255,255),$scroll_on_the_right(855,690,255,255,255)))
 In 1945, Vannevar Bush wrote a visionary essay that urged scientists to redirect their creative capacities from weapons of war to instruments for the intellect. In this article, he develops the idea of the Memex, a desk-sized device imagined to mimic the mind's associative workings in order to store and link information.
 
 *This is Textarium, an experimental interface created in 2025 for interpreting textual sources.*
@@ -130,8 +130,8 @@ Learn more about it in the <a href="https://arxiv.org/abs/2509.13191">research p
 
 [](txt/#bush&annotations=master(638,390,0,0,0);powerful_instrumentalities(706,627,0,0,0);!0_scientific_research(722,522,0,0,0))Textarium was created by <a href="https://philippproff.eu">Philipp Proff</a> and <a href="https://mariandoerk.de">Marian Dörk</a> at <a href="https://uclab.fh-potsdam.de">UCLAB</a> of FH Potsdam. It builds on Philipp's MA thesis completed in <a href="https://www.newpractice.net/study">Design&Computation</a> at TU Berlin/UdK.
 
-Textarium uses the <a href="https://uclab.fh-potsdam.de/inflect/">!nflect framework</a> for the scrollytelling environment, the <a href="https://github.com/image-js/monotone-chain-convex-hull">Monotone Chain Convex Hull algorithm</a> to visually group annotations and the <a href="https://tartarus.org/martin/PorterStemmer/">Porter Stemmer</a> to identify annotations of the same stem.
+Textarium uses the <a href="https://uclab.fh-potsdam.de/inflect/">!nflect framework</a> for the scrollytelling environment, the <a href="https://github.com/image-js/monotone-chain-convex-hull">Monotone Chain Convex Hull algorithm</a> to visually group annotations, the <a href="https://tartarus.org/martin/PorterStemmer/">Porter Stemmer</a> to identify annotations of the same stem, and <a href="https://marked.js.org">Marked</a> to parse markdown text files.
 
-All text is rendered in <a href="https://www.brailleinstitute.org/freefont/">Atkinson Hyperlegible</a>.
+The font is <a href="https://www.brailleinstitute.org/freefont/">Atkinson Hyperlegible</a>.
 
 Textarium is <a href="https://github.com/elproffesore/textarium">freely available</a> under an MIT license: provided 'as is', you can use it for whatever, and the creators take no liability.
