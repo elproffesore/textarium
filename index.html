@@ -296,10 +296,11 @@
     document.addEventListener("scroll", (event) => {
         if (location.hostname=="localhost") sessionStorage.setItem("scrollPosition", window.scrollY);
         if (window.scrollY > 5) {
-            document.querySelector('#scroll-hint').classList.remove('animated');
-            setTimeout(function(){ document.querySelector('#scroll-hint').remove(); },500);
+            let scrollHint = document.querySelector('#scroll-hint');
+            if (!scrollHint) return;
+            scrollHint.classList.remove('animated');
+            setTimeout(function(){ scrollHint.remove(); },500);
         }
-    
     });    
     window.addEventListener("beforeunload", function () {
         if (location.hostname=="localhost") sessionStorage.setItem("scrollPosition", window.scrollY);
@@ -361,7 +362,6 @@
             firstLink.classList.add('active');
             setIframeIfPathChanged(firstLink.href);
         }
-
     }
 
     function scrollToNextSection() {
@@ -370,7 +370,6 @@
             const rect = section.getBoundingClientRect();
             return rect.top > 1;
         });
-        console.log(target);
         if (target) target.scrollIntoView({ behavior: 'smooth' });            
     }
 
