@@ -216,24 +216,22 @@
     let lastIframePath = null;
     let firstFrame = true;
     const iframe = document.getElementById('if');
+    let ifUpdateTimeout = null;
 
     // Fade in new content 
     function setIframeIfPathChanged(newHref) {
-      const newURL = new URL(newHref, window.location.origin);
-      newURL.hash = ''; // remove hash for path comparison
-      const newPath = newURL.href;
-
-      // If path changes, set iframe to 0 opacity
-      if (newPath !== lastIframePath) {
-        if (firstFrame) firstFrame = false;
-        else iframe.style.opacity = '0';
-        iframe.src = newHref;
-        lastIframePath = newPath;
-      } 
-      else {
-        // Otherwise just update src as needed (rare case)
-        iframe.src = newHref;
-      }
+        const newURL = new URL(newHref, window.location.origin);
+        newURL.hash = ''; // remove hash for path comparison
+        const newPath = newURL.href;
+        
+        // If path changes, set iframe to 0 opacity
+        if (newPath !== lastIframePath) {
+            if (firstFrame) firstFrame = false;
+            else iframe.style.opacity = '0';            
+            lastIframePath = newPath;
+        }
+        clearTimeout(ifUpdateTimeout);         
+        ifUpdateTimeout = setTimeout(function() { iframe.src = newHref; }, 100);         
     }
 
     // Fade in once the iframe finishes loading
