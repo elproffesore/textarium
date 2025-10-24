@@ -67,11 +67,17 @@
             background-color: #fff;
             border: 0;
             margin: 0;
-            padding: 0;            
+            padding: 0;
+            transition: opacity 0.1s ease-in;
         }
 
-        iframe {
-            transition: opacity 0.1s ease-in;
+        #ifwrap {
+            top: 0;
+            position: fixed;
+            background-color: white;
+            z-index: 2; 
+            width: 67vw;
+            height: 100vh;
         }
 
         h1 { font-size: 2.25em; font-weight: 200; margin-bottom: 0;}
@@ -185,6 +191,8 @@
                 z-index: 100;
             }
 
+            #ifwrap { width: 100vw; height: 50vh; }
+
             main {
                 position: relative; 
                 width: 100vw;
@@ -207,7 +215,7 @@
 
 <div id="scroll-hint" class="animated">▼</div>
 
-<div><iframe id="if"></iframe></div>
+<div id="ifwrap"><iframe id="if"></iframe></div>
 
 <main></main>
 

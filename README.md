@@ -14,12 +14,12 @@ Bush is concerned about the rapid expansion of human knowledge.
 He describes the overwhelming surge of scientific output exceeding our capacity to make sense of it. While research proliferates, the tools for navigating it cannot keep up with the mass.
 
 
-[](txt/#bush&annotations=difficulty(587,388,141,134,0);mass(587,323,141,134,0);maze(565,449,141,134,0);catastrophe(606,262,141,134,0);mountain_of_research(635,73,255,251,0);signs_of_a_change(727,597,0,253,255);!1_powerful_instrumentalities(753,743,0,253,255))
+[](txt/#bush&annotations=difficulty(587,388,141,134,0);!0_mass(587,323,141,134,0);maze(565,449,141,134,0);catastrophe(606,262,141,134,0);mountain_of_research(635,73,255,251,0);signs_of_a_change(727,597,0,253,255);powerful_instrumentalities(753,743,0,253,255))
 At the same time, a wave of promising technologies is ushering in an era in which mechanical and electrical devices are about to change how we work with information.
 
 
 [](txt/#bush&annotations=$KNOWLEDGE_WORK(753,577,255,255,255);signs_of_a_change(683,111,0,253,255);!0_powerful_instrumentalities(754,192,0,253,255))
-Throughout this essay, Bush focuses on knowledge work, which is marked by a tension between consuming and producing.
+Before we discuss these new technologies, it is worth noting how he focuses on knowledge work throughout this essay. For Bush, this type of work is characterized by a tension between consumption and production.
 
 
 [](txt/#bush&annotations=reviewing(659,480,0,200,0);grasping(653,564,0,200,0);!0_reading(656,648,0,200,0);$consuming_knowledge(657,393,255,255,255);$KEY_TASKS_OF(867,547,255,255,255);$KNOWLEDGE_WORK(865,610,255,255,255))
@@ -40,31 +40,31 @@ Bush pays close attention to the new technologies of the time that could help ac
 
 
 <!-- capture -->
-[](txt/#bush&annotations=A(typewriter(664,465,0,253,255),photocell(681,376,0,253,255),!0_camera(756,340,0,253,255),$capturing_data(770,494,255,255,255),photography(811,417,0,253,255));$EMERGING_TECHNOLOGIES(739,579,255,255,255))
+[](txt/#bush&annotations=A(photocell(701,459,0,253,255),camera(658,655,0,253,255),photography(665,562,0,253,255),!0_typewriter(692,729,0,253,255),$capturing_data(792,592,255,255,255));$EMERGING_TECHNOLOGIES(735,303,255,255,255))
 First, he recognizes new ways of capturing data.
 
 
 <!-- store -->
-[](txt/#bush&annotations=A(typewriter(576,300,0,253,255),photocell(596,251,0,253,255),camera(656,204,0,253,255),$capturing_data(670,329,255,255,255),photography(679,286,0,253,255));A(wax_disks(789,637,0,253,255),$storage_technologies(842,797,255,255,255),!1_magnetic_wires(864,569,0,253,255),microfilm(748,717,0,253,255),film(861,672,0,253,255),microphotography(899,743,0,253,255));$EMERGING_TECHNOLOGIES(686,448,255,255,255))
+[](txt/#bush&annotations=A(!0_typewriter(689,325,0,253,255),photocell(685,218,0,253,255),camera(661,290,0,253,255),$capturing_data(778,273,255,255,255),photography(669,255,0,253,255));A(wax_disks(725,567,0,253,255),magnetic_wires(699,623,0,253,255),microfilm(663,737,0,253,255),film(628,682,0,253,255),microphotography(735,797,0,253,255),$storage_technologies(793,691,255,255,255));$EMERGING_TECHNOLOGIES(732,141,255,255,255))
 Then he highlights advances in miniaturization in storage.
 
 
 <!-- transmit -->
-[](txt/#bush&annotations=A(typewriter(576,300,0,253,255),photocell(596,251,0,253,255),camera(656,204,0,253,255),$capturing_data(670,329,255,255,255),photography(679,286,0,253,255));A(wax_disks(849,389,0,253,255),$storage_technologies(894,522,255,255,255),magnetic_wires(901,337,0,253,255),microfilm(822,440,0,253,255),film(912,422,0,253,255),microphotography(891,475,0,253,255));A(telephone(719,728,0,253,255),!0_radio(631,670,0,253,255),television(819,671,0,253,255),$means_of_transmission(721,608,255,255,255),automatic_telephone_exchange(742,774,0,253,255),facsimile(741,852,0,253,255));$EMERGING_TECHNOLOGIES(615,483,255,255,255))
+[](txt/#bush&annotations=A(typewriter(624,275,0,253,255),photocell(625,173,0,253,255),camera(595,244,0,253,255),$capturing_data(707,228,255,255,255),photography(600,208,0,253,255));A(wax_disks(858,285,0,253,255),$storage_technologies(855,353,255,255,255),magnetic_wires(818,321,0,253,255),microfilm(786,387,0,253,255),microphotography(852,432,0,253,255),!0_film(740,351,0,253,255));A(facsimile(600,664,0,253,255),telephone(660,588,0,253,255),automatic_telephone_exchange(659,731,0,253,255),radio(666,806,0,253,255),television(729,852,0,253,255),$means_of_transmission(771,657,255,255,255));$EMERGING_TECHNOLOGIES(720,91,255,255,255))
 Bush also maps a highly dynamic media landscape in which textual and audivisual records can be transmitted.
 
 
 <!-- access -->
-[](txt/#bush&annotations=A(typewriter(576,300,0,253,255),photocell(596,251,0,253,255),camera(655,224,0,253,255),$capturing_data(670,329,255,255,255),photography(679,286,0,253,255));A(wax_disks(839,246,0,253,255),$storage_technologies(873,377,255,255,255),magnetic_wires(881,199,0,253,255),microfilm(829,285,0,253,255),film(899,276,0,253,255),microphotography(874,328,0,253,255));A(telephone(830,569,0,253,255),radio(782,534,0,253,255),television(870,529,0,253,255),$means_of_transmission(822,488,255,255,255),automatic_telephone_exchange(847,609,0,253,255),facsimile(837,654,0,253,255));A(!2_cathode_ray_tubes(680,861,0,253,255),$access(635,685,255,255,255),translucent_screens(709,774,0,253,255),keyboard(565,818,0,253,255),projection(589,743,0,253,255));$EMERGING_TECHNOLOGIES(609,503,255,255,255))
+[](txt/#bush&annotations=A(typewriter(602,227,0,253,255),photocell(600,106,0,253,255),camera(571,189,0,253,255),$capturing_data(668,179,255,255,255),photography(562,149,0,253,255));A(wax_disks(869,196,0,253,255),$storage_technologies(886,266,255,255,255),magnetic_wires(840,232,0,253,255),microfilm(807,304,0,253,255),film(774,259,0,253,255),microphotography(868,332,0,253,255));A(!0_telephone(671,368,0,253,255),radio(603,435,0,253,255),television(679,437,0,253,255),automatic_telephone_exchange(645,403,0,253,255),facsimile(574,369,0,253,255),$means_of_transmission(633,332,255,255,255));A(cathode_ray_tubes(727,616,0,253,255),translucent_screens(744,832,0,253,255),keyboard(665,757,0,253,255),projection(684,691,0,253,255),$access(820,717,255,255,255));$EMERGING_TECHNOLOGIES(746,61,255,255,255))
 Access technologies enable flexible control over how records can be consulted.
 
 
 <!-- process -->
-[](txt/#bush&annotations=A(typewriter(576,300,0,253,255),photocell(596,251,0,253,255),camera(656,204,0,253,255),$capturing_data(670,329,255,255,255),photography(679,286,0,253,255));A(wax_disks(838,231,0,253,255),$storage_technologies(871,361,255,255,255),magnetic_wires(868,187,0,253,255),microfilm(810,276,0,253,255),film(878,269,0,253,255),microphotography(870,323,0,253,255));A(telephone(840,563,0,253,255),radio(770,533,0,253,255),television(880,523,0,253,255),$means_of_transmission(832,482,255,255,255),automatic_telephone_exchange(857,603,0,253,255),facsimile(847,648,0,253,255));A(cathode_ray_tubes(848,896,0,253,255),$access(802,769,255,255,255),translucent_screens(869,847,0,253,255),keyboard(737,874,0,253,255),projection(765,814,0,253,255));A(thermionic_tubes(579,657,0,253,255),$processing_systems(622,596,255,255,255),!0_relay_combinations(615,715,0,253,255),machine(633,769,0,253,255));$EMERGING_TECHNOLOGIES(595,481,255,255,255))
+[](txt/#bush&annotations=A(typewriter(602,227,0,253,255),!6_photocell(600,106,0,253,255),camera(571,189,0,253,255),$capturing_data(668,179,255,255,255),photography(562,149,0,253,255));A(wax_disks(868,160,0,253,255),$storage_technologies(885,230,255,255,255),magnetic_wires(839,196,0,253,255),microfilm(806,269,0,253,255),film(773,224,0,253,255),microphotography(870,313,0,253,255));A(telephone(666,378,0,253,255),radio(592,448,0,253,255),television(671,452,0,253,255),automatic_telephone_exchange(629,413,0,253,255),facsimile(578,378,0,253,255),$means_of_transmission(624,346,255,255,255));A(cathode_ray_tubes(778,529,0,253,255),keyboard(704,611,0,253,255),projection(720,568,0,253,255),$access(812,569,255,255,255),translucent_screens(830,615,0,253,255));A(thermionic_tubes(688,731,0,253,255),relay_combinations(641,820,0,253,255),machine(720,897,0,253,255),$processing_systems(810,812,255,255,255));$EMERGING_TECHNOLOGIES(746,61,255,255,255))
 Lastly, processing is where Bush places maybe the greatest transformative potential.
 
 
-[](txt/#bush&annotations=A(typewriter(558,374,0,253,255),photocell(578,325,0,253,255),camera(649,317,0,253,255),$capturing_data(652,403,255,255,255),photography(661,360,0,253,255));A(wax_disks(802,305,0,253,255),$storage_technologies(849,418,255,255,255),magnetic_wires(851,267,0,253,255),microfilm(780,346,0,253,255),film(866,344,0,253,255),microphotography(846,381,0,253,255));A(telephone(815,607,0,253,255),radio(758,574,0,253,255),television(863,577,0,253,255),$means_of_transmission(815,536,255,255,255),automatic_telephone_exchange(835,649,0,253,255),facsimile(820,684,0,253,255));A(cathode_ray_tubes(737,824,0,253,255),$access(688,739,255,255,255),translucent_screens(750,781,0,253,255),keyboard(627,824,0,253,255),projection(635,780,0,253,255));A(!0_thermionic_tubes(567,572,0,253,255),$processing_systems(607,534,255,255,255),relay_combinations(603,611,0,253,255),machine(614,650,0,253,255));$EMERGING_TECHNOLOGIES(667,473,255,255,255))
+[](txt/#bush&annotations=A(typewriter(702,245,0,253,255),photocell(700,124,0,253,255),camera(671,207,0,253,255),$capturing_data(768,197,255,255,255),photography(662,167,0,253,255));A(wax_disks(728,319,0,253,255),$storage_technologies(745,389,255,255,255),magnetic_wires(699,355,0,253,255),microfilm(663,424,0,253,255),film(633,383,0,253,255),microphotography(729,460,0,253,255));A(telephone(731,563,0,253,255),radio(657,633,0,253,255),television(736,637,0,253,255),automatic_telephone_exchange(694,598,0,253,255),facsimile(643,563,0,253,255),$means_of_transmission(689,531,255,255,255));A(cathode_ray_tubes(722,698,0,253,255),keyboard(648,780,0,253,255),!4_projection(664,737,0,253,255),$access(756,751,255,255,255),translucent_screens(770,793,0,253,255));A(thermionic_tubes(688,872,0,253,255),relay_combinations(652,903,0,253,255),machine(699,936,0,253,255),$processing_systems(809,907,255,255,255));$EMERGING_TECHNOLOGIES(716,70,255,255,255))
 Overall, these technologies are becoming smaller, faster, and more capable of recording, storing, transmitting, displaying, and processing information. It is almost as if these technologies herald the advent of the information society…
 
 
@@ -123,7 +123,7 @@ In the face of eroding trust in science, how might we think further toward a hum
 [](txt/#bush&annotations=mountain_of_research(726,226,255,252,65);!0_scaffolding(730,759,255,251,0);skip_trail(726,521,255,251,0))
 Textarium is an experimental interface designed to open a space for linking text fragments, making interpretive gestures visible, and following threads of meaning.
 
-Learn more about it in the <a href="https://arxiv.org/abs/2509.13191">research paper</a> presented at VIS4DH during IEEE VIS 2025.
+Learn more about it in the <a href="https://arxiv.org/abs/2509.13191">research paper</a> presented at <a href="https://vis4dh.dbvis.de">VIS4DH</a> during IEEE VIS 2025.
 
 
 ## Credits
