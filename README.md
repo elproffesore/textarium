@@ -128,7 +128,7 @@ Learn more about it in the <a href="https://arxiv.org/abs/2509.13191">research p
 
 ## Credits
 
-[](txt/#bush&annotations=master(638,390,0,0,0);powerful_instrumentalities(706,627,0,0,0);!0_scientific_research(722,522,0,0,0))Textarium was created by <a href="https://philippproff.eu">Philipp Proff</a> and <a href="https://mariandoerk.de">Marian Dörk</a> at <a href="https://uclab.fh-potsdam.de">UCLAB</a> of FH Potsdam. It builds on Philipp's MA thesis completed in <a href="https://www.newpractice.net/study">Design&Computation</a> at TU Berlin/UdK.
+[](txt/#bush&annotations=master(638,390,0,0,0);powerful_instrumentalities(706,627,0,0,0);!0_scientific_research(722,522,0,0,0))Textarium was created by <a href="https://philippproff.eu">Philipp Proff</a> and <a href="https://mariandoerk.de">Marian Dörk</a> at <a href="https://uclab.fh-potsdam.de">UCLAB</a> of FH Potsdam. It builds on Philipp's <a href="https://philippproff.eu/media/me/Masterarbeit.pdf">MA thesis</a> completed in <a href="https://www.newpractice.net/study">Design&Computation</a> at TU Berlin/UdK.
 
 Textarium uses the <a href="https://uclab.fh-potsdam.de/inflect/">!nflect framework</a> for the scrollytelling environment, the <a href="https://github.com/image-js/monotone-chain-convex-hull">Monotone Chain Convex Hull algorithm</a> to visually group annotations, the <a href="https://tartarus.org/martin/PorterStemmer/">Porter Stemmer</a> to identify annotations of the same stem, and <a href="https://marked.js.org">Marked</a> to parse markdown text files.
 
