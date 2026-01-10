@@ -233,11 +233,14 @@
         // If path changes, set iframe to 0 opacity
         if (newPath !== lastIframePath) {
             if (firstFrame) firstFrame = false;
-            else iframe.style.opacity = '0';            
+            else iframe.style.opacity = '0';
             lastIframePath = newPath;
         }
         clearTimeout(ifUpdateTimeout);         
-        ifUpdateTimeout = setTimeout(function() { iframe.src = newHref; }, 100);         
+        ifUpdateTimeout = setTimeout(function() { 
+            if ( iframe.src.split('#')[0] == newHref.split('#')[0] ) iframe.style.opacity = '1';            
+            iframe.src = newHref;
+        }, 50);         
     }
 
     // Fade in once the iframe finishes loading
