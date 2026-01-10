@@ -13,7 +13,7 @@
     <meta property="og:image:height" content="630">
 
     <script src="src/marked.min.js"></script>
-
+    
     <style>
 
         @font-face {
@@ -33,6 +33,11 @@
             src: url("src/fonts/AtkinsonHyperlegibleMono-Bold.woff2") format("woff2-variations");
             font-style: normal;
             font-weight: bold;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;  
+            text-size-adjust: 100%;
         }
 
         body {
@@ -217,7 +222,8 @@
     let firstFrame = true;
     const ifwrap = document.getElementById('ifwrap');
     let ifUpdateTimeout = null;
-    
+    var fs = 16;
+
     // Fade in new content 
     function setIframeIfPathChanged(newHref) {
         const newURL = new URL(newHref, window.location.origin);
@@ -242,7 +248,7 @@
     function setFontSize(){
         const height = window.innerHeight;
         const weidth = window.innerWidth;
-        var fs = 2+(height + height)/80;
+        fs = 2+(height + height)/80;
         document.documentElement.style.fontSize = `${fs}px`;
     }
 
@@ -440,7 +446,6 @@
         const heightDiff = Math.abs(window.innerHeight - lastHeight);
 
         if (widthDiff > RESIZE_THRESHOLD || heightDiff > RESIZE_THRESHOLD) {
-            console.log("asd");
             const activeLink = document.querySelector('a.active');
             const targetSection = activeLink ? activeLink.closest('section') : null;
             
@@ -450,7 +455,7 @@
             if (targetSection) targetSection.scrollIntoView({ behavior: 'instant' });            
             
             lastWidth = window.innerWidth;
-            lastHeight = window.innerHeight;
+            lastHeight = window.innerHeight;                    
         }
     });
 
