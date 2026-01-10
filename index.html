@@ -37,8 +37,7 @@
 
         body {
             font-family: "Atkinson", sans-serif;
-            font-weight: 250;
-            font-size: calc(1vw + 1vh);
+            font-weight: 250;			
             background-color: white;
             margin: 0;
             padding: 0;
@@ -63,12 +62,13 @@
             left: 0;
             height: 100vh;
             width: 67vw;
-            position: fixed;
+            position: absolute; /* Changed from fixed to absolute within #ifwrap */
             background-color: #fff;
             border: 0;
             margin: 0;
             padding: 0;
             transition: opacity 0.1s ease-in;
+            z-index: 1;
         }
 
         #ifwrap {
@@ -80,36 +80,35 @@
             height: 100vh;
         }
 
-        h1 { font-size: 2.25em; font-weight: 200; margin-bottom: 0;}
-        h2 { font-size: 1.5em; }
-        h3 { font-size: 1.4em; }
-        h4 { font-size: 1.2em; }
+        h1 { font-size: 2.25rem; font-weight: 200; margin-bottom: 0;}
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.4rem; }
+        h4 { font-size: 1.2rem; }
         h2, h3, h4 { font-weight: 500; }
-        h1, h2, h3, h4 { margin: .25em 0; }
+        h1, h2, h3, h4 { margin: .25rem 0; }
 
         main {
             background-color: rgb(242, 242, 242);
             box-sizing: border-box;
             position: absolute;
             right: 0;
-            width: 33vw;
-            padding: 0 3vh;
+            width: 33vw; 
+            padding: 0 3vh; 
             margin: 0;
         }
 
         section {
             padding: 1vh 0 0 0;
             margin: 0 0 10vh 0;
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             flex-direction: column;           
         }
 
         p {
-            font-size: 1em;
-            line-height: 1.5em;
-            margin: .5em 0;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            margin: .5rem 0;
         }
         
         a {
@@ -117,12 +116,12 @@
         }
 
         ul, ol {
-            padding-left: 1.25em;
-            margin: .5em 0;
+            padding-left: 1.25rem;
+            margin: .5rem 0;
         }
 
         li {
-            padding-bottom: 0.5em;
+            padding-bottom: 0.5rem;
         }
 
         li li {
@@ -146,7 +145,7 @@
             padding: 0;
             opacity: 0.33;
             height: 7vh;
-            font-size: .85em;
+            font-size: .85rem;
         }
 
         footer a.dontinflect { color: #333;}
@@ -158,7 +157,7 @@
             right: 0;
             width: 33%;
             height: 6vh;
-            font-size: 1.25em;
+            font-size: 1.25rem;
             z-index: 5;            
             text-align: center;            
             opacity: 0;
@@ -172,22 +171,19 @@
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(-0.5em); }
-            66% { transform: translateY(0em); }
+            0%, 100% { transform: translateY(-0.5rem); }
+            66% { transform: translateY(0rem); }
         }
 
         @media (max-width: 1000px) and (orientation: portrait) {
-            #scroll-hint { width: 100%; font-size: 2em;}
-            body {
-                font-size: calc(1.5vw + 1.5vh);
-            }
+            #scroll-hint { width: 100%; font-size: 2rem;}
 
             iframe {
                 position: fixed;
                 top: 0;
                 left: 0;
-                width: 100vw;
-                height: 50vh;
+                width: 100vw; 
+                height: 50vh; 
                 z-index: 100;
             }
 
@@ -195,17 +191,13 @@
 
             main {
                 position: relative; 
-                width: 100vw;
+                width: 100vw; 
                 right: auto;        
-                padding: 0 5vw;     
-                margin-top: 50vh;   
+                padding: 0 5vw;
+                margin-top: 50vh;
                 z-index: 1;
             }
 
-            section {
-                justify-content: start;
-                min-height: 50vh;
-            }
         }
 
     </style>
@@ -220,12 +212,12 @@
 <main></main>
 
 <script>
-    // Track last path (excluding hash)
+    const iframe = document.getElementById('if');
     let lastIframePath = null;
     let firstFrame = true;
-    const iframe = document.getElementById('if');
+    const ifwrap = document.getElementById('ifwrap');
     let ifUpdateTimeout = null;
-
+    
     // Fade in new content 
     function setIframeIfPathChanged(newHref) {
         const newURL = new URL(newHref, window.location.origin);
@@ -244,8 +236,24 @@
 
     // Fade in once the iframe finishes loading
     iframe.addEventListener('load', () => {
-      iframe.style.opacity = '1';
+        iframe.style.opacity = '1';
     });
+
+    function setFontSize(){
+        const height = window.innerHeight;
+        const weidth = window.innerWidth;
+        var fs = 2+(height + height)/80;
+        document.documentElement.style.fontSize = `${fs}px`;
+    }
+
+    function setSectionHeights() {
+        const isMobilePortrait = window.matchMedia("(max-width: 1000px) and (orientation: portrait)").matches;
+        const height = isMobilePortrait ? window.innerHeight / 2 : window.innerHeight;
+        
+        document.querySelectorAll('section').forEach(section => {
+            section.style.minHeight = `${height}px`;
+        });
+    }    
 
     // Function to fetch and render the markdown
     async function renderMarkdown() {
@@ -255,8 +263,8 @@
 
             var title = document.title.split(" · ")[0];
             document.title = (file === "README") 
-                             ? title
-                             : `${title} · ${file}`;
+                            ? title
+                            : `${title} · ${file}`;
 
             const response = await fetch(file + ".md"); 
             let text = await response.text();
@@ -267,10 +275,10 @@
             
             // add class dontinflect to regular html links
             text = text.replace(/<a\b([^>]*)>/gi, (m, attrs) => 
-              `<a${/class\s*=\s*["']([^"']*)["']/i.test(attrs) 
-                  ? attrs.replace(/class\s*=\s*["']([^"']*)["']/i, 
-                                  (m, c) => `class="${c} dontinflect"`) 
-                  : ` class="dontinflect"${attrs}`}>`
+            `<a${/class\s*=\s*["']([^"']*)["']/i.test(attrs) 
+                ? attrs.replace(/class\s*=\s*["']([^"']*)["']/i, 
+                                (m, c) => `class="${c} dontinflect"`) 
+                : ` class="dontinflect"${attrs}`}>`
             );
 
             // render markdown into HTML           
@@ -282,6 +290,7 @@
             document.querySelector('main').innerHTML = html;
 
             transformInflectionImages();
+            setSectionHeights();
 
             initializeObservers();
 
@@ -293,7 +302,7 @@
     }
 
     // Update markdown when hash changes
-    window.addEventListener('hashchange', function() {
+    window.addEventListener('hashchange', function(event) {
         event.preventDefault();
         window.scrollTo(0, 0);
         if (location.hostname=="localhost") sessionStorage.setItem("scrollPosition", 0);
@@ -307,8 +316,9 @@
             if (!scrollHint) return;
             scrollHint.classList.remove('animated');
             setTimeout(function(){ scrollHint.remove(); },500);
-        }
-    });    
+        }    
+    });
+
     window.addEventListener("beforeunload", function () {
         if (location.hostname=="localhost") sessionStorage.setItem("scrollPosition", window.scrollY);
     });
@@ -338,7 +348,7 @@
                     const visibleLink = entry.target;
                     if (!visibleLink.classList.contains("dontinflect") && visibleLink.getAttribute("href") != "") {
                         visibleLink.classList.add('active');
-                        // Update iframe, ignoring just changes
+                        // Update iframe
                         setIframeIfPathChanged(visibleLink.href);
                     }
                 }
@@ -369,6 +379,7 @@
             firstLink.classList.add('active');
             setIframeIfPathChanged(firstLink.href);
         }
+
     }
 
     function scrollToNextSection() {
@@ -390,6 +401,7 @@
             }
         }
     }
+
     // scroll up when pressing Escape
     // scroll to next or previous sections using space bar or arrow keys
     document.addEventListener('keydown', function(event) {
@@ -419,6 +431,30 @@
 
         }
     });
+
+    let lastWidth = window.innerWidth;
+    let lastHeight = window.innerHeight;
+    const RESIZE_THRESHOLD = 200; 
+    window.addEventListener('resize', function() {
+        const widthDiff = Math.abs(window.innerWidth - lastWidth);
+        const heightDiff = Math.abs(window.innerHeight - lastHeight);
+
+        if (widthDiff > RESIZE_THRESHOLD || heightDiff > RESIZE_THRESHOLD) {
+            console.log("asd");
+            const activeLink = document.querySelector('a.active');
+            const targetSection = activeLink ? activeLink.closest('section') : null;
+            
+            setFontSize();
+            setSectionHeights();            
+            
+            if (targetSection) targetSection.scrollIntoView({ behavior: 'instant' });            
+            
+            lastWidth = window.innerWidth;
+            lastHeight = window.innerHeight;
+        }
+    });
+
+    setFontSize();
 
     // Load, parse, and display markdown on page load
     renderMarkdown();
