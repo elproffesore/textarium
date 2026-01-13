@@ -11,6 +11,7 @@
     <meta property="og:image" content="https://uclab.fh-potsdam.de/textarium/preview.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
     <script src="src/marked.min.js"></script>
     
@@ -66,14 +67,22 @@
             top: 0;
             left: 0;
             height: 100vh;
-            width: 67vw;
-            position: absolute; /* Changed from fixed to absolute within #ifwrap */
+            width: 66vw;
+            position: absolute;
             background-color: #fff;
             border: 0;
             margin: 0;
             padding: 0;
-            transition: opacity 0.1s ease-in;
+            transition: opacity 0.1s ease-in-out;
             z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        iframe.active {
+            z-index: 10;
+            opacity: 1;
+            pointer-events: auto;
         }
 
         #ifwrap {
@@ -81,7 +90,7 @@
             position: fixed;
             background-color: white;
             z-index: 2; 
-            width: 67vw;
+            width: 66vw;
             height: 100vh;
         }
 
@@ -98,7 +107,7 @@
             position: absolute;
             right: 0;
             width: 33vw; 
-            padding: 0 3vh; 
+            padding: 0 1.5vw 0 3vw;
             margin: 0;
         }
 
@@ -187,18 +196,22 @@
                 position: fixed;
                 top: 0;
                 left: 0;
-                width: 100vw; 
+                width: 100%; 
                 height: 50vh; 
                 z-index: 100;
+            }
+
+            iframe.active {
+                z-index: 110;
             }
 
             #ifwrap { width: 100vw; height: 50vh; }
 
             main {
                 position: relative; 
-                width: 100vw; 
+                width: 100%; 
                 right: auto;        
-                padding: 0 5vw;
+                padding: 0 7.5vw;                
                 margin-top: 50vh;
                 z-index: 1;
             }
@@ -212,46 +225,148 @@
 
 <div id="scroll-hint" class="animated">▼</div>
 
-<div id="ifwrap"><iframe id="if"></iframe></div>
+<div id="ifwrap"></div>
 
 <main></main>
 
 <script>
-    const iframe = document.getElementById('if');
-    let lastIframePath = null;
-    let firstFrame = true;
+    const iframesByBaseUrl = new Map();
+    let activeIframe = null;
+    let activeBaseUrl = null;
     const ifwrap = document.getElementById('ifwrap');
     let ifUpdateTimeout = null;
     var fs = 16;
+    
+    let preloadQueue = [];
+    let isPreloading = false;
 
-    // Fade in new content 
-    function setIframeIfPathChanged(newHref) {
-        const newURL = new URL(newHref, window.location.origin);
-        newURL.hash = ''; // remove hash for path comparison
-        const newPath = newURL.href;
-        
-        // If path changes, set iframe to 0 opacity
-        if (newPath !== lastIframePath) {
-            if (firstFrame) firstFrame = false;
-            else iframe.style.opacity = '0';
-            lastIframePath = newPath;
-        }
-        clearTimeout(ifUpdateTimeout);         
-        ifUpdateTimeout = setTimeout(function() { 
-            if ( iframe.src.split('#')[0] == newHref.split('#')[0] ) iframe.style.opacity = '1';            
-            iframe.src = newHref;
-        }, 50);         
+    function getBaseUrl(href) {
+        const url = new URL(href, window.location.href);
+        url.hash = '';
+        return url.href;
     }
 
-    // Fade in once the iframe finishes loading
-    iframe.addEventListener('load', () => {
-        iframe.style.opacity = '1';
-    });
+    function getOrCreateIframe(baseUrl) {
+        if (iframesByBaseUrl.has(baseUrl)) return iframesByBaseUrl.get(baseUrl);        
+        const iframe = document.createElement('iframe');
+        ifwrap.appendChild(iframe);
+        iframesByBaseUrl.set(baseUrl, iframe);
+        return iframe;
+    }
 
-    function setFontSize(){
+    const iframeResetTimeouts = new Map();
+    
+    function switchToIframe(newIframe, newBaseUrl) {
+        if (activeIframe === newIframe) return;
+        
+        // Clear any pending reset for the iframe we're switching TO
+        if (iframeResetTimeouts.has(newIframe)) {
+            clearTimeout(iframeResetTimeouts.get(newIframe));
+            iframeResetTimeouts.delete(newIframe);
+        }
+        
+        // Deactivate current iframe
+        if (activeIframe) {
+            const oldIframe = activeIframe;
+            const oldBaseUrl = activeBaseUrl;
+            
+            oldIframe.classList.remove('active');
+            
+            // Schedule reset to base URL after transition
+            if (oldBaseUrl) {
+                const timeoutId = setTimeout(() => {
+                    iframeResetTimeouts.delete(oldIframe);
+                    if (oldIframe.src !== oldBaseUrl) {
+                        oldIframe.src = oldBaseUrl;
+                    }
+                }, 250);
+                iframeResetTimeouts.set(oldIframe, timeoutId);
+            }
+        }
+        
+        newIframe.classList.add('active');
+        activeIframe = newIframe;
+        activeBaseUrl = newBaseUrl;
+    }
+
+    function setIframeIfPathChanged(newHref) {
+        const newBaseUrl = getBaseUrl(newHref);
+        const iframe = getOrCreateIframe(newBaseUrl);
+        
+        clearTimeout(ifUpdateTimeout);
+        
+        ifUpdateTimeout = setTimeout(() => {
+            if (iframe.src !== newHref) {
+                iframe.src = newHref;
+            }
+            
+            if (newBaseUrl !== activeBaseUrl) {
+                switchToIframe(iframe, newBaseUrl);
+            }
+        }, 50);
+    }
+
+    function processPreloadQueue() {
+        if (preloadQueue.length === 0) {
+            isPreloading = false;
+            return;
+        }
+        
+        isPreloading = true;
+        const baseUrl = preloadQueue.shift();
+        
+        // Skip if already loaded
+        if (iframesByBaseUrl.has(baseUrl)) {
+            setTimeout(processPreloadQueue, 0);
+            return;
+        }
+        
+        const iframe = getOrCreateIframe(baseUrl);
+        iframe.src = baseUrl;
+        
+        // Process next after load (or timeout as fallback)
+        let handled = false;
+        const onDone = () => {
+            if (handled) return;
+            handled = true;
+            setTimeout(processPreloadQueue, 100);
+        };
+        iframe.addEventListener('load', onDone, { once: true });
+        setTimeout(onDone, 5000);
+    }
+
+    function preloadAllBaseUrls() {
+        if (isPreloading) return;
+        
+        const links = document.querySelectorAll('a:not(.dontinflect)');
+        const baseUrls = new Set();
+        
+        links.forEach(link => {
+            if (link.href && link.href !== '') {
+                try {
+                    const baseUrl = getBaseUrl(link.href);
+                    baseUrls.add(baseUrl);
+                } catch (e) {
+                    // Invalid URL, skip
+                }
+            }
+        });
+        
+        baseUrls.forEach(baseUrl => {
+            if (baseUrl !== activeBaseUrl && !iframesByBaseUrl.has(baseUrl) && !preloadQueue.includes(baseUrl)) {
+                preloadQueue.push(baseUrl);
+            }
+        });
+        
+        processPreloadQueue();
+    }
+
+    function setFontSize() {
+        const isMobilePortrait = window.matchMedia("(max-width: 1000px) and (orientation: portrait)").matches;
         const height = window.innerHeight;
-        const weidth = window.innerWidth;
-        fs = 2+(height + height)/80;
+        
+        if (isMobilePortrait) fs = 5 + (height + height) / 75;
+        else fs = 5 + (height + height) / 100;
         document.documentElement.style.fontSize = `${fs}px`;
     }
 
@@ -262,12 +377,11 @@
         document.querySelectorAll('section').forEach(section => {
             section.style.minHeight = `${height}px`;
         });
-    }    
+    }
 
-    // Function to fetch and render the markdown
     async function renderMarkdown() {
         try {
-            const hash = window.location.hash.substring(1); // Remove '#' from hash
+            const hash = window.location.hash.substring(1);
             const file = hash ? hash : 'README';
 
             var title = document.title.split(" · ")[0];
@@ -284,97 +398,94 @@
             
             // add class dontinflect to regular html links
             text = text.replace(/<a\b([^>]*)>/gi, (m, attrs) => 
-            `<a${/class\s*=\s*["']([^"']*)["']/i.test(attrs) 
-                ? attrs.replace(/class\s*=\s*["']([^"']*)["']/i, 
-                                (m, c) => `class="${c} dontinflect"`) 
-                : ` class="dontinflect"${attrs}`}>`
+                `<a${/class\s*=\s*["']([^"']*)["']/i.test(attrs) 
+                    ? attrs.replace(/class\s*=\s*["']([^"']*)["']/i, 
+                                    (m, c) => `class="${c} dontinflect"`) 
+                    : ` class="dontinflect"${attrs}`}>`
             );
 
             // render markdown into HTML           
             let html = marked.parse(text);
 
             // skip footer when on inflect page
-            if (document.URL!="https://uclab.fh-potsdam.de/inflect/") html = html + "\n<footer>a story made with <strong><a class='dontinflect' href='https://uclab.fh-potsdam.de/inflect/'>!nflect</a></strong></footer>";
+            if (document.URL != "https://uclab.fh-potsdam.de/inflect/") {
+                html = html + "\n<footer>a story made with <strong><a class='dontinflect' href='https://uclab.fh-potsdam.de/inflect/'>!nflect</a></strong></footer>";
+            }
 
             document.querySelector('main').innerHTML = html;
 
             transformInflectionImages();
             setSectionHeights();
-
             initializeObservers();
+            
+            // Start preloading after initial render settles
+            setTimeout(preloadAllBaseUrls, 1000);
 
-            // return to old position
-            if (location.hostname=="localhost") window.scrollTo(0, sessionStorage.getItem("scrollPosition") || 0);
+            // return to old position (localhost only)
+            if (location.hostname == "localhost") {
+                window.scrollTo(0, sessionStorage.getItem("scrollPosition") || 0);
+            }
         } catch (error) {
             console.error('Error fetching or rendering the markdown file:', error);
         }
     }
 
-    // Update markdown when hash changes
     window.addEventListener('hashchange', function(event) {
         event.preventDefault();
         window.scrollTo(0, 0);
-        if (location.hostname=="localhost") sessionStorage.setItem("scrollPosition", 0);
+        if (location.hostname == "localhost") sessionStorage.setItem("scrollPosition", 0);
         renderMarkdown();        
     });
 
     document.addEventListener("scroll", (event) => {
-        if (location.hostname=="localhost") sessionStorage.setItem("scrollPosition", window.scrollY);
+        if (location.hostname == "localhost") sessionStorage.setItem("scrollPosition", window.scrollY);
         if (window.scrollY > 5) {
             let scrollHint = document.querySelector('#scroll-hint');
             if (!scrollHint) return;
             scrollHint.classList.remove('animated');
-            setTimeout(function(){ scrollHint.remove(); },500);
+            setTimeout(function() { scrollHint.remove(); }, 500);
         }    
     });
 
-    window.addEventListener("beforeunload", function () {
-        if (location.hostname=="localhost") sessionStorage.setItem("scrollPosition", window.scrollY);
+    window.addEventListener("beforeunload", function() {
+        if (location.hostname == "localhost") sessionStorage.setItem("scrollPosition", window.scrollY);
     });
 
-    // turn images with alt-tag img to inflection links
     function transformInflectionImages() {
         const images = document.querySelectorAll('img[alt="img"]');
         images.forEach(img => {
             const link = document.createElement('a');
-
             link.href = img.getAttribute('src');
             link.classList.add("img");
-
             const p = img.closest('p');
-
             p.replaceWith(link);
         });
     }
 
-    // with IntersectionObserver we can check what is visible    
     function initializeObservers() {
         const isMobilePortrait = window.matchMedia("(max-width: 1000px) and (orientation: portrait)").matches;
+        
         const observer = new IntersectionObserver((entries) => {            
             entries.forEach(entry => {
                 if (entry.isIntersecting) {                    
-                    // Add active class only to the visible link
                     const visibleLink = entry.target;
                     if (!visibleLink.classList.contains("dontinflect") && visibleLink.getAttribute("href") != "") {
                         visibleLink.classList.add('active');
-                        // Update iframe
                         setIframeIfPathChanged(visibleLink.href);
                     }
+                } else {
+                    entry.target.classList.remove("active");
                 }
-                else entry.target.classList.remove("active")
             });
-        },{
+        }, {
             rootMargin: isMobilePortrait ? "-50% 0px 0px 0px" : "0px"
         });
 
-        // Add observer to all inflect links
         const inflectLinks = document.querySelectorAll('a');
         inflectLinks.forEach(link => {
             observer.observe(link);
 
-            // ignore local links to markdown files
             if (!link.classList.contains("dontinflect")) {
-                // Add event listener to manually handle click
                 link.addEventListener('click', function(event) {                    
                     document.querySelectorAll('a').forEach(a => a.classList.remove('active'));
                     link.classList.add('active');
@@ -382,13 +493,6 @@
                 });
             }
         });
-
-        const firstLink = document.querySelector('main a:not(.dontinflect)');
-        if (firstLink) {
-            firstLink.classList.add('active');
-            setIframeIfPathChanged(firstLink.href);
-        }
-
     }
 
     function scrollToNextSection() {
@@ -411,19 +515,14 @@
         }
     }
 
-    // scroll up when pressing Escape
-    // scroll to next or previous sections using space bar or arrow keys
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        else if (
+        } else if (
             event.key === 'ArrowDown' ||
             event.key === 'ArrowUp' ||
-            event.key === ' '  // space key
+            event.key === ' '
         ) {
-            // determine direction
             const goingDown = (
                 event.key === 'ArrowDown' ||
                 (event.key === ' ' && !event.shiftKey)
@@ -436,14 +535,14 @@
 
             event.preventDefault();
             if (goingDown) scrollToNextSection();
-            else if (goingUp) scrollToPreviousSection();                            
-
+            else if (goingUp) scrollToPreviousSection();
         }
     });
 
     let lastWidth = window.innerWidth;
     let lastHeight = window.innerHeight;
-    const RESIZE_THRESHOLD = 200; 
+    const RESIZE_THRESHOLD = 350; 
+    
     window.addEventListener('resize', function() {
         const widthDiff = Math.abs(window.innerWidth - lastWidth);
         const heightDiff = Math.abs(window.innerHeight - lastHeight);
@@ -463,9 +562,8 @@
     });
 
     setFontSize();
-
-    // Load, parse, and display markdown on page load
     renderMarkdown();
 </script>
+
 </body>
 </html>

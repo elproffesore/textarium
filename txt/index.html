@@ -224,6 +224,7 @@
 
         #edit-icon { text-decoration: none; }
 
+        ul { padding-left: 1rem;}
     </style>
 </head>
 
@@ -293,7 +294,8 @@
 
         // Application related variables
         const BLOBBYHULL = false;
-        const SOURCETEXT = window.location.hash.slice(1).match(/\w+/)[0];
+        const hashMatch = window.location.hash.slice(1).match(/^\w+/);
+        let SOURCETEXT = hashMatch ? hashMatch[0] : null;
         const WORDINDEX = [];
         const EMBEDDED = window.self !== window.top;
         const ANNOTATIONS = [];
@@ -957,6 +959,7 @@
         }
         function setURLHashState() {            
             if (resetPage) return;
+            if (!SOURCETEXT) return;
             updatingHash = true;
             // Set the URL hash to the current annotations
             let annotationHash = ANNOTATIONS.map((annotation) => {
@@ -1285,6 +1288,13 @@
             }            
         }
         window.addEventListener('hashchange', (e) => {
+            const newHashMatch = window.location.hash.slice(1).match(/^\w+/);
+            const newSourceText = newHashMatch ? newHashMatch[0] : null;
+            if (newSourceText && newSourceText !== SOURCETEXT) {
+                location.reload();
+                return;
+            }
+
             if (!EMBEDDED) return;
             editIcon.href = window.location.href;
             if (updatingHash) return;
@@ -1419,7 +1429,8 @@
         let trigramsMap = null;
         let quadgramsMap = null;
         let quintgramsMap = null;
-        fetch(`${SOURCETEXT}.md`)
+
+        if (SOURCETEXT) fetch(`${SOURCETEXT}.md`)
             .then(response => response.text())
             .then(text => {
                 if (!text) {
